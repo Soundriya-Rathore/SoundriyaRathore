@@ -18,7 +18,9 @@ window.PORTFOLIO_CONFIG = {
     whatsapp: "918107849819",
     youtubeChannel: "https://youtube.com/@soundriya.rathore?si=L-8t2I-JUCiy0A-r",
     instagram: "https://www.instagram.com/Soundriya_rathore/",
-    linkedin: "https://www.linkedin.com/in/soundriya-rathore-060988316/"
+    linkedin: "https://www.linkedin.com/in/soundriya-rathore-060988316/",
+    soundcloud: "https://soundcloud.com/soundriya-rathore",
+    muckrack: "https://muckrack.com/soundriya-rathore-1"
   },
 
   // Primary Featured Showreel
