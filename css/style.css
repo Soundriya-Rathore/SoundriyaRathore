@@ -111,6 +111,8 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 20px);
   -webkit-text-size-adjust: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -119,6 +121,7 @@ body {
   color: var(--navy-deep);
   line-height: 1.65;
   font-size: 16px;
+  max-width: 100%;
   overflow-x: hidden;
   background-image: 
     radial-gradient(circle at 10% 12%, rgba(0, 102, 255, 0.06) 0%, transparent 45%),
@@ -172,8 +175,10 @@ button {
   max-width: var(--container-max);
   margin-left: auto;
   margin-right: auto;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding-left: clamp(14px, 4vw, 24px);
+  padding-right: clamp(14px, 4vw, 24px);
+  padding-left: max(clamp(14px, 4vw, 24px), env(safe-area-inset-left));
+  padding-right: max(clamp(14px, 4vw, 24px), env(safe-area-inset-right));
 }
 
 .section {
@@ -1228,6 +1233,9 @@ button {
   padding: 4px 0;
   cursor: pointer;
   width: 100%;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .wave-bar {
@@ -1281,6 +1289,9 @@ button {
   position: relative;
   cursor: pointer;
   overflow: hidden;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .demo-progress-fill {
@@ -2773,6 +2784,7 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
+  height: 100dvh;
   background: rgba(11, 25, 44, 0.82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -2780,7 +2792,13 @@ button {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: clamp(12px, 3vw, 24px);
+  padding-top: max(clamp(12px, 3vw, 24px), env(safe-area-inset-top));
+  padding-bottom: max(clamp(12px, 3vw, 24px), env(safe-area-inset-bottom));
+  padding-left: max(clamp(12px, 3vw, 24px), env(safe-area-inset-left));
+  padding-right: max(clamp(12px, 3vw, 24px), env(safe-area-inset-right));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-backdrop.open {
@@ -2800,7 +2818,10 @@ button {
   max-width: 680px;
   width: 100%;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 90vh;
+  max-height: 90dvh;
+  -webkit-overflow-scrolling: touch;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -2964,8 +2985,17 @@ button {
 }
 
 /* ==========================================================================
-   Responsive Breakpoints
+   Responsive Breakpoints - Optimized for Mobile Browsers & Foldable Phones
+   (Covers Foldable Cover Screens 280px-344px, Mobiles 360px-430px,
+    and Foldables Unfolded / Small Tablets 600px-900px)
    ========================================================================== */
+
+/* Prevent horizontal page blowout across all screens */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 @media (max-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -3036,28 +3066,67 @@ button {
   }
 }
 
+/* Foldables Unfolded & Small Tablets (600px - 880px) */
+@media (min-width: 601px) and (max-width: 880px) {
+  .videos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .services-grid-5 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .square-cards-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Standard Mobile & Foldables Folded Orientation (<= 768px) */
 @media (max-width: 768px) {
   :root {
-    --header-height: 70px;
+    --header-height: 68px;
+  }
+
+  .header {
+    height: calc(var(--header-height) + env(safe-area-inset-top, 0px));
+    padding-top: env(safe-area-inset-top, 0px);
   }
 
   .section {
-    padding: 70px 0;
+    padding: 56px 0;
+  }
+
+  .section-heading {
+    font-size: clamp(1.8rem, 6vw, 2.3rem);
   }
 
   .nav-menu {
     position: fixed;
-    top: var(--header-height);
+    top: calc(var(--header-height) + env(safe-area-inset-top, 0px));
     left: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     flex-direction: column;
     padding: 24px;
-    gap: 20px;
+    padding-bottom: max(24px, env(safe-area-inset-bottom, 24px));
+    gap: 18px;
     border-bottom: 1px solid var(--border-ice);
     box-shadow: var(--shadow-lg);
     display: none;
+    max-height: calc(100dvh - var(--header-height) - env(safe-area-inset-top, 0px));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Critical Dark Mode Mobile Menu Fix */
+  [data-theme="dark"] .nav-menu {
+    background: rgba(12, 23, 43, 0.98);
+    border-bottom-color: rgba(56, 189, 248, 0.22);
   }
 
   .nav-menu.open {
@@ -3075,11 +3144,20 @@ button {
   .nav-menu .mobile-contact-btn {
     display: flex;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 8px;
   }
 
   .demos-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .demo-card {
+    padding: 22px 18px;
+  }
+
+  .demo-player-body {
+    padding: 16px 14px;
   }
 
   .videos-grid {
@@ -3094,19 +3172,47 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .service-card {
+    padding: 24px 20px;
+  }
+
   .square-cards-row {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .square-exp-card {
+    aspect-ratio: auto;
+    min-height: 120px;
+    padding: 16px 12px;
   }
 
   .edu-cert-grid {
     grid-template-columns: 1fr;
   }
 
+  .spec-sheet-card {
+    padding: 28px 20px;
+  }
+
+  .mic-interactive-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .mic-specs-grid {
+    grid-template-columns: 1fr;
+  }
+
   .article-row-item {
     flex-direction: column;
     align-items: flex-start;
-    padding: 16px 20px;
+    padding: 16px 18px;
     gap: 10px;
+  }
+
+  .footer-contact-section {
+    padding-top: 60px;
+    padding-bottom: max(32px, env(safe-area-inset-bottom, 32px));
   }
 
   .footer-bottom {
@@ -3114,32 +3220,276 @@ button {
     text-align: center;
     gap: 12px;
   }
-
-  .mic-specs-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
-@media (max-width: 480px) {
-  .shorts-grid {
-    grid-template-columns: 1fr;
+/* Compact Mobile (<= 560px) */
+@media (max-width: 560px) {
+  .hero-name {
+    font-size: clamp(2.1rem, 7.5vw, 2.7rem);
   }
 
-  .hero-name {
-    font-size: 2.3rem;
+  .hero-headline {
+    font-size: clamp(1.25rem, 4.8vw, 1.55rem);
   }
 
   .hero-image {
-    height: 380px;
+    height: clamp(320px, 48vh, 390px);
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .demo-controls-row {
     flex-direction: column;
     align-items: stretch;
-    gap: 16px;
+    gap: 14px;
   }
 
   .demo-btn-group {
     justify-content: center;
+  }
+
+  .waveform-bars-wrap {
+    height: 42px;
+    gap: 2.5px;
+  }
+
+  .demo-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .demo-badges-group {
+    justify-content: center;
+  }
+
+  .demo-footer-actions {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .demo-vol-wrap {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .shorts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .yt-channel-callout {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .yt-callout-text {
+    text-align: center;
+  }
+
+  .yt-channel-callout .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Ultra-Narrow Mobile & Foldable Cover Screens (<= 380px, e.g. Galaxy Z Fold outer: 280px-344px) */
+@media (max-width: 380px) {
+  :root {
+    --header-height: 62px;
+  }
+
+  .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Header scaling to prevent overflow */
+  .brand {
+    gap: 8px;
+  }
+
+  .brand-logo-wrap {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+  }
+
+  .brand-logo {
+    width: 22px;
+    height: 22px;
+  }
+
+  .brand-name {
+    font-size: 1.05rem;
+  }
+
+  /* Hide tagline on ultra-narrow screens so brand fits cleanly without wrapping */
+  .brand-tagline {
+    display: none;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .theme-toggle-btn, .mobile-toggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .theme-toggle-btn svg, .mobile-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Hero adjustments */
+  .hero-name {
+    font-size: 1.95rem;
+  }
+
+  .hero-headline {
+    font-size: 1.2rem;
+  }
+
+  .hero-subheadline {
+    font-size: 0.95rem;
+  }
+
+  .hero-badge-overlay {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    padding: 8px 12px;
+  }
+
+  .hero-badge-text {
+    font-size: 11px;
+  }
+
+  .hero-badge-location {
+    font-size: 9.5px;
+  }
+
+  /* Audio player fit for 280px-340px */
+  .demo-card {
+    padding: 16px 12px;
+  }
+
+  .demo-player-body {
+    padding: 12px 8px;
+  }
+
+  .wave-bar {
+    min-width: 1px;
+  }
+
+  .waveform-bars-wrap {
+    gap: 1.5px;
+    height: 34px;
+  }
+
+  .demo-step-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .demo-play-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .demo-play-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .demo-step-btn svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .filter-tab-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* Single column for brand cards on ultra-narrow screen */
+  .square-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  .spec-sheet-card {
+    padding: 20px 14px;
+  }
+
+  .spec-sheet-title {
+    font-size: 1.2rem;
+  }
+
+  .service-card {
+    padding: 20px 14px;
+  }
+
+  .service-title {
+    font-size: 1.1rem;
+  }
+
+  .articles-sheet-header {
+    padding: 16px 12px;
+  }
+
+  .articles-sheet-heading {
+    font-size: 1.15rem;
+  }
+
+  .article-row-item {
+    padding: 12px 10px;
+  }
+
+  .contact-hub-heading {
+    font-size: 1.65rem;
+  }
+
+  .social-link-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .mic-modal-body {
+    padding: 20px 12px;
+  }
+
+  .mic-modal-title {
+    font-size: 1.25rem;
+  }
+
+  .mic-modal-icon {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* Dual-Screen & Foldable Spanning Support */
+@media (horizontal-viewport-segments: 2), (spanning: single-fold-vertical) {
+  .hero-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+
+  .specs-grid-wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .videos-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
