@@ -3021,6 +3021,625 @@ button {
 }
 
 /* ==========================================================================
+   High-Conversion Booking Tools Styles
+   (Audition Callout, Specs Actions, Booking & EPK Modals)
+   ========================================================================== */
+
+/* 1. Custom Sample Audition Callout Banner */
+.audition-callout-card {
+  margin-top: 36px;
+  background: linear-gradient(135deg, rgba(237, 244, 251, 0.95) 0%, rgba(225, 238, 249, 0.95) 100%);
+  border: 1.5px solid var(--border-ice);
+  border-radius: var(--radius-lg);
+  padding: 32px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.audition-callout-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--blue-primary) 0%, var(--blue-secondary) 100%);
+}
+
+[data-theme="dark"] .audition-callout-card {
+  background: linear-gradient(135deg, #0C172B 0%, #101F38 100%);
+  border-color: rgba(56, 189, 248, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.audition-callout-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 680px;
+}
+
+.audition-callout-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--blue-primary);
+  letter-spacing: 0.8px;
+}
+
+.audition-callout-title {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--navy-deep);
+  line-height: 1.25;
+}
+
+.audition-callout-desc {
+  font-size: 14.5px;
+  color: var(--slate-text);
+  line-height: 1.6;
+}
+
+.audition-callout-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.audition-callout-action .btn {
+  white-space: nowrap;
+}
+
+.audition-callout-hint {
+  font-size: 11.5px;
+  color: var(--slate-muted);
+  text-align: center;
+}
+
+/* 2. Specs Section Action Bar (Directed Session & EPK) */
+.specs-actions-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.specs-action-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-ice);
+  border-radius: var(--radius-lg);
+  padding: 30px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.specs-action-card:hover {
+  border-color: var(--blue-primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+[data-theme="dark"] .specs-action-card {
+  background: var(--bg-card);
+  border-color: rgba(56, 189, 248, 0.18);
+}
+
+.specs-action-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  background: var(--bg-ice-light);
+  border: 1px solid var(--border-ice);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue-primary);
+}
+
+[data-theme="dark"] .specs-action-icon {
+  background: var(--bg-ice-medium);
+  border-color: rgba(56, 189, 248, 0.2);
+}
+
+.specs-action-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+}
+
+.specs-action-tag {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--blue-primary);
+  letter-spacing: 0.8px;
+}
+
+.specs-action-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--navy-deep);
+  line-height: 1.3;
+  margin-top: 4px;
+}
+
+.specs-action-desc {
+  font-size: 14px;
+  color: var(--slate-text);
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+.specs-action-card .btn {
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
+}
+
+/* 3. Booking & Form Modals */
+.booking-modal-card {
+  max-width: 680px;
+  width: 100%;
+}
+
+.booking-modal-body {
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.booking-modal-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-ice);
+}
+
+.booking-modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background: var(--bg-ice-light);
+  border: 1px solid var(--border-ice);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue-primary);
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .booking-modal-icon {
+  background: var(--bg-ice-medium);
+}
+
+.booking-modal-icon svg {
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
+}
+
+.booking-modal-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--blue-primary);
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+.booking-modal-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--navy-deep);
+  line-height: 1.25;
+}
+
+.booking-modal-subtitle {
+  font-size: 13.5px;
+  color: var(--slate-text);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--navy-deep);
+}
+
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-main);
+  border: 1px solid var(--border-ice);
+  color: var(--navy-deep);
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 3px var(--blue-subtle);
+  background: var(--bg-surface);
+}
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-textarea,
+[data-theme="dark"] .form-select {
+  background: #091322;
+  border-color: rgba(56, 189, 248, 0.2);
+  color: #F1F5F9;
+}
+
+[data-theme="dark"] .form-input:focus,
+[data-theme="dark"] .form-textarea:focus,
+[data-theme="dark"] .form-select:focus {
+  border-color: var(--blue-primary);
+  background: #0D1B30;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.tone-pills-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tone-pill {
+  cursor: pointer;
+  user-select: none;
+}
+
+.tone-pill input {
+  display: none;
+}
+
+.tone-pill span {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--bg-main);
+  border: 1px solid var(--border-ice);
+  color: var(--slate-text);
+  transition: all var(--transition-fast);
+}
+
+.tone-pill input:checked + span {
+  background: var(--blue-primary);
+  color: #FFFFFF;
+  border-color: var(--blue-primary);
+  box-shadow: 0 3px 10px var(--blue-glow);
+}
+
+[data-theme="dark"] .tone-pill span {
+  background: #0D1B30;
+  border-color: rgba(56, 189, 248, 0.16);
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .tone-pill input:checked + span {
+  background: var(--blue-primary);
+  color: #FFFFFF;
+}
+
+.booking-form-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.btn-whatsapp {
+  background: #25D366;
+  color: #FFFFFF;
+  border: 1px solid #1EBE5D;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-whatsapp svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.btn-whatsapp:hover {
+  background: #1EBE5D;
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.3);
+  transform: translateY(-2px);
+}
+
+.form-success-banner {
+  background: rgba(37, 211, 102, 0.12);
+  border: 1px solid rgba(37, 211, 102, 0.4);
+  color: #0F5132;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+}
+
+[data-theme="dark"] .form-success-banner {
+  background: rgba(37, 211, 102, 0.15);
+  color: #4ADE80;
+}
+
+/* 4. Instant EPK & Rate Sheet One-Sheet */
+.epk-modal-card {
+  max-width: 860px;
+  width: 100%;
+}
+
+.epk-sheet {
+  padding: 32px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.epk-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--border-ice);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.epk-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.epk-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--blue-primary);
+  box-shadow: 0 4px 14px var(--blue-glow);
+}
+
+.epk-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--blue-primary);
+  letter-spacing: 0.8px;
+}
+
+.epk-name {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--navy-deep);
+  line-height: 1.2;
+}
+
+.epk-roles {
+  font-size: 13px;
+  color: var(--slate-text);
+  margin-top: 2px;
+}
+
+.epk-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.epk-box {
+  background: var(--bg-ice-light);
+  border: 1px solid var(--border-ice);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+[data-theme="dark"] .epk-box {
+  background: #0E1A2E;
+  border-color: rgba(56, 189, 248, 0.16);
+}
+
+.epk-box-title {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--blue-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-ice);
+  padding-bottom: 6px;
+}
+
+.epk-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--slate-text);
+  line-height: 1.45;
+}
+
+.epk-list strong {
+  color: var(--navy-deep);
+}
+
+.epk-rate-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.epk-section-heading {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.epk-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border-ice);
+  border-radius: var(--radius-md);
+}
+
+.epk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  text-align: left;
+}
+
+.epk-table th {
+  background: var(--bg-ice-medium);
+  padding: 10px 14px;
+  font-weight: 700;
+  color: var(--navy-deep);
+  border-bottom: 1px solid var(--border-ice);
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .epk-table th {
+  background: #14243D;
+  color: #F1F5F9;
+}
+
+.epk-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-ice);
+  color: var(--slate-text);
+}
+
+.epk-table tr:last-child td {
+  border-bottom: none;
+}
+
+.epk-table td strong {
+  color: var(--navy-deep);
+}
+
+.epk-rate-note {
+  font-size: 11.5px;
+  color: var(--slate-muted);
+  font-style: italic;
+}
+
+.epk-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-ice);
+  font-size: 12px;
+  color: var(--slate-text);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.epk-contact-item strong {
+  color: var(--blue-primary);
+}
+
+/* Print Stylesheet for EPK PDF Export */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #epk-modal, #epk-modal * {
+    visibility: visible;
+  }
+  #epk-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  .epk-modal-card {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+  }
+  .modal-close-btn, .epk-print-action {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
    Responsive Breakpoints - Optimized for Mobile Browsers & Foldable Phones
    (Covers Foldable Cover Screens 280px-344px, Mobiles 360px-430px,
     and Foldables Unfolded / Small Tablets 600px-900px)
@@ -3382,6 +4001,86 @@ html, body {
     flex-direction: column;
     text-align: center;
     gap: 12px;
+  }
+
+  /* Booking & EPK Mobile Overrides */
+  .audition-callout-card {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 24px 18px;
+    gap: 20px;
+  }
+
+  .audition-callout-badge {
+    justify-content: center;
+  }
+
+  .audition-callout-action {
+    width: 100%;
+  }
+
+  .audition-callout-action .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .specs-actions-bar {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 28px;
+  }
+
+  .specs-action-card {
+    padding: 22px 18px;
+  }
+
+  .form-row-2, .form-row-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-form-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-modal-body {
+    padding: 24px 18px;
+  }
+
+  .booking-modal-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .epk-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .epk-sheet {
+    padding: 20px 14px;
+    gap: 18px;
+  }
+
+  .epk-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .epk-brand-block {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .epk-print-action .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .epk-footer {
+    flex-direction: column;
+    text-align: center;
   }
 }
 
