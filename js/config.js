@@ -117,7 +117,7 @@ window.PORTFOLIO_CONFIG = {
     },
     {
       id: "demo-3",
-      title: "Mohan Judaro",
+      title: "Mohenjo-daro",
       type: "documentary",
       category: "Documentary Demo",
       description: "Authoritative, deep historical narration with measured cadence, dramatic weight, and resonant archaeological storytelling.",

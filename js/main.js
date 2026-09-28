@@ -346,7 +346,7 @@ function initAudioPlayers() {
     [28, 42, 60, 78, 55, 72, 92, 65, 48, 82, 98, 74, 58, 88, 82, 45, 62, 94, 82, 58, 72, 88, 68, 48, 78, 62, 45, 68, 52, 38, 26, 18],
     // 2. Cart Pop (Punchy, energetic retail commercial bursts)
     [32, 58, 92, 75, 88, 100, 82, 64, 96, 78, 54, 86, 98, 68, 48, 74, 92, 86, 64, 78, 96, 100, 72, 52, 82, 68, 48, 64, 42, 32, 22, 16],
-    // 3. Mohan Judaro (Deep historical bass, measured cadence)
+    // 3. Mohenjo-daro (Deep historical bass, measured cadence)
     [22, 38, 58, 76, 88, 74, 56, 72, 84, 94, 82, 68, 88, 98, 76, 62, 82, 92, 72, 58, 76, 86, 92, 72, 52, 66, 52, 42, 32, 26, 20, 16],
     // 4. Tiger Sharks (Atmospheric, predatory suspense crescendos)
     [26, 52, 72, 94, 86, 62, 82, 92, 98, 76, 62, 86, 96, 72, 58, 76, 92, 86, 66, 82, 96, 72, 62, 86, 66, 52, 42, 56, 42, 32, 22, 16]
