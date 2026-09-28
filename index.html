@@ -737,6 +737,33 @@
           </article>
 
         </div>
+
+        <!-- High-Conversion Custom Sample Audition Callout Banner -->
+        <div class="audition-callout-card">
+          <div class="audition-callout-content">
+            <div class="audition-callout-badge">
+              <span class="pulse-dot" aria-hidden="true"></span>
+              <span>Fast 24-Hour Turnaround &bull; Complimentary</span>
+            </div>
+            <h3 class="audition-callout-title">Need a Custom Audition for Your Script?</h3>
+            <p class="audition-callout-desc">
+              Have a campaign, documentary, or commercial script? Send 20–40 words and Soundriya will record and deliver a tailored 15-second vocal audition in your required tone within 24 hours.
+            </p>
+          </div>
+          <div class="audition-callout-action">
+            <button type="button" class="btn btn-primary btn-lg" data-open-audition-modal>
+              <span>Request Custom 15-Sec Sample</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </button>
+            <div class="audition-callout-hint">Direct studio recording &bull; No agency markup</div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -1301,6 +1328,60 @@
             </div>
           </div>
 
+        </div>
+
+        <!-- Studio & Casting Client Actions: Live Directed Session & EPK Download -->
+        <div class="specs-actions-bar">
+          <div class="specs-action-card">
+            <div class="specs-action-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="specs-action-info">
+              <span class="specs-action-tag">Remote Studio Patch</span>
+              <h3 class="specs-action-title">Book a Live Directed Recording Session</h3>
+              <p class="specs-action-desc">
+                Direct Soundriya live in real-time from Mumbai, Bangalore, London, New York, or anywhere via Source-Connect, Cleanfeed Pro, Zoom, or Google Meet.
+              </p>
+            </div>
+            <button type="button" class="btn btn-primary" data-open-session-modal>
+              <span>Schedule Directed Session</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="specs-action-card">
+            <div class="specs-action-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <div class="specs-action-info">
+              <span class="specs-action-tag">Casting &amp; Producer Kit</span>
+              <h3 class="specs-action-title">Instant EPK &amp; Rate Sheet (PDF One-Sheet)</h3>
+              <p class="specs-action-desc">
+                Download Soundriya's verified casting one-sheet with vocal characteristics, studio hardware specs, and baseline commercial rate guidelines.
+              </p>
+            </div>
+            <button type="button" class="btn btn-secondary" data-open-epk-modal>
+              <span>View EPK &amp; Rate Card</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
       </div>
@@ -2034,8 +2115,315 @@
     </div>
   </div>
 
+  <!-- ==========================================================================
+       1. Custom 15-Second Sample Audition Request Modal
+       ========================================================================== -->
+  <div id="audition-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card booking-modal-card">
+      <button class="modal-close-btn" data-close-modal aria-label="Close Audition Request Form">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div class="booking-modal-body">
+        <div class="booking-modal-header">
+          <div class="booking-modal-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+          </div>
+          <div>
+            <div class="booking-modal-badge">Complimentary Audition Service</div>
+            <h3 class="booking-modal-title">Request a Custom 15-Sec Voice Sample</h3>
+            <p class="booking-modal-subtitle">
+              Paste 20–40 words of your script. Soundriya will record and deliver a tailored vocal sample within 24 hours.
+            </p>
+          </div>
+        </div>
+
+        <form id="audition-request-form" class="booking-form">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="audition-name" class="form-label">Your Name &amp; Company / Agency</label>
+              <input type="text" id="audition-name" class="form-input" placeholder="e.g., Alex Sharma &bull; Dentsu Creative" required>
+            </div>
+            <div class="form-group">
+              <label for="audition-email" class="form-label">Email Address (For MP3 Delivery)</label>
+              <input type="email" id="audition-email" class="form-input" placeholder="e.g., alex@agency.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Desired Tone &amp; Style</label>
+            <div class="tone-pills-selector">
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Commercial (Warm &amp; Conversational)" checked><span>Commercial (Warm &amp; Conversational)</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Commercial (Energetic &amp; Retail)"><span>Commercial (Energetic &amp; Retail)</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Documentary (Deep &amp; Authoritative)"><span>Documentary (Deep &amp; Authoritative)</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Corporate &amp; E-Learning (Professional)"><span>Corporate &amp; E-Learning</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="News &amp; Television Bulletin"><span>Broadcast Journalism</span></label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="audition-script" class="form-label">Script Excerpt (20 to 50 words)</label>
+            <textarea id="audition-script" class="form-textarea" rows="3" placeholder="Paste your script lines here. E.g.: 'Introducing Bella Tavola. Where ancient Italian culinary mastery meets modern dining grace. Taste the authenticity tonight.'" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="audition-notes" class="form-label">Pronunciation &amp; Pace Notes (Optional)</label>
+            <input type="text" id="audition-notes" class="form-input" placeholder="e.g., Medium pace, slight pause after brand name, neutral accent">
+          </div>
+
+          <div class="booking-form-actions">
+            <button type="button" id="audition-send-wa" class="btn btn-whatsapp">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+              </svg>
+              <span>Submit via WhatsApp (Instant)</span>
+            </button>
+            <button type="submit" id="audition-send-email" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span>Submit via Email</span>
+            </button>
+          </div>
+          <div id="audition-success-msg" class="form-success-banner" style="display: none;"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       2. Live Directed Recording Session Booking Modal
+       ========================================================================== -->
+  <div id="session-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card booking-modal-card">
+      <button class="modal-close-btn" data-close-modal aria-label="Close Directed Session Scheduler">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div class="booking-modal-body">
+        <div class="booking-modal-header">
+          <div class="booking-modal-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <div>
+            <div class="booking-modal-badge">Remote Studio Patch</div>
+            <h3 class="booking-modal-title">Schedule a Live Directed Session</h3>
+            <p class="booking-modal-subtitle">
+              Direct Soundriya in real time via Source-Connect, Cleanfeed, Zoom, or Google Meet with pristine low-latency monitoring.
+            </p>
+          </div>
+        </div>
+
+        <form id="session-request-form" class="booking-form">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="session-director" class="form-label">Director / Producer Name &amp; Agency</label>
+              <input type="text" id="session-director" class="form-input" placeholder="e.g., Rahul Verma &bull; Studio Post Mumbai" required>
+            </div>
+            <div class="form-group">
+              <label for="session-email" class="form-label">Work Email</label>
+              <input type="email" id="session-email" class="form-input" placeholder="e.g., rahul@studiopost.in" required>
+            </div>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label for="session-date" class="form-label">Preferred Date</label>
+              <input type="date" id="session-date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="session-time" class="form-label">Time Window (IST / Remote)</label>
+              <select id="session-time" class="form-select" required>
+                <option value="Morning (10:00 AM - 01:00 PM IST)">Morning (10:00 AM - 01:00 PM IST)</option>
+                <option value="Afternoon (02:00 PM - 05:00 PM IST)" selected>Afternoon (02:00 PM - 05:00 PM IST)</option>
+                <option value="Evening (06:00 PM - 09:00 PM IST)">Evening (06:00 PM - 09:00 PM IST)</option>
+                <option value="Late Night / US &amp; EU Timezones">Late Night / US &amp; EU Timezones</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="session-platform" class="form-label">Remote Platform</label>
+              <select id="session-platform" class="form-select" required>
+                <option value="Cleanfeed Pro (Lossless Audio)" selected>Cleanfeed Pro (Lossless Audio)</option>
+                <option value="Source-Connect Now">Source-Connect Now</option>
+                <option value="Zoom Audio (High Fidelity)">Zoom (Hi-Fi Mode)</option>
+                <option value="Google Meet">Google Meet</option>
+                <option value="Phone Patch / WhatsApp Call">Phone Patch</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="session-project" class="form-label">Project Details &amp; Estimated Duration</label>
+            <input type="text" id="session-project" class="form-input" placeholder="e.g., 45-second TV commercial, estimated 30-45 minutes directed recording">
+          </div>
+
+          <div class="booking-form-actions">
+            <button type="button" id="session-send-wa" class="btn btn-whatsapp">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+              </svg>
+              <span>Confirm via WhatsApp (Fastest)</span>
+            </button>
+            <button type="submit" id="session-send-email" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span>Submit via Email</span>
+            </button>
+          </div>
+          <div id="session-success-msg" class="form-success-banner" style="display: none;"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       3. Instant EPK (Electronic Press Kit) & Rate Card One-Sheet Modal
+       ========================================================================== -->
+  <div id="epk-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card epk-modal-card">
+      <button class="modal-close-btn" data-close-modal aria-label="Close EPK One-Sheet">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div class="epk-sheet" id="printable-epk-sheet">
+        <!-- Top EPK Header Bar -->
+        <div class="epk-header">
+          <div class="epk-brand-block">
+            <img src="assets/images/soundriya-rathore-main.jpg" alt="Soundriya Rathore" class="epk-avatar" width="70" height="70">
+            <div>
+              <span class="epk-badge">Official Casting One-Sheet &bull; 2026</span>
+              <h2 class="epk-name">Soundriya Rathore</h2>
+              <div class="epk-roles">Voice Artist &bull; Live EMCEE &bull; Television Journalist</div>
+            </div>
+          </div>
+          <div class="epk-print-action">
+            <button type="button" class="btn btn-primary btn-sm" id="epk-print-btn" title="Save or Print as PDF">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 6 2 18 2 18 9"/>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                <rect x="6" y="14" width="12" height="8"/>
+              </svg>
+              <span>Print / Save PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3-Column EPK Overview Grid -->
+        <div class="epk-grid-3">
+          <div class="epk-box">
+            <div class="epk-box-title">Vocal Profile</div>
+            <ul class="epk-list">
+              <li><strong>Languages:</strong> Hindi (Native), English (Neutral / Indian Broadcast), Urdu</li>
+              <li><strong>Tone Archetypes:</strong> Warm, Corporate, Sophisticated, Authoritative, Conversational</li>
+              <li><strong>Vocal Age:</strong> 22 – 38 Years</li>
+              <li><strong>Turnaround:</strong> Within 12 – 24 Hours</li>
+            </ul>
+          </div>
+
+          <div class="epk-box">
+            <div class="epk-box-title">Studio &amp; Hardware</div>
+            <ul class="epk-list">
+              <li><strong>Microphones:</strong> Sennheiser MK4 XLR, Fifine AM8 Dynamic</li>
+              <li><strong>Interface:</strong> Focusrite Scarlett 2i2 Gen 4</li>
+              <li><strong>Booth:</strong> Custom Acoustic Treatment &amp; Reflection Shields</li>
+              <li><strong>DAW:</strong> Adobe Audition CC / Reaper (24-bit 48kHz WAV / MP3)</li>
+            </ul>
+          </div>
+
+          <div class="epk-box">
+            <div class="epk-box-title">Remote Connectivity</div>
+            <ul class="epk-list">
+              <li><strong>Source-Connect:</strong> Source-Connect Now</li>
+              <li><strong>Cleanfeed:</strong> Pro Lossless Remote Link</li>
+              <li><strong>Web Conferencing:</strong> Zoom (Hi-Fi), Google Meet</li>
+              <li><strong>Monitoring:</strong> Audio-Technica ATH-M50x</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Rate Card Guidelines Table -->
+        <div class="epk-rate-section">
+          <h4 class="epk-section-heading">Commercial &amp; Narration Baseline Rate Guide (Standard Estimates)</h4>
+          <div class="epk-table-wrap">
+            <table class="epk-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Usage Scope</th>
+                  <th>Delivery</th>
+                  <th>Guideline Range (INR)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Digital / Social Commercial</strong></td>
+                  <td>YouTube, Instagram, LinkedIn, Web (1-Year Buyout)</td>
+                  <td>Raw &amp; Mastered WAV</td>
+                  <td>Available on Brief</td>
+                </tr>
+                <tr>
+                  <td><strong>Television &amp; Radio Commercial</strong></td>
+                  <td>Regional / National Broadcast Flight</td>
+                  <td>Full Broadcast Spec</td>
+                  <td>Available on Brief</td>
+                </tr>
+                <tr>
+                  <td><strong>Corporate AV &amp; Explainer</strong></td>
+                  <td>Internal Training, B2B Video, Website</td>
+                  <td>Per Finished Minute</td>
+                  <td>Available on Brief</td>
+                </tr>
+                <tr>
+                  <td><strong>Documentary Narration</strong></td>
+                  <td>Long-form, OTT, Educational, Museum Audio</td>
+                  <td>Full Edited Audio</td>
+                  <td>Available on Brief</td>
+                </tr>
+                <tr>
+                  <td><strong>Live Event EMCEE / Hosting</strong></td>
+                  <td>Corporate Summit, Award Night, Gala</td>
+                  <td>Half-Day / Full-Day</td>
+                  <td>Available on Brief</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="epk-rate-note">
+            Rates vary based on script word count, usage rights, broadcast cycle, and live direction. Inquire with your project brief for exact quote.
+          </div>
+        </div>
+
+        <!-- EPK Footer Contact Details -->
+        <div class="epk-footer">
+          <div class="epk-contact-item">
+            <strong>Email:</strong> Soundriyarathore221@gmail.com
+          </div>
+          <div class="epk-contact-item">
+            <strong>Direct / WhatsApp:</strong> +91 8107849819
+          </div>
+          <div class="epk-contact-item">
+            <strong>Portfolio:</strong> soundriyarathore.vercel.app
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts: Config First, then Main JS -->
-  <script src="js/config.js?v=2.2"></script>
-  <script src="js/main.js?v=2.2"></script>
+  <script src="js/config.js?v=2.3"></script>
+  <script src="js/main.js?v=2.3"></script>
 </body>
 </html>
