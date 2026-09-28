@@ -1,8 +1,8 @@
 export default async function handler(req, res) {
-  // CORS & 1-hour Edge caching with 24-hour stale-while-revalidate
+  // CORS & 30-minute Edge caching with 24-hour stale-while-revalidate
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
-  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+  res.setHeader('Cache-Control', 's-maxage=1800, stale-while-revalidate=86400');
 
   const CHANNEL_ID = 'UCm3C__y6F_KLPH-D-5Rc4jQ';
   const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
