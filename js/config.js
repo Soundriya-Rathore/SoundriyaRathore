@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Soundriya Rathore - Website Content Configuration
  * ===================================================
  * You can easily edit any video, voice demo, article, or contact detail here!
@@ -75,7 +75,7 @@ window.PORTFOLIO_CONFIG = {
   shorts: [
     {
       youtubeId: "tZ2_A4lClK4",
-      title: "Rang Barse Holi Celebration | Live Event Emcee & Hosting | Soundriya Rathore",
+      title: "Rang Barse Holi Celebration | Live Event Emcee &amp; Hosting | Soundriya Rathore",
       label: "Cultural Festival"
     },
     {
@@ -85,7 +85,7 @@ window.PORTFOLIO_CONFIG = {
     },
     {
       youtubeId: "RaWw6AJ6XVo",
-      title: "Alumni Meet Host & Anchor | GKFTII Formal Stage Event | Soundriya Rathore",
+      title: "Alumni Meet Host &amp; Anchor | GKFTII Formal Stage Event | Soundriya Rathore",
       label: "Institutional Gala"
     },
     {
@@ -228,4 +228,6 @@ window.PORTFOLIO_CONFIG = {
     }
   ]
 };
+
+
 
