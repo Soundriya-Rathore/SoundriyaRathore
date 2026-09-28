@@ -41,13 +41,13 @@ window.PORTFOLIO_CONFIG = {
     },
     {
       youtubeId: "H-G96ClEFME",
-      title: "War Journalism Risks &amp; Ethics || Podcast by Soundriya Rathore",
+      title: "War Journalism Risks & Ethics || Podcast by Soundriya Rathore",
       category: "Dialogue & Audio-Visual",
       badge: "Podcast"
     },
     {
       youtubeId: "g-Sd6AoYXt4",
-      title: "ΓüáReporting- Piece to Camera",
+      title: "⁠Reporting- Piece to Camera",
       category: "Field Journalism",
       badge: "Field Reporting"
     },
