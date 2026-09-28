@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initShortsToggle();
   initArticlesAccordion();
   initMicModal();
+  initBookingTools();
   initScrollSpy();
   initContactActions();
 
@@ -208,7 +209,7 @@ function initYouTubeVideoPlayers() {
     });
   });
 
-  // Close modals
+  // Universal Close modals
   const closeModal = () => {
     if (videoModal) {
       videoModal.classList.remove('open');
@@ -216,10 +217,11 @@ function initYouTubeVideoPlayers() {
     }
     const micModal = document.getElementById('mic-modal');
     if (micModal) micModal.classList.remove('open');
+    document.querySelectorAll('.modal-backdrop.open').forEach(m => m.classList.remove('open'));
     document.body.style.overflow = '';
   };
 
-  modalCloseBtns.forEach(btn => btn.addEventListener('click', closeModal));
+  document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', closeModal));
 
   // Close on backdrop click
   document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
@@ -799,3 +801,147 @@ function initContactActions() {
     });
   });
 }
+
+/* ==========================================================================
+   High-Conversion Booking Tools (Audition Request, Session Booking, EPK)
+   ========================================================================== */
+function initBookingTools() {
+  const auditionModal = document.getElementById('audition-modal');
+  const sessionModal = document.getElementById('session-modal');
+  const epkModal = document.getElementById('epk-modal');
+
+  // Open Audition Modal triggers
+  document.querySelectorAll('[data-open-audition-modal]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (auditionModal) {
+        auditionModal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  // Open Session Modal triggers
+  document.querySelectorAll('[data-open-session-modal]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (sessionModal) {
+        sessionModal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  // Open EPK Modal triggers
+  document.querySelectorAll('[data-open-epk-modal]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (epkModal) {
+        epkModal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  // EPK Print / Save as PDF Button
+  const epkPrintBtn = document.getElementById('epk-print-btn');
+  if (epkPrintBtn) {
+    epkPrintBtn.addEventListener('click', () => {
+      window.print();
+    });
+  }
+
+  // 1. Audition Form Handling
+  const auditionForm = document.getElementById('audition-request-form');
+  const auditionSendWa = document.getElementById('audition-send-wa');
+  const auditionSuccess = document.getElementById('audition-success-msg');
+
+  const getAuditionData = () => {
+    const name = document.getElementById('audition-name')?.value.trim() || 'Client';
+    const email = document.getElementById('audition-email')?.value.trim() || '';
+    const script = document.getElementById('audition-script')?.value.trim() || '';
+    const notes = document.getElementById('audition-notes')?.value.trim() || 'None';
+    const selectedTone = document.querySelector('input[name="audition-tone"]:checked')?.value || 'Commercial';
+    return { name, email, script, notes, tone: selectedTone };
+  };
+
+  if (auditionSendWa) {
+    auditionSendWa.addEventListener('click', () => {
+      const data = getAuditionData();
+      if (!data.script || !data.email) {
+        alert('Please enter your email and script excerpt so Soundriya can record your sample.');
+        return;
+      }
+      const message = `*Custom Audition Request for Soundriya Rathore*\n\n*Client / Agency:* ${data.name}\n*Email:* ${data.email}\n*Desired Tone:* ${data.tone}\n*Script Excerpt:*\n"${data.script}"\n\n*Notes:* ${data.notes}\n\n_Sent via soundriyarathore.vercel.app_`;
+      const waUrl = `https://wa.me/918107849819?text=${encodeURIComponent(message)}`;
+      window.open(waUrl, '_blank');
+      if (auditionSuccess) {
+        auditionSuccess.style.display = 'block';
+        auditionSuccess.textContent = 'Opening WhatsApp with your audition script! Soundriya will deliver your sample within 24 hours.';
+      }
+    });
+  }
+
+  if (auditionForm) {
+    auditionForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = getAuditionData();
+      const subject = `Custom 15-Sec Audition Request - ${data.name}`;
+      const body = `Hi Soundriya,\n\nI would like to request a complimentary 15-second vocal audition for our project:\n\nClient / Agency: ${data.name}\nEmail for MP3: ${data.email}\nDesired Tone: ${data.tone}\n\nScript Excerpt:\n"${data.script}"\n\nPronunciation/Pacing Notes:\n${data.notes}\n\nThank you!`;
+      const mailtoUrl = `mailto:Soundriyarathore221@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoUrl;
+      if (auditionSuccess) {
+        auditionSuccess.style.display = 'block';
+        auditionSuccess.textContent = 'Opening email client! Your audition details are populated. Send the email and Soundriya will reply with your custom sample.';
+      }
+    });
+  }
+
+  // 2. Session Booking Form Handling
+  const sessionForm = document.getElementById('session-request-form');
+  const sessionSendWa = document.getElementById('session-send-wa');
+  const sessionSuccess = document.getElementById('session-success-msg');
+
+  const getSessionData = () => {
+    const director = document.getElementById('session-director')?.value.trim() || 'Director';
+    const email = document.getElementById('session-email')?.value.trim() || '';
+    const date = document.getElementById('session-date')?.value || 'Upcoming';
+    const time = document.getElementById('session-time')?.value || 'Afternoon';
+    const platform = document.getElementById('session-platform')?.value || 'Cleanfeed';
+    const project = document.getElementById('session-project')?.value.trim() || 'Voiceover Session';
+    return { director, email, date, time, platform, project };
+  };
+
+  if (sessionSendWa) {
+    sessionSendWa.addEventListener('click', () => {
+      const data = getSessionData();
+      if (!data.director || !data.email || !data.date) {
+        alert('Please fill in your name, email, and preferred date.');
+        return;
+      }
+      const message = `*Live Directed Session Booking Request*\n\n*Director / Agency:* ${data.director}\n*Email:* ${data.email}\n*Preferred Date:* ${data.date}\n*Time Window:* ${data.time}\n*Remote Platform:* ${data.platform}\n*Project Details:* ${data.project}\n\n_Sent via soundriyarathore.vercel.app_`;
+      const waUrl = `https://wa.me/918107849819?text=${encodeURIComponent(message)}`;
+      window.open(waUrl, '_blank');
+      if (sessionSuccess) {
+        sessionSuccess.style.display = 'block';
+        sessionSuccess.textContent = 'Opening WhatsApp with your session details to confirm Soundriya\'s calendar!';
+      }
+    });
+  }
+
+  if (sessionForm) {
+    sessionForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = getSessionData();
+      const subject = `Live Directed Session Booking Request - ${data.director}`;
+      const body = `Hi Soundriya,\n\nWe would like to book a live directed recording session with you:\n\nDirector / Agency: ${data.director}\nEmail: ${data.email}\nPreferred Date: ${data.date}\nTime Window: ${data.time}\nPlatform: ${data.platform}\nProject: ${data.project}\n\nPlease confirm availability and send the session link.\n\nThank you!`;
+      const mailtoUrl = `mailto:Soundriyarathore221@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoUrl;
+      if (sessionSuccess) {
+        sessionSuccess.style.display = 'block';
+        sessionSuccess.textContent = 'Opening email client! Your session booking request is populated.';
+      }
+    });
+  }
+}
+
