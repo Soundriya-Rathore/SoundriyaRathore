@@ -35,37 +35,37 @@ window.PORTFOLIO_CONFIG = {
   featuredVideos: [
     {
       youtubeId: "KUt2m5-ysqY",
-      title: "The Psychology of Late-Night Thoughts || Talk Show by Soundriya Rathore",
+      title: "The Psychology of Late-Night Thoughts | Talk Show Hosted by Soundriya Rathore",
       category: "Moderation & Panel",
       badge: "Talk Show"
     },
     {
       youtubeId: "H-G96ClEFME",
-      title: "War Journalism Risks & Ethics || Podcast by Soundriya Rathore",
+      title: "War Journalism: Risks & Ethics | Media & Conflict Podcast | Soundriya Rathore",
       category: "Dialogue & Audio-Visual",
       badge: "Podcast"
     },
     {
       youtubeId: "g-Sd6AoYXt4",
-      title: "⁠Reporting- Piece to Camera",
-      category: "Field Journalism",
-      badge: "Field Reporting"
-    },
-    {
-      youtubeId: "jTtfGnU25Ns",
-      title: "Superfast News Bulletin",
+      title: "Field Reporting & Piece to Camera (PTC) | On-Location News | Soundriya Rathore",
       category: "Broadcast Journalism",
       badge: "Bulletin"
     },
     {
+      youtubeId: "jTtfGnU25Ns",
+      title: "Superfast News Bulletin | Rapid Headline Anchoring | Soundriya Rathore",
+      category: "News Studio Desk",
+      badge: "Anchoring"
+    },
+    {
       youtubeId: "NFFZtB_0Ymw",
-      title: "Studio Anchoring",
+      title: "Studio News Anchoring | Prime Time Bulletin | Soundriya Rathore",
       category: "News Studio Desk",
       badge: "Anchoring"
     },
     {
       youtubeId: "762kTKqRnyE",
-      title: "Documentary - Jagat Shiromani Documnetary Anchoring",
+      title: "Documentary: Jagat Shiromani Temple | Amer, Rajasthan | Soundriya Rathore",
       category: "Documentary Production",
       badge: "Documentary"
     }
@@ -75,22 +75,22 @@ window.PORTFOLIO_CONFIG = {
   shorts: [
     {
       youtubeId: "tZ2_A4lClK4",
-      title: "Rang Barse - Holi Event || Soundriya Rathore - Live event anchoring and Emceeing at GKFTII ||",
+      title: "Rang Barse Holi Celebration | Live Event Emcee & Hosting | Soundriya Rathore",
       label: "Cultural Festival"
     },
     {
       youtubeId: "D5Z4vR1B72c",
-      title: "Standup Comedy Night Host at Club Capri",
+      title: "Standup Comedy Night Host | Live Stage Emceeing | Soundriya Rathore",
       label: "Comedy & Entertainment"
     },
     {
       youtubeId: "RaWw6AJ6XVo",
-      title: "Alumni Meet Event Host at GKFTII",
+      title: "Alumni Meet Host & Anchor | GKFTII Formal Stage Event | Soundriya Rathore",
       label: "Institutional Gala"
     },
     {
       youtubeId: "jqCok9FnwF4",
-      title: "Digital Media - News Reel by Soundriya Rathore",
+      title: "Digital Media News Reel | Fast-Paced News Anchor | Soundriya Rathore",
       label: "Digital News Desk"
     }
   ],
