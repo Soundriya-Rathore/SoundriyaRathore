@@ -1,0 +1,15 @@
+# Sensitive OAuth credentials & tokens
+scripts/client_secrets.json
+scripts/youtube_token.json
+client_secret*.json
+*.pem
+*.key
+
+# Local development / temporary files
+.vercel
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Generated graphic design & thumbnail exports (hosted live on YouTube CDN)
+assets/thumbnails/
