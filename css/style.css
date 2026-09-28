@@ -115,6 +115,57 @@ html {
   overflow-x: hidden;
 }
 
+/* Typography Wrap Balance & Orphans Prevention (Pro Editorial Standard) */
+h1, h2, h3, h4, h5, h6,
+.hero-title, .section-heading, .demo-title, .video-card-name, .service-title {
+  text-wrap: balance;
+}
+
+p, .about-bio-text, .demo-description, .service-desc, .exp-desc, .audition-callout-desc {
+  text-wrap: pretty;
+}
+
+/* Modern Studio Selection Highlight */
+::selection {
+  background: rgba(0, 102, 255, 0.22);
+  color: var(--navy-deep);
+}
+[data-theme="dark"] ::selection {
+  background: rgba(56, 189, 248, 0.32);
+  color: #FFFFFF;
+}
+
+/* Sleek Minimalist Studio Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-ice);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--bg-main);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blue-secondary);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.28);
+  border-color: var(--bg-main);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--blue-primary);
+}
+
+/* Pro Accessibility Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--blue-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 body {
   font-family: var(--font-main);
   background-color: var(--bg-main);
@@ -284,6 +335,15 @@ button {
 
 .btn:hover svg {
   transform: translateX(3px);
+}
+
+.btn:active,
+.demo-play-btn:active,
+.demo-step-btn:active,
+.social-link-btn:active,
+.filter-tab-btn:active,
+.theme-toggle-btn:active {
+  transform: scale(0.96) translateY(1px);
 }
 
 .btn-primary {
@@ -1021,13 +1081,19 @@ button {
   border: 1.5px solid var(--border-ice);
   border-radius: var(--radius-lg);
   padding: 28px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 3px rgba(11, 25, 44, 0.04), 0 8px 24px -4px rgba(11, 25, 44, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.85);
   transition: all var(--transition-normal);
   display: flex;
   flex-direction: column;
   gap: 18px;
   position: relative;
   overflow: hidden;
+}
+
+.demo-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 102, 255, 0.35);
+  box-shadow: 0 14px 34px -4px rgba(0, 102, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .demo-card::before {
@@ -1044,11 +1110,16 @@ button {
 
 .demo-card.playing {
   border-color: var(--blue-primary);
-  box-shadow: 0 12px 34px rgba(0, 102, 255, 0.16);
+  box-shadow: 0 14px 36px rgba(0, 102, 255, 0.18), 0 0 0 1px var(--blue-primary), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .demo-card.playing::before {
   opacity: 1;
+}
+
+.demo-card.playing .wave-bar.played {
+  box-shadow: 0 0 6px var(--blue-glow);
+  filter: brightness(1.15);
 }
 
 .demo-header {
@@ -4371,5 +4442,15 @@ html, body {
 
   .videos-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Accessibility: Honor User Motion Sensitivity Preferences (WCAG AAA) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
