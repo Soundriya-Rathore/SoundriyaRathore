@@ -94,23 +94,32 @@ function initMobileMenu() {
   const navMenu = document.querySelector('.nav-menu');
   if (!toggleBtn || !navMenu) return;
 
+  const closeMenu = () => {
+    navMenu.classList.remove('open');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  };
+
   toggleBtn.addEventListener('click', () => {
     const isOpen = navMenu.classList.toggle('open');
     toggleBtn.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
   });
 
   const navLinks = navMenu.querySelectorAll('.nav-link, .mobile-contact-btn');
   navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      navMenu.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-    });
+    link.addEventListener('click', closeMenu);
   });
 
   document.addEventListener('click', (e) => {
     if (!navMenu.contains(e.target) && !toggleBtn.contains(e.target) && navMenu.classList.contains('open')) {
-      navMenu.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
+      closeMenu();
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && navMenu.classList.contains('open')) {
+      closeMenu();
     }
   });
 }
@@ -625,6 +634,25 @@ function initAudioPlayers() {
 
         window.addEventListener('mousemove', onVolMouseMove);
         window.addEventListener('mouseup', onVolMouseUp);
+      });
+
+      // Mobile Touch support for volume slider
+      volSlider.addEventListener('touchstart', (e) => {
+        if (!e.touches.length) return;
+        isVolDragging = true;
+        setVolume(calcVolumeFromEvent(e.touches[0].clientX));
+      }, { passive: true });
+
+      volSlider.addEventListener('touchmove', (e) => {
+        if (!isVolDragging || !e.touches.length) return;
+        setVolume(calcVolumeFromEvent(e.touches[0].clientX));
+      }, { passive: true });
+
+      volSlider.addEventListener('touchend', () => {
+        isVolDragging = false;
+      });
+      volSlider.addEventListener('touchcancel', () => {
+        isVolDragging = false;
       });
 
       // Keyboard support for accessibility
