@@ -87,26 +87,55 @@ function initHeader() {
 }
 
 /* ==========================================================================
-   Mobile Navigation Drawer
+   Mobile Navigation Drawer & Full Backdrop Dimmer
    ========================================================================== */
 function initMobileMenu() {
   const toggleBtn = document.querySelector('.mobile-toggle');
   const navMenu = document.querySelector('.nav-menu');
+  const navBackdrop = document.getElementById('nav-backdrop');
   if (!toggleBtn || !navMenu) return;
+
+  const hamburgerIcon = toggleBtn.querySelector('.hamburger-icon');
+  const closeIcon = toggleBtn.querySelector('.close-icon');
+
+  const updateToggleIcons = (isOpen) => {
+    if (hamburgerIcon && closeIcon) {
+      hamburgerIcon.style.display = isOpen ? 'none' : 'block';
+      closeIcon.style.display = isOpen ? 'block' : 'none';
+    }
+  };
 
   const closeMenu = () => {
     navMenu.classList.remove('open');
+    if (navBackdrop) navBackdrop.classList.remove('open');
     toggleBtn.setAttribute('aria-expanded', 'false');
+    updateToggleIcons(false);
     document.body.style.overflow = '';
   };
 
-  toggleBtn.addEventListener('click', () => {
-    const isOpen = navMenu.classList.toggle('open');
-    toggleBtn.setAttribute('aria-expanded', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+  const openMenu = () => {
+    navMenu.classList.add('open');
+    if (navBackdrop) navBackdrop.classList.add('open');
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    updateToggleIcons(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = navMenu.classList.contains('open');
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
   });
 
-  const navLinks = navMenu.querySelectorAll('.nav-link, .mobile-contact-btn');
+  if (navBackdrop) {
+    navBackdrop.addEventListener('click', closeMenu);
+  }
+
+  const navLinks = navMenu.querySelectorAll('.nav-link, .mobile-contact-btn a');
   navLinks.forEach(link => {
     link.addEventListener('click', closeMenu);
   });
