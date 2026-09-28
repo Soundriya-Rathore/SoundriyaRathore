@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Soundriya Rathore - Website Content Configuration
  * ===================================================
  * You can easily edit any video, voice demo, article, or contact detail here!
@@ -34,10 +34,28 @@ window.PORTFOLIO_CONFIG = {
   // 6 Featured YouTube Videos (Live in-page players matching Sara Secora's site)
   featuredVideos: [
     {
-      youtubeId: "762kTKqRnyE",
-      title: "Documentary Jagat Shiromani",
-      category: "Documentary Production",
-      badge: "Documentary"
+      youtubeId: "KUt2m5-ysqY",
+      title: "The Psychology of Late-Night Thoughts || Talk Show by Soundriya Rathore",
+      category: "Moderation & Panel",
+      badge: "Talk Show"
+    },
+    {
+      youtubeId: "H-G96ClEFME",
+      title: "War Journalism Risks &amp; Ethics || Podcast by Soundriya Rathore",
+      category: "Dialogue & Audio-Visual",
+      badge: "Podcast"
+    },
+    {
+      youtubeId: "g-Sd6AoYXt4",
+      title: "ΓüáReporting- Piece to Camera",
+      category: "Field Journalism",
+      badge: "Field Reporting"
+    },
+    {
+      youtubeId: "jTtfGnU25Ns",
+      title: "Superfast News Bulletin",
+      category: "Broadcast Journalism",
+      badge: "Bulletin"
     },
     {
       youtubeId: "NFFZtB_0Ymw",
@@ -46,28 +64,10 @@ window.PORTFOLIO_CONFIG = {
       badge: "Anchoring"
     },
     {
-      youtubeId: "jTtfGnU25Ns",
-      title: "News Bulletin",
-      category: "Broadcast Journalism",
-      badge: "Bulletin"
-    },
-    {
-      youtubeId: "g-Sd6AoYXt4",
-      title: "Piece to Camera",
-      category: "Field Reporting",
-      badge: "Reporting"
-    },
-    {
-      youtubeId: "KUt2m5-ysqY",
-      title: "Talk Show",
-      category: "Moderation & Panel",
-      badge: "Talk Show"
-    },
-    {
-      youtubeId: "H-G96ClEFME",
-      title: "Podcast",
-      category: "Dialogue & Audio-Visual",
-      badge: "Podcast"
+      youtubeId: "762kTKqRnyE",
+      title: "Documentary - Jagat Shiromani Documnetary Anchoring",
+      category: "Documentary Production",
+      badge: "Documentary"
     }
   ],
 
@@ -75,22 +75,22 @@ window.PORTFOLIO_CONFIG = {
   shorts: [
     {
       youtubeId: "tZ2_A4lClK4",
-      title: "Holi Event Host",
+      title: "Rang Barse - Holi Event || Soundriya Rathore - Live event anchoring and Emceeing at GKFTII ||",
       label: "Cultural Festival"
     },
     {
       youtubeId: "D5Z4vR1B72c",
-      title: "Stand-Up Host",
+      title: "Standup Comedy Night Host at Club Capri",
       label: "Comedy & Entertainment"
     },
     {
       youtubeId: "RaWw6AJ6XVo",
-      title: "Alumni Meet Host",
+      title: "Alumni Meet Event Host at GKFTII",
       label: "Institutional Gala"
     },
     {
       youtubeId: "jqCok9FnwF4",
-      title: "Digital Media Anchor",
+      title: "Digital Media - News Reel by Soundriya Rathore",
       label: "Digital News Desk"
     }
   ],
@@ -228,3 +228,4 @@ window.PORTFOLIO_CONFIG = {
     }
   ]
 };
+

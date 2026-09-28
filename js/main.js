@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initBookingTools();
   initScrollSpy();
   initContactActions();
+  autoSyncLiveYouTube();
 
   // Dynamic Year in Footer
   const yr = document.getElementById('current-year');
@@ -960,4 +961,102 @@ function initBookingTools() {
     });
   }
 }
+
+/* ==========================================================================
+   Live Auto-Sync Latest YouTube Uploads via Serverless / Edge API
+   (Automatically brings in newly published videos and shorts without editing code)
+   ========================================================================== */
+async function autoSyncLiveYouTube() {
+  const videosGrid = document.getElementById('featured-videos-grid');
+  const shortsGrid = document.getElementById('shorts-grid-container');
+  if (!videosGrid) return;
+
+  try {
+    const res = await fetch('/api/videos');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data || !data.success) return;
+
+    // Collect currently rendered video IDs from iframes and links
+    const existingIds = new Set();
+    document.querySelectorAll('.video-card iframe, .video-card a[href*="youtu"]').forEach(el => {
+      const match = (el.src || el.href || '').match(/(?:embed\/|watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      if (match) existingIds.add(match[1]);
+    });
+
+    // Check for newly published featured videos not yet in DOM
+    if (data.featuredVideos && data.featuredVideos.length > 0) {
+      // Reverse so newest appears first
+      [...data.featuredVideos].reverse().forEach(v => {
+        if (!existingIds.has(v.id) && v.id !== 'E0j9MgTL14U') {
+          existingIds.add(v.id);
+          const article = document.createElement('article');
+          article.className = 'video-card new-video-entry';
+          article.innerHTML = `
+            <div class="video-container-16x9">
+              <iframe 
+                src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0&amp;playsinline=1" 
+                title="${v.title} - Soundriya Rathore" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen 
+                loading="lazy">
+              </iframe>
+            </div>
+            <div class="video-card-info">
+              <span class="video-card-badge" style="background: var(--blue-primary); color: #FFFFFF; font-weight: 700;">
+                <span class="pulse-dot" style="background: #FFFFFF; width: 6px; height: 6px;" aria-hidden="true"></span>
+                Latest Report
+              </span>
+              <h4 class="video-card-name">${v.title}</h4>
+              <div class="video-card-footer">
+                <span>In-Page Player</span>
+                <a href="${v.url}" target="_blank" rel="noopener noreferrer" class="watch-link">
+                  YouTube &rarr;
+                </a>
+              </div>
+            </div>
+          `;
+          videosGrid.prepend(article);
+        }
+      });
+    }
+
+    // Check for newly published shorts not yet in DOM
+    if (shortsGrid && data.shorts && data.shorts.length > 0) {
+      const existingShortIds = new Set();
+      shortsGrid.querySelectorAll('iframe, a').forEach(el => {
+        const match = (el.src || el.href || '').match(/(?:embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+        if (match) existingShortIds.add(match[1]);
+      });
+
+      [...data.shorts].reverse().forEach(s => {
+        if (!existingShortIds.has(s.id)) {
+          existingShortIds.add(s.id);
+          const article = document.createElement('article');
+          article.className = 'short-card new-short-entry';
+          article.innerHTML = `
+            <div class="short-media-9x16">
+              <iframe 
+                src="https://www.youtube-nocookie.com/embed/${s.id}?rel=0&amp;playsinline=1" 
+                title="${s.title} - Soundriya Rathore" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen 
+                loading="lazy">
+              </iframe>
+            </div>
+            <div class="short-info">
+              <span class="short-label" style="color: var(--blue-primary); font-weight: 700;">Latest Short</span>
+              <h4 class="short-name">${s.title}</h4>
+            </div>
+          `;
+          shortsGrid.prepend(article);
+        }
+      });
+    }
+  } catch (err) {
+    // Graceful silent fallback for local file:// mode or network offline
+    console.debug('Live YouTube sync running in offline/static mode');
+  }
+}
+
 
