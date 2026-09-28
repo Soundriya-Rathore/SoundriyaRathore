@@ -526,6 +526,22 @@ function initAudioPlayers() {
       });
     }
 
+    // Keyboard Controls: Space to toggle play/pause, Left/Right arrow to seek 5s
+    card.setAttribute('tabindex', '0');
+    card.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.code === 'Space' && (e.target === card || e.target === playBtn)) {
+        e.preventDefault();
+        if (playBtn) playBtn.click();
+      } else if (e.code === 'ArrowLeft' && (e.target === card || card.contains(e.target))) {
+        e.preventDefault();
+        if (rewindBtn) rewindBtn.click();
+      } else if (e.code === 'ArrowRight' && (e.target === card || card.contains(e.target))) {
+        e.preventDefault();
+        if (forwardBtn) forwardBtn.click();
+      }
+    });
+
     // Direct Seek & Real-Time Scrub Dragging Controller (Mouse & Touch)
     let isScrubbing = false;
 

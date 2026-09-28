@@ -53,7 +53,7 @@ window.PORTFOLIO_CONFIG = {
     },
     {
       youtubeId: "g-Sd6AoYXt4",
-      title: "Piece to camera",
+      title: "Piece to Camera",
       category: "Field Reporting",
       badge: "Reporting"
     },
@@ -80,7 +80,7 @@ window.PORTFOLIO_CONFIG = {
     },
     {
       youtubeId: "D5Z4vR1B72c",
-      title: "Stand-UP Host",
+      title: "Stand-Up Host",
       label: "Comedy & Entertainment"
     },
     {
