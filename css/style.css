@@ -3843,7 +3843,7 @@ html, body {
   }
 
   .nav-menu .nav-link::after {
-    content: '→';
+    content: '\2192';
     font-size: 16px;
     font-weight: 700;
     color: var(--blue-primary);
