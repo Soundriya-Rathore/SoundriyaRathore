@@ -3,8 +3,8 @@
  * Desktop PC Only | Natural 4-Leg Feline Anatomy | Relaxed Hunting Standoff
  * Random Playful Engine: Dancing, Singing/Meow, Tail Chase, Yawn & Loaf, Pacing, Biscuits
  * Full Screen-Edge Traversal (Enters One Side & Exits Other Above Taskbar)
- * 1-Minute Easter Eggs: Dimmed 7-Band Rainbow with Slow Runway Strut | Aurora Borealis with Luminous Crescent Moon
- * 3-Minute Grand Easter Egg: SPIDER-CAT Web-Swinging across Top Navigation Bar shouting "WEB!" and "THWIP!"
+ * 100-Second Atmospheric Easter Eggs: Dimmed 7-Band Rainbow Runway | Aurora with Crescent Moon & Shooting Star
+ * 200-Second Superhero Skins: Batman, Iron Man, Spider-Man, and Superman Costumes in Light & Dark Mode
  * Zero-Emoji | Pure Hardware-Accelerated 60 FPS
  */
 
@@ -26,28 +26,27 @@
   let facingLeft = false;
   let frameCount = 0;
 
-  // State Machine: 'sit', 'stalk', 'chase', 'listening', 'walk_to_photo', 'photo_affection',
-  // 'knead_biscuits', 'edge_stroll', 'dance', 'sing_meow', 'chase_tail', 'yawn_loaf', 'sleep',
-  // 'easter_egg' (1-min rainbow/aurora), 'spider_cat' (3-min web-swinging)
+  // State Machine
   let state = 'sit';
   let stateTimer = 0;
   let lastUserActivity = Date.now();
-  const EASTER_EGG_TIMEOUT_MS = 60000;   // 1 Minute (60s)
-  const SPIDER_CAT_TIMEOUT_MS = 180000;  // 3 Minutes (180s)
+  
+  // Timing Thresholds
+  const EASTER_EGG_TIMEOUT_MS = 100000;    // Exactly 100 Seconds for Rainbow / Aurora
+  const SUPERHERO_SKIN_TIMEOUT_MS = 200000; // 200 Seconds for Superhero Skins
   
   let easterEggActive = false;
   let easterEggMode = null; // 'rainbow' or 'aurora'
   let easterEggFrame = 0;
 
-  // Spider-Cat State
-  let spiderCatActive = false;
-  let spiderFrame = 0;
-  let spiderSwingIndex = 0;
-  let spiderAnchorX = window.innerWidth * 0.35;
-  const spiderAnchorY = 24; // Top Navigation Bar anchor level
+  // Superhero Skins System
+  let activeSkin = 'none'; // 'none', 'batman', 'ironman', 'spiderman', 'superman'
+  const superheroSkins = ['batman', 'ironman', 'spiderman', 'superman'];
+  let superheroSkinIndex = 0;
+  let skinRotateTimer = 0;
 
   // Screen Edge Stroll State (Full screen traversal from off-screen to off-screen)
-  let edgeDirection = 1; // 1 = Left to Right, -1 = Right to Left
+  let edgeDirection = 1;
   let edgeActive = false;
 
   // Tail Chase Angle
@@ -89,41 +88,6 @@
     transform: translate3d(-150px, -150px, 0);
     transition: opacity 0.3s ease;
   `;
-
-  // Create Fixed Spider-Man Web SVG Overlay
-  const spiderWebSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  spiderWebSvg.id = 'cat-spider-web-overlay';
-  spiderWebSvg.setAttribute('aria-hidden', 'true');
-  spiderWebSvg.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 9993;
-    overflow: visible;
-    display: none;
-  `;
-  spiderWebSvg.innerHTML = `
-    <defs>
-      <filter id="webSoftGlow">
-        <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#FFFFFF" flood-opacity="0.95"/>
-      </filter>
-    </defs>
-    <!-- Web Line from Navbar to Cat -->
-    <line id="spider-web-line" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" filter="url(#webSoftGlow)"/>
-    <!-- Sticky Web Burst / Splat on Navigation Bar -->
-    <g id="spider-web-splat">
-      <circle cx="0" cy="0" r="7" fill="#FFFFFF" opacity="0.95" filter="url(#webSoftGlow)"/>
-      <path d="M 0 0 L -14 -6 M 0 0 L -9 -13 M 0 0 L 9 -13 M 0 0 L 14 -6 M 0 0 L 16 5 M 0 0 L 9 13 M 0 0 L -9 13 M 0 0 L -16 5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
-      <circle cx="0" cy="0" r="11" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.75"/>
-    </g>
-  `;
-  document.body.appendChild(spiderWebSvg);
-
-  const webLine = spiderWebSvg.querySelector('#spider-web-line');
-  const webSplat = spiderWebSvg.querySelector('#spider-web-splat');
 
   // Inject Theme Styling & Animation Keyframes
   const styleEl = document.createElement('style');
@@ -172,7 +136,7 @@
     .cat-music-note-1 { animation: catNoteFloatA 1.8s infinite ease-out; }
     .cat-music-note-2 { animation: catNoteFloatB 2.1s infinite ease-out 0.7s; }
 
-    /* 1-Minute Easter Egg Overlays */
+    /* 100-Second Easter Egg Overlays */
     #cat-easteregg-overlay {
       position: fixed;
       top: 0;
@@ -211,16 +175,21 @@
       0%, 100% { opacity: 0.75; transform: scale(1); }
       50% { opacity: 0.95; transform: scale(1.04); }
     }
+    @keyframes arcReactorGlow {
+      0%, 100% { opacity: 0.8; filter: drop-shadow(0 0 3px #00E5FF); }
+      50% { opacity: 1; filter: drop-shadow(0 0 7px #00E5FF); }
+    }
 
     .aurora-ribbon-1 { animation: auroraWave1 9s infinite ease-in-out; }
     .aurora-ribbon-2 { animation: auroraWave2 12s infinite ease-in-out -4s; }
     .shooting-star-group { animation: shootingStarAnim 7.5s infinite ease-in 2.5s; }
     .easter-star-twinkle { animation: starPulseSlow 3s infinite ease-in-out; }
     .easter-moon-glow { animation: moonGlowPulse 5s infinite ease-in-out; }
+    .ironman-arc-glow { animation: arcReactorGlow 2s infinite ease-in-out; }
   `;
   document.head.appendChild(styleEl);
 
-  // SVG Anatomy: 4 Natural Feline Legs, Realistic Joints, Studio Headphones, Facial States, Spider-Cat Suit
+  // SVG Anatomy: 4 Natural Feline Legs, Realistic Joints, Studio Headphones, Facial States, Superhero Skins
   catEl.innerHTML = `
     <div class="cat-wrapper" style="position: relative; width: 100%; height: 100%; transform-origin: 50% 88%;">
       <!-- Ground Shadow -->
@@ -374,41 +343,84 @@
         </g>
 
         <!-- ===================================================================
-             SPIDER-CAT SUIT OVERLAY (Transforms after 3 Minutes!)
+             SUPERHERO SKINS SUITE (Unlocks after 200s or via setCatSkin)
              =================================================================== -->
-        <g class="cat-spiderman-suit" style="display: none;">
-          <!-- Blue Flanks Body Suit -->
-          <path d="M 22 36 C 20 28, 28 22, 38 23 C 46 24, 52 28, 52 35 C 52 43, 44 46, 36 46 C 26 46, 22 42, 22 36 Z" fill="#1D4ED8"/>
-          <!-- Red Center Chest & Spine Section -->
-          <path d="M 32 23 C 40 23, 48 27, 48 35 C 48 43, 40 46, 34 45 C 38 41, 38 28, 32 23 Z" fill="#EF4444"/>
-          <!-- Spider Web Grid on Red Body -->
-          <path d="M 35 24 L 46 43 M 43 24 L 35 43 M 34 32 Q 40 33 46 32 M 34 38 Q 40 39 46 38" fill="none" stroke="#0F172A" stroke-width="0.6"/>
-          <!-- Spider Emblem on Chest -->
-          <g transform="translate(41, 33)">
-            <ellipse cx="0" cy="0" rx="1.5" ry="2" fill="#0F172A"/>
-            <circle cx="0" cy="-2.2" r="1" fill="#0F172A"/>
-            <path d="M -1 -1 Q -3 -3 -4 -5 M -1 0 Q -4 0 -5 2 M -1 1 Q -4 2 -3 5 M 1 -1 Q 3 -3 4 -5 M 1 0 Q 4 0 5 2 M 1 1 Q 4 2 3 5" fill="none" stroke="#0F172A" stroke-width="0.65"/>
+        <g class="cat-superhero-skins">
+
+          <!-- 1. BATMAN CAT (Bat-Cat) -->
+          <g class="skin-batman" style="display: none;">
+            <!-- Dark Stealth Grey Body -->
+            <path d="M 22 36 C 20 28, 28 22, 38 23 C 46 24, 52 28, 52 35 C 52 43, 44 46, 36 46 C 26 46, 22 42, 22 36 Z" fill="#334155"/>
+            <!-- Bat Chest Emblem -->
+            <path d="M 36 30 C 38 29, 41 31, 44 31 C 47 31, 50 29, 52 30 C 50 34, 47 33, 44 36 C 41 33, 38 34, 36 30 Z" fill="#0B132B"/>
+            <!-- Golden Utility Belt -->
+            <path d="M 34 40 Q 42 42 50 39" fill="none" stroke="#F59E0B" stroke-width="2.6" stroke-linecap="round"/>
+            <rect x="42" y="39" width="4" height="4" rx="1" fill="#D97706"/>
+            <!-- Bat Cowl with Pointed Ears -->
+            <polygon points="37,17 40,2 47,13" fill="#0B132B"/>
+            <polygon points="53,12 60,2 63,17" fill="#0B132B"/>
+            <ellipse cx="50" cy="20" rx="12.6" ry="10.6" fill="#0B132B" filter="url(#cat-depth-shadow)"/>
+            <!-- Glowing White Bat Eyes -->
+            <polygon points="43,17 47,19 43,21" fill="#FFFFFF"/>
+            <polygon points="57,17 53,19 57,21" fill="#FFFFFF"/>
           </g>
 
-          <!-- Red Gloves on Front Paws -->
-          <ellipse cx="42" cy="51.5" rx="3.5" ry="2.3" fill="#EF4444" stroke="#DC2626" stroke-width="0.5"/>
-          <ellipse cx="49.5" cy="52" rx="4" ry="2.5" fill="#EF4444" stroke="#DC2626" stroke-width="0.5"/>
-          <!-- Red Boots on Rear Paws -->
-          <ellipse cx="18.5" cy="52.5" rx="3.8" ry="2.3" fill="#EF4444" stroke="#DC2626" stroke-width="0.5"/>
-          <ellipse cx="25" cy="53.5" rx="4.2" ry="2.4" fill="#EF4444" stroke="#DC2626" stroke-width="0.5"/>
+          <!-- 2. IRON MAN CAT (Iron Cat) -->
+          <g class="skin-ironman" style="display: none;">
+            <!-- Crimson Red Armor -->
+            <path d="M 22 36 C 20 28, 28 22, 38 23 C 46 24, 52 28, 52 35 C 52 43, 44 46, 36 46 C 26 46, 22 42, 22 36 Z" fill="#DC2626"/>
+            <!-- Gold Armor Shoulder Plates -->
+            <path d="M 30 26 C 36 24, 44 26, 44 34 L 30 38 Z" fill="#FBBF24"/>
+            <!-- Glowing Arc Reactor on Chest -->
+            <circle class="ironman-arc-glow" cx="43" cy="33" r="3.4" fill="#00E5FF" stroke="#FFFFFF" stroke-width="1.2"/>
+            <circle cx="43" cy="33" r="1.5" fill="#FFFFFF"/>
+            <!-- Crimson Helmet & Gold Faceplate -->
+            <polygon points="39,17 42,4 49,14" fill="#DC2626"/>
+            <polygon points="52,13 58,4 62,17" fill="#DC2626"/>
+            <ellipse cx="50" cy="20" rx="12.6" ry="10.6" fill="#DC2626" filter="url(#cat-depth-shadow)"/>
+            <path d="M 43 14 L 57 14 L 55 24 L 45 24 Z" fill="#FBBF24"/>
+            <!-- Glowing Cyan Slit Eyes -->
+            <line x1="44" y1="18" x2="48" y2="18" stroke="#00E5FF" stroke-width="2" stroke-linecap="round"/>
+            <line x1="52" y1="18" x2="56" y2="18" stroke="#00E5FF" stroke-width="2" stroke-linecap="round"/>
+          </g>
 
-          <!-- Red Spider-Cat Mask & Hood -->
-          <polygon points="39,17 42,4 49,14" fill="#EF4444"/>
-          <polygon points="52,13 58,4 62,17" fill="#EF4444"/>
-          <ellipse cx="50" cy="20" rx="12.5" ry="10.5" fill="#EF4444" filter="url(#cat-depth-shadow)"/>
+          <!-- 3. SPIDER-MAN CAT (Spider-Cat Skin) -->
+          <g class="skin-spiderman" style="display: none;">
+            <!-- Blue Flanks -->
+            <path d="M 22 36 C 20 28, 28 22, 38 23 C 46 24, 52 28, 52 35 C 52 43, 44 46, 36 46 C 26 46, 22 42, 22 36 Z" fill="#1D4ED8"/>
+            <!-- Red Center Body -->
+            <path d="M 32 23 C 40 23, 48 27, 48 35 C 48 43, 40 46, 34 45 C 38 41, 38 28, 32 23 Z" fill="#EF4444"/>
+            <!-- Spider Web Body Lines -->
+            <path d="M 35 24 L 46 43 M 43 24 L 35 43 M 34 32 Q 40 33 46 32 M 34 38 Q 40 39 46 38" fill="none" stroke="#0F172A" stroke-width="0.6"/>
+            <!-- Spider Chest Emblem -->
+            <ellipse cx="41" cy="33" rx="1.5" ry="2" fill="#0F172A"/>
+            <!-- Red Webbed Mask -->
+            <polygon points="39,17 42,4 49,14" fill="#EF4444"/>
+            <polygon points="52,13 58,4 62,17" fill="#EF4444"/>
+            <ellipse cx="50" cy="20" rx="12.5" ry="10.5" fill="#EF4444" filter="url(#cat-depth-shadow)"/>
+            <path d="M 50 20 L 50 9.5 M 50 20 L 42 10.5 M 50 20 L 58 10.5 M 50 20 L 37.5 20 M 50 20 L 62.5 20" stroke="#0F172A" stroke-width="0.75" stroke-linecap="round"/>
+            <path d="M 45 13 Q 50 11 55 13 M 42 16 Q 50 14 58 16" fill="none" stroke="#0F172A" stroke-width="0.75"/>
+            <!-- Triangular Eyes -->
+            <path d="M 41 15 C 45 14, 47 18, 47 21 C 44 22, 39 20, 41 15 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8"/>
+            <path d="M 59 15 C 55 14, 53 18, 53 21 C 56 22, 61 20, 59 15 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8"/>
+          </g>
 
-          <!-- Black Spider Web Grid on Mask -->
-          <path d="M 50 20 L 50 9.5 M 50 20 L 42 10.5 M 50 20 L 58 10.5 M 50 20 L 37.5 20 M 50 20 L 62.5 20 M 50 20 L 43 28 M 50 20 L 57 28" stroke="#0F172A" stroke-width="0.75" stroke-linecap="round"/>
-          <path d="M 45 13 Q 50 11 55 13 M 42 16 Q 50 14 58 16 M 44 24 Q 50 26 56 24" fill="none" stroke="#0F172A" stroke-width="0.75"/>
+          <!-- 4. SUPERMAN CAT (Super-Cat) -->
+          <g class="skin-superman" style="display: none;">
+            <!-- Royal Blue Suit -->
+            <path d="M 22 36 C 20 28, 28 22, 38 23 C 46 24, 52 28, 52 35 C 52 43, 44 46, 36 46 C 26 46, 22 42, 22 36 Z" fill="#2563EB"/>
+            <!-- Flowing Red Cape -->
+            <path d="M 24 28 C 16 32, 10 40, 12 48 C 16 46, 20 38, 26 34 Z" fill="#DC2626"/>
+            <!-- Iconic "S" Shield on Chest -->
+            <polygon points="42,28 47,30 45,36 41,36 39,30" fill="#FBBF24" stroke="#DC2626" stroke-width="1"/>
+            <path d="M 41 30 Q 45 30 43 32 Q 41 34 45 34" fill="none" stroke="#DC2626" stroke-width="1"/>
+            <!-- Red Boots -->
+            <ellipse cx="42" cy="51.5" rx="3.5" ry="2.3" fill="#DC2626"/>
+            <ellipse cx="49.5" cy="52" rx="4" ry="2.5" fill="#DC2626"/>
+            <ellipse cx="18.5" cy="52.5" rx="3.8" ry="2.3" fill="#DC2626"/>
+            <ellipse cx="25" cy="53.5" rx="4.2" ry="2.4" fill="#DC2626"/>
+          </g>
 
-          <!-- Iconic White Curved Triangular Spider-Man Eye Lenses -->
-          <path d="M 41 15 C 45 14, 47 18, 47 21 C 44 22, 39 20, 41 15 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8"/>
-          <path d="M 59 15 C 55 14, 53 18, 53 21 C 56 22, 61 20, 59 15 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8"/>
         </g>
       </svg>
 
@@ -455,8 +467,25 @@
   const eyesStarry = catEl.querySelector('.cat-eyes-starry');
   const headphones = catEl.querySelector('.cat-headphones');
   const musicNotes = catEl.querySelector('.cat-music-notes');
-  const spidermanSuit = catEl.querySelector('.cat-spiderman-suit');
   const bubble = catEl.querySelector('.cat-bubble');
+
+  // Superhero Skin DOM Groups
+  const skinGroups = {
+    batman: catEl.querySelector('.skin-batman'),
+    ironman: catEl.querySelector('.skin-ironman'),
+    spiderman: catEl.querySelector('.skin-spiderman'),
+    superman: catEl.querySelector('.skin-superman')
+  };
+
+  // Skin Switcher Function
+  function setCatSkin(skinName) {
+    activeSkin = skinName || 'none';
+    for (const [key, group] of Object.entries(skinGroups)) {
+      if (group) {
+        group.style.display = key === activeSkin ? 'block' : 'none';
+      }
+    }
+  }
 
   // Eye State Controller
   function setEyes(mode) {
@@ -486,14 +515,15 @@
     }, duration);
   }
 
-  // User Activity Tracker (Resets idle timers & dismisses active Easter eggs gracefully)
+  // User Activity Tracker (Resets idle timers & dismisses active Easter eggs)
   const registerActivity = () => {
     lastUserActivity = Date.now();
     if (easterEggActive) {
       stopEasterEgg();
     }
-    if (spiderCatActive) {
-      stopSpiderCat();
+    if (activeSkin !== 'none') {
+      setCatSkin('none');
+      showBubble(':3', 1000);
     }
   };
 
@@ -548,12 +578,12 @@
   }
 
   // =========================================================================
-  // Easter Egg System: 1 Minute Inactivity (60,000ms)
+  // Atmospheric Easter Egg: 100 Seconds Inactivity (100,000ms)
   // =========================================================================
   let easterEggOverlay = null;
 
   function startEasterEgg() {
-    if (easterEggActive || spiderCatActive) return;
+    if (easterEggActive) return;
     easterEggActive = true;
     easterEggFrame = 0;
     easterEggMode = isDarkTheme() ? 'aurora' : 'rainbow';
@@ -702,53 +732,12 @@
     setMouth(false);
   }
 
-  // =========================================================================
-  // Grand Easter Egg System: 3 Minutes (180,000ms) - SPIDER-CAT!
-  // =========================================================================
-  function startSpiderCat() {
-    if (spiderCatActive) return;
-    // Dismiss 1-minute easter egg if active
-    if (easterEggActive) stopEasterEgg();
-
-    spiderCatActive = true;
-    spiderFrame = 0;
-    spiderSwingIndex = 0;
-    spiderAnchorX = window.innerWidth * 0.35;
-
-    // Put on the Spider-Man suit!
-    if (spidermanSuit) spidermanSuit.style.display = 'block';
-    if (spiderWebSvg) spiderWebSvg.style.display = 'block';
-
-    showBubble('*POOF! SPIDER-CAT!*', 2000);
-  }
-
-  function stopSpiderCat() {
-    if (!spiderCatActive) return;
-    spiderCatActive = false;
-
-    // Hide Spider-Man suit and web line
-    if (spidermanSuit) spidermanSuit.style.display = 'none';
-    if (spiderWebSvg) spiderWebSvg.style.display = 'none';
-
-    // Backflip landing
-    if (wrapper) {
-      wrapper.style.transition = 'transform 0.3s ease-out';
-      wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} rotate(360deg)`;
-      setTimeout(() => {
-        wrapper.style.transition = '';
-        wrapper.style.transform = facingLeft ? 'scaleX(-1)' : 'scaleX(1)';
-      }, 300);
-    }
-
-    state = 'sit';
-    setEyes('normal');
-    setMouth(false);
-    showBubble(':3', 1000);
-  }
-
-  // Developer convenience: Accessible via console for instant testing
-  window.triggerSpiderCat = startSpiderCat;
+  // Developer Convenience: Global methods for testing
+  window.setCatSkin = setCatSkin;
   window.triggerEasterEgg = startEasterEgg;
+  window.triggerSuperheroSkins = () => {
+    lastUserActivity = Date.now() - SUPERHERO_SKIN_TIMEOUT_MS;
+  };
 
   // =========================================================================
   // 60 FPS Companion Animation Loop
@@ -759,11 +748,34 @@
     const idleMs = now - lastUserActivity;
     const idleSeconds = idleMs / 1000;
 
-    // Check Trigger for 3-Minute Grand Easter Egg: SPIDER-CAT!
-    if (idleMs >= SPIDER_CAT_TIMEOUT_MS && !spiderCatActive && !isAudioActive()) {
-      startSpiderCat();
-    } else if (idleMs >= EASTER_EGG_TIMEOUT_MS && idleMs < SPIDER_CAT_TIMEOUT_MS && !easterEggActive && !spiderCatActive && !isAudioActive()) {
+    // Trigger 100-Second Atmospheric Easter Egg (Rainbow / Aurora)
+    if (idleMs >= EASTER_EGG_TIMEOUT_MS && idleMs < SUPERHERO_SKIN_TIMEOUT_MS && !easterEggActive && !isAudioActive()) {
       startEasterEgg();
+    }
+
+    // Trigger 200-Second Superhero Skin Cycling
+    if (idleMs >= SUPERHERO_SKIN_TIMEOUT_MS && !isAudioActive()) {
+      // Dismiss atmospheric easter egg if still active
+      if (easterEggActive) stopEasterEgg();
+
+      skinRotateTimer++;
+      if (skinRotateTimer > 600) { // Rotate costume every ~10 seconds
+        skinRotateTimer = 0;
+        superheroSkinIndex = (superheroSkinIndex + 1) % superheroSkins.length;
+        const newSkin = superheroSkins[superheroSkinIndex];
+        setCatSkin(newSkin);
+
+        // Character Quotes in Speech Bubble
+        if (newSkin === 'batman') {
+          showBubble('I AM BAT-CAT', 1800);
+        } else if (newSkin === 'ironman') {
+          showBubble('I AM IRON CAT', 1800);
+        } else if (newSkin === 'spiderman') {
+          showBubble('SPIDER-CAT!', 1800);
+        } else if (newSkin === 'superman') {
+          showBubble('SUPER-CAT!', 1800);
+        }
+      }
     }
 
     // Audio Playback Priority Check
@@ -777,85 +789,12 @@
     }
 
     // =========================================================================
-    // 3-Minute Grand Easter Egg: SPIDER-CAT WEB SWINGING
-    // =========================================================================
-    if (spiderCatActive) {
-      spiderFrame++;
-
-      // Multiple Anchor Points along the top Navigation Bar
-      const navAnchors = [
-        window.innerWidth * 0.28,
-        window.innerWidth * 0.72,
-        window.innerWidth * 0.48,
-        window.innerWidth * 0.82,
-        window.innerWidth * 0.18
-      ];
-
-      // Switch anchor point every 220 frames (~3.6s per swing session)
-      const currentAnchorIndex = Math.floor(spiderFrame / 220) % navAnchors.length;
-      spiderAnchorX += (navAnchors[currentAnchorIndex] - spiderAnchorX) * 0.05;
-
-      // Authentic Pendulum Swing Physics
-      const swingSpeed = 0.038;
-      const angle = Math.sin(spiderFrame * swingSpeed) * 0.68; // Radians (~ -39 to +39 deg)
-      const ropeLength = 150 + Math.cos(spiderFrame * (swingSpeed * 0.5)) * 25;
-
-      catX = spiderAnchorX + Math.sin(angle) * ropeLength;
-      catY = spiderAnchorY + Math.cos(angle) * ropeLength;
-
-      // Facing orientation based on swing velocity
-      const swingVel = Math.cos(spiderFrame * swingSpeed);
-      facingLeft = swingVel < 0;
-
-      // Cat body tilts with pendulum arc
-      const swingDeg = angle * (180 / Math.PI);
-
-      // Upside-Down Hanging Pause every 4th cycle
-      const hangingCycle = Math.floor(spiderFrame / 440) % 2 === 1;
-      if (hangingCycle && Math.abs(angle) < 0.18) {
-        // Hangs upside-down by a single web thread from navbar
-        if (wrapper) wrapper.style.transform = 'rotate(180deg)';
-        if (spiderFrame % 140 === 0) {
-          showBubble('*hangs upside-down*', 1600);
-        }
-      } else {
-        if (wrapper) {
-          wrapper.style.transform = `${facingLeft ? 'scaleX(-1) ' : ''}rotate(${swingDeg * 0.85}deg)`;
-        }
-
-        // Shouts at the top of the Navigation Bar!
-        // Triggers shouts near the peak of the swing / when shooting webs
-        if (spiderFrame % 180 === 15) {
-          showBubble('*THWIP!*', 1200);
-        } else if (spiderFrame % 180 === 60) {
-          showBubble('*WEB!*', 1200);
-        } else if (spiderFrame % 180 === 115) {
-          showBubble('SPIDER-CAT!', 1400);
-        }
-      }
-
-      // Update Web SVG Vector Line & Sticky Splat
-      if (webLine && webSplat) {
-        webLine.setAttribute('x1', spiderAnchorX);
-        webLine.setAttribute('y1', spiderAnchorY);
-        webLine.setAttribute('x2', catX + (facingLeft ? -8 : 8));
-        webLine.setAttribute('y2', catY - 14); // Connects to front paw!
-        webSplat.setAttribute('transform', `translate(${spiderAnchorX}, ${spiderAnchorY})`);
-      }
-
-      catEl.style.transform = `translate3d(${catX - 37}px, ${catY - 45}px, 0)`;
-      requestAnimationFrame(animate);
-      return;
-    }
-
-    // =========================================================================
-    // 1-Minute Easter Egg Rendering (Rainbow / Aurora)
+    // 100-Second Easter Egg Rendering (Rainbow / Aurora)
     // =========================================================================
     if (easterEggActive) {
       easterEggFrame++;
 
       if (easterEggMode === 'rainbow') {
-        // ULTRA-SLOW, DELICATE, REGAL Runway Ramp Walk (30 seconds per cycle = 1800 frames)
         const cycleFrames = 1800;
         const cycle = (easterEggFrame % cycleFrames) / cycleFrames;
         const screenW = window.innerWidth;
@@ -890,7 +829,6 @@
         }
 
       } else {
-        // Dark Mode: Serene Stargazer with Aurora and Glowing Crescent Moon
         const targetX = window.innerWidth * 0.5;
         const targetY = window.innerHeight * 0.70;
         catX += (targetX - catX) * 0.03;
@@ -927,7 +865,6 @@
     }
 
     if (audioPlaying) {
-      // Audio Listening Mode: Cat puts on headphones & grooves
       state = 'listening';
       setEyes('happy');
       setMouth(false);
@@ -944,9 +881,9 @@
       catY += (targetY - catY) * 0.06;
       facingLeft = targetX < catX;
 
-    } else if (idleSeconds >= 2.5 && idleSeconds < 58) {
+    } else if (idleSeconds >= 2.5 && idleSeconds < 98) {
       // =======================================================================
-      // RANDOM PLAYFUL BEHAVIOR ENGINE (Autonomous, Rich, Varied Feline Life!)
+      // RANDOM PLAYFUL BEHAVIOR ENGINE (Autonomous, Varied Feline Life!)
       // =======================================================================
       stateTimer--;
 
@@ -956,35 +893,35 @@
 
         if (portrait && randChoice < 0.28) {
           state = 'walk_to_photo';
-          stateTimer = 350; // ~6 seconds
+          stateTimer = 350;
         } else if (randChoice < 0.42 && !edgeActive) {
           state = 'edge_stroll';
           edgeActive = true;
           edgeDirection = Math.random() < 0.5 ? 1 : -1;
           catX = edgeDirection === 1 ? -70 : window.innerWidth + 70;
-          catY = window.innerHeight - 38; // Sits right atop taskbar
-          stateTimer = 900; // ~15 seconds to leisurely cross screen
+          catY = window.innerHeight - 38; // Taskbar top baseline
+          stateTimer = 900;
           showBubble(':3', 1000);
         } else if (randChoice < 0.56) {
           state = 'dance';
-          stateTimer = 220; // ~3.6 seconds
+          stateTimer = 220;
           showBubble('*dance*', 1400);
         } else if (randChoice < 0.70) {
           state = 'sing_meow';
-          stateTimer = 200; // ~3.3 seconds
+          stateTimer = 200;
           showBubble('meow~', 1500);
         } else if (randChoice < 0.82) {
           state = 'knead_biscuits';
-          stateTimer = 260; // ~4.3 seconds
+          stateTimer = 260;
           showBubble('*knead*', 1400);
         } else if (randChoice < 0.92) {
           state = 'chase_tail';
           spinAngle = 0;
-          stateTimer = 140; // ~2.3 seconds
+          stateTimer = 140;
           showBubble('*spin*', 1200);
         } else {
           state = 'yawn_loaf';
-          stateTimer = 280; // ~4.6 seconds
+          stateTimer = 280;
           showBubble('*yawn*', 1500);
         }
       }
@@ -1156,7 +1093,7 @@
 
     // Apply Position & Facing Flip
     catEl.style.transform = `translate3d(${catX - 37}px, ${catY - 45}px, 0)`;
-    if (wrapper && state !== 'photo_affection' && state !== 'chase_tail' && state !== 'dance' && state !== 'yawn_loaf' && !easterEggActive && !spiderCatActive) {
+    if (wrapper && state !== 'photo_affection' && state !== 'chase_tail' && state !== 'dance' && state !== 'yawn_loaf' && !easterEggActive) {
       wrapper.style.transform = facingLeft ? 'scaleX(-1)' : 'scaleX(1)';
     }
 
@@ -1171,7 +1108,6 @@
     if (!isDesktop()) {
       catEl.style.display = 'none';
       if (easterEggActive) stopEasterEgg();
-      if (spiderCatActive) stopSpiderCat();
     } else {
       catEl.style.display = 'block';
     }
