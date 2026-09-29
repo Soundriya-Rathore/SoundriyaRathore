@@ -215,6 +215,9 @@
 </head>
 <body>
 
+  <!-- Precision Top Reading / Scroll Progress Bar -->
+  <div id="scroll-progress-bar" class="scroll-progress-bar" role="progressbar" aria-label="Page scroll progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
   <!-- Local Disk File Protocol Notification (Shown only when opened directly via file://) -->
   <div id="local-preview-tip" class="local-preview-tip">
     <span>Running locally from disk: Double-click <strong>preview-website.bat</strong> to open <strong>http://localhost:3000</strong> for instant YouTube video playback without browser origin restrictions. Or view live on Vercel.</span>
@@ -301,6 +304,10 @@
        ========================================================================== -->
   <main>
     <section class="hero-section" id="hero">
+      <!-- Atmospheric Studio Lighting Aura -->
+      <div class="hero-ambient-glow glow-1" aria-hidden="true"></div>
+      <div class="hero-ambient-glow glow-2" aria-hidden="true"></div>
+
       <div class="container">
         <div class="hero-grid">
 
@@ -394,6 +401,49 @@
                 </div>
               </div>
             </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Career Highlights & Metrics Strip (Animated Counters)
+         ========================================================================== -->
+    <section class="metrics-strip-section" aria-label="Career Highlights and Performance Metrics">
+      <div class="container">
+        <div class="metrics-strip-grid">
+          
+          <div class="metric-item reveal-on-scroll">
+            <div class="metric-number-wrap">
+              <span class="metric-number" data-target="50">0</span><span class="metric-suffix">+</span>
+            </div>
+            <div class="metric-label">Television News Bulletins</div>
+            <div class="metric-subtext">Anchor desk, rapid PTC &amp; breaking coverage</div>
+          </div>
+
+          <div class="metric-item reveal-on-scroll reveal-stagger-1">
+            <div class="metric-number-wrap">
+              <span class="metric-number" data-target="100">0</span><span class="metric-suffix">+</span>
+            </div>
+            <div class="metric-label">Live Stage &amp; Gala Hours</div>
+            <div class="metric-subtext">Festivals, alumni summits &amp; comedy emceeing</div>
+          </div>
+
+          <div class="metric-item reveal-on-scroll reveal-stagger-2">
+            <div class="metric-number-wrap">
+              <span class="metric-number" data-target="1">0</span><span class="metric-suffix">M+</span>
+            </div>
+            <div class="metric-label">Digital Video Reach</div>
+            <div class="metric-subtext">YouTube, social reels &amp; live stream views</div>
+          </div>
+
+          <div class="metric-item reveal-on-scroll reveal-stagger-3">
+            <div class="metric-number-wrap">
+              <span class="metric-number" data-target="24">0</span><span class="metric-suffix">-48h</span>
+            </div>
+            <div class="metric-label">Studio Turnaround</div>
+            <div class="metric-subtext">Treated studio acoustic remote delivery</div>
           </div>
 
         </div>
@@ -2486,8 +2536,15 @@
     </div>
   </div>
 
+  <!-- Floating Glassmorphic Back to Top Action -->
+  <button id="floating-back-to-top" class="floating-back-to-top" aria-label="Scroll back to top" title="Scroll back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+
   <!-- Scripts: Config First, then Main JS -->
-  <script src="js/config.js?v=2.5"></script>
-  <script src="js/main.js?v=2.5"></script>
+  <script src="js/config.js?v=2.6"></script>
+  <script src="js/main.js?v=2.6"></script>
 </body>
 </html>
