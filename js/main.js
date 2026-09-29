@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initPreviewTip();
   initHeader();
   initMobileMenu();
+  initScrollProgressBar();
+  initScrollReveals();
+  initMetricsCounter();
+  initFloatingBackToTop();
+  initHeroPerspectiveTilt();
+  initCardSpotlightHover();
   initAudioPlayers();
   initAudioFilterTabs();
   initYouTubeVideoPlayers();
@@ -1057,6 +1063,208 @@ async function autoSyncLiveYouTube() {
     // Graceful silent fallback for local file:// mode or network offline
     console.debug('Live YouTube sync running in offline/static mode');
   }
+}
+
+/* ==========================================================================
+   Modern Cinematic Motion & Interactive Enhancements
+   ========================================================================== */
+
+/**
+ * 1. Precision Top Scroll / Reading Progress Bar
+ */
+function initScrollProgressBar() {
+  const bar = document.getElementById('scroll-progress-bar');
+  if (!bar) return;
+
+  let ticking = false;
+  const updateProgress = () => {
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = totalHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / totalHeight)) : 0;
+    bar.style.transform = `scaleX(${progress})`;
+    bar.setAttribute('aria-valuenow', Math.round(progress * 100));
+    ticking = false;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateProgress);
+      ticking = true;
+    }
+  }, { passive: true });
+}
+
+/**
+ * 2. Fluid Scroll-Driven Staggered Reveals
+ */
+function initScrollReveals() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('is-revealed'));
+    return;
+  }
+
+  // Auto-register key sections and card groups
+  const targets = [
+    '.section-title-wrap',
+    '.showreel-featured-card',
+    '.about-grid',
+    '.about-brands-block',
+    '.articles-sheet-container',
+    '.contact-hub-card'
+  ];
+
+  targets.forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => el.classList.add('reveal-on-scroll'));
+  });
+
+  // Stagger grid children
+  const grids = [
+    { container: '.demos-grid', items: '.demo-card' },
+    { container: '#featured-videos-grid', items: '.video-card' },
+    { container: '.specs-grid-wrapper', items: '.spec-card' },
+    { container: '.services-grid', items: '.service-card' },
+    { container: '.square-cards-row', items: '.square-exp-card' },
+    { container: '.contact-channels-grid', items: '.contact-channel-card' }
+  ];
+
+  grids.forEach(({ container, items }) => {
+    const parent = document.querySelector(container);
+    if (!parent) return;
+    const childList = parent.querySelectorAll(items);
+    childList.forEach((child, idx) => {
+      child.classList.add('reveal-on-scroll');
+      child.style.transitionDelay = `${(idx % 6) * 0.08}s`;
+    });
+  });
+
+  // Intersection Observer for scroll triggers
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.08,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+}
+
+/**
+ * 3. Animated Career Metrics & Experience Counters
+ */
+function initMetricsCounter() {
+  const metricItems = document.querySelectorAll('.metric-item');
+  if (!metricItems.length) return;
+
+  const animateNumber = (el, target, duration = 1400) => {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      // Ease-out cubic curve
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(eased * target);
+      el.textContent = current;
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        el.textContent = target;
+      }
+    };
+    window.requestAnimationFrame(step);
+  };
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const numEl = entry.target.querySelector('.metric-number');
+        if (numEl) {
+          const target = parseInt(numEl.getAttribute('data-target'), 10) || 0;
+          animateNumber(numEl, target);
+        }
+        obs.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.25
+  });
+
+  metricItems.forEach(item => observer.observe(item));
+}
+
+/**
+ * 4. Floating Glassmorphic Back to Top Action
+ */
+function initFloatingBackToTop() {
+  const btn = document.getElementById('floating-back-to-top');
+  if (!btn) return;
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        if (window.scrollY > 400) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
+
+/**
+ * 5. Hero Portrait 3D Micro-Perspective Tilt
+ */
+function initHeroPerspectiveTilt() {
+  const card = document.querySelector('.hero-image-card');
+  if (!card || window.matchMedia('(hover: none)').matches) return;
+
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    
+    // Max 3.5 deg tilt
+    const rotateX = -(y / (rect.height / 2)) * 3.5;
+    const rotateY = (x / (rect.width / 2)) * 3.5;
+
+    card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`;
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+  });
+}
+
+/**
+ * 6. Dynamic Card Spotlight Cursor Hover
+ */
+function initCardSpotlightHover() {
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  const cards = document.querySelectorAll('.demo-card, .video-card, .service-card, .spec-card, .metric-item');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
 }
 
 
