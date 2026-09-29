@@ -1,9 +1,9 @@
 /**
- * Soundriya Rathore - Intelligent Playful PC Cursor Cat Companion
- * Desktop PC Only | 4-Leg Natural Feline Anatomy | Stalk & Hunt Standoff Distance
- * Studio Headphones Audio Listening | Walks to Soundriya's Photo & Shows Affection
- * UI Platform Exploration & Cat Zoomies | 30s Inactivity Easter Eggs (Rainbow Ramp Walk / Aurora)
- * Zero-Emoji | Pure 60 FPS Hardware-Accelerated
+ * Soundriya Rathore - Refined PC Cursor Cat Companion
+ * Desktop PC Only | Natural 4-Leg Feline Anatomy | Stalk & Hunt Standoff Distance
+ * Studio Headphones Audio Mode | Walks to Soundriya's Photo with Affection
+ * Gentle Screen Edge Stroll & Making Biscuits | 1-Minute Easter Eggs (7-Band Rainbow / Aurora)
+ * Zero-Emoji | Pure Hardware-Accelerated 60 FPS
  */
 
 (function () {
@@ -16,33 +16,34 @@
 
   if (!isDesktop()) return;
 
-  // Cat Coordinates & Physics
+  // Cat State & Coordinates
   let mouseX = window.innerWidth / 2;
   let mouseY = window.innerHeight / 2;
   let mousePrevX = mouseX;
   let mousePrevY = mouseY;
   let mouseSpeed = 0;
-  let catX = mouseX - 90;
+  let catX = mouseX - 95;
   let catY = mouseY + 40;
   let facingLeft = false;
   let frameCount = 0;
-  
-  // State Machine
-  // 'stalk', 'chase', 'sit', 'bat', 'listening', 'walk_to_photo', 'photo_affection',
-  // 'perch_button', 'zoomies', 'easter_egg', 'stretch', 'sleep'
+
+  // State Machine: 'sit', 'stalk', 'chase', 'listening', 'walk_to_photo',
+  // 'photo_affection', 'knead_biscuits', 'edge_stroll', 'firefly_watch', 'sleep', 'easter_egg'
   let state = 'sit';
   let stateTimer = 0;
   let lastUserActivity = Date.now();
+  const EASTER_EGG_TIMEOUT_MS = 60000; // Exactly 1 minute
   let easterEggActive = false;
   let easterEggMode = null; // 'rainbow' or 'aurora'
   let easterEggFrame = 0;
 
-  // Zoomies State Variables
-  let zoomieTargets = [];
-  let zoomieIndex = 0;
+  // Edge Stroll Coordinates
+  let edgeDirection = 1;
 
-  // UI Target for Exploration
-  let currentUiTarget = null;
+  // Butterfly / Firefly Entity
+  let flyX = 0;
+  let flyY = 0;
+  let flyAngle = 0;
 
   // Theme Detection (Dark Theme = Pure White Cat | Light Theme = Midnight Slate Cat)
   const isDarkTheme = () => {
@@ -63,7 +64,7 @@
     return false;
   };
 
-  // Create Main Companion Element
+  // Create Main Companion Root Element
   const catEl = document.createElement('div');
   catEl.id = 'playful-cursor-cat';
   catEl.setAttribute('aria-hidden', 'true');
@@ -114,6 +115,7 @@
       --cat-bubble-color: #38BDF8;
       --cat-bubble-border: rgba(56, 189, 248, 0.3);
     }
+
     @keyframes catNoteFloatA {
       0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
       40% { opacity: 1; }
@@ -127,7 +129,7 @@
     .cat-music-note-1 { animation: catNoteFloatA 1.8s infinite ease-out; }
     .cat-music-note-2 { animation: catNoteFloatB 2.1s infinite ease-out 0.7s; }
 
-    /* Easter Egg Overlays */
+    /* 1-Minute Easter Egg Overlays */
     #cat-easteregg-overlay {
       position: fixed;
       top: 0;
@@ -137,33 +139,43 @@
       pointer-events: none;
       z-index: 9992;
       opacity: 0;
-      transition: opacity 0.8s ease;
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
     #cat-easteregg-overlay.active {
       opacity: 1;
     }
-    @keyframes auroraWave {
-      0% { transform: scaleY(1) translateY(0); opacity: 0.75; }
-      50% { transform: scaleY(1.15) translateY(-8px); opacity: 0.95; }
-      100% { transform: scaleY(1) translateY(0); opacity: 0.75; }
+
+    /* Aurora Waves & Shooting Star Animations */
+    @keyframes auroraWave1 {
+      0%, 100% { transform: scaleY(1) translateY(0) rotate(0deg); opacity: 0.7; }
+      50% { transform: scaleY(1.22) translateY(-12px) rotate(1deg); opacity: 0.95; }
     }
-    @keyframes starTwinkle {
-      0%, 100% { opacity: 0.3; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.25); }
+    @keyframes auroraWave2 {
+      0%, 100% { transform: scaleY(1.15) translateY(-8px) rotate(-1deg); opacity: 0.85; }
+      50% { transform: scaleY(0.95) translateY(4px) rotate(0.5deg); opacity: 0.65; }
     }
-    .aurora-ribbon {
-      animation: auroraWave 6s infinite ease-in-out;
+    @keyframes shootingStarAnim {
+      0% { transform: translate(0, 0) scale(1); opacity: 0; }
+      5% { opacity: 1; }
+      30% { transform: translate(-260px, 140px) scale(0.8); opacity: 0; }
+      100% { transform: translate(-260px, 140px) scale(0.8); opacity: 0; }
     }
-    .easter-star {
-      animation: starTwinkle 2.5s infinite ease-in-out;
+    @keyframes starPulseSlow {
+      0%, 100% { opacity: 0.35; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.3); }
     }
+
+    .aurora-ribbon-1 { animation: auroraWave1 9s infinite ease-in-out; }
+    .aurora-ribbon-2 { animation: auroraWave2 12s infinite ease-in-out -4s; }
+    .shooting-star-group { animation: shootingStarAnim 7s infinite ease-in 2s; }
+    .easter-star-twinkle { animation: starPulseSlow 3s infinite ease-in-out; }
   `;
   document.head.appendChild(styleEl);
 
   // SVG Anatomy: 4 Natural Feline Legs, Realistic Joints, Studio Headphones, Facial States
   catEl.innerHTML = `
     <div class="cat-wrapper" style="position: relative; width: 100%; height: 100%; transform-origin: 50% 88%;">
-      <!-- Cat Ground Shadow -->
+      <!-- Ground Shadow -->
       <div class="cat-shadow" style="position: absolute; bottom: 2px; left: 12px; width: 50px; height: 10px; background: var(--cat-shadow); border-radius: 50%; filter: blur(2px);"></div>
       
       <!-- Primary Vector Cat SVG -->
@@ -200,12 +212,12 @@
         <path class="cat-chest" d="M 40 26 C 45 27, 49 32, 49 38 C 49 44, 44 46, 40 46 C 36 46, 37 38, 38 30 Z" fill="var(--cat-belly)"/>
 
         <!-- Front Leg Far (Quadruped Leg 3 - Left Front Natural Slender Leg & Carpal Wrist) -->
-        <g class="cat-leg-front-far" style="transform-origin: 43px 32px;">
+        <g class="cat-leg-front-far" style="transform-origin: 43px 32px; transition: transform 0.12s ease;">
           <path d="M 42 32 C 40 37, 39 44, 40 50 C 40.5 53, 43.5 53, 44 50 C 45 44, 45 37, 46 32 Z" fill="var(--cat-coat-far)"/>
           <ellipse cx="42" cy="51.5" rx="3.3" ry="2.2" fill="var(--cat-paw)" stroke="var(--cat-paw-stroke)" stroke-width="0.5"/>
         </g>
 
-        <!-- Front Leg Near (Quadruped Leg 4 - Right Front Natural Feline Foreleg) -->
+        <!-- Front Leg Near (Quadruped Leg 4 - Right Front Natural Foreleg) -->
         <g class="cat-leg-front-near" style="transform-origin: 49px 31px; transition: transform 0.12s ease;">
           <path d="M 48 31 C 46 36, 45 44, 47 51 C 47.5 54, 51.5 54, 52 51 C 53 44, 53 36, 54 31 Z" fill="var(--cat-coat)"/>
           <ellipse cx="49.5" cy="52" rx="3.8" ry="2.4" fill="var(--cat-paw)" stroke="var(--cat-paw-stroke)" stroke-width="0.5"/>
@@ -239,7 +251,7 @@
             <line x1="57" y1="23" x2="68" y2="24"/>
           </g>
 
-          <!-- Cute Pink Button Nose & Mouth -->
+          <!-- Button Nose & Mouth -->
           <polygon points="48.5,22.2 51.5,22.2 50,23.6" fill="var(--cat-nose)"/>
           <path d="M 50 23.6 L 50 24.6 Q 48.5 25.6 47 25 M 50 24.6 Q 51.5 25.6 53 25" 
                 fill="none" stroke="#94A3B8" stroke-width="0.9" stroke-linecap="round"/>
@@ -252,7 +264,7 @@
             <circle cx="52.7" cy="16.8" r="1.1" fill="#FFFFFF"/>
           </g>
 
-          <!-- 2. Happy / Listening Eyes (^ ^ Arcs) -->
+          <!-- 2. Happy / Listening / Biscuit-Kneading Eyes (^ ^ Arcs) -->
           <g class="cat-eyes-happy" style="display: none;">
             <path d="M 43 19 Q 45.5 15.5 48 19" fill="none" stroke="#0066FF" stroke-width="1.8" stroke-linecap="round"/>
             <path d="M 51 19 Q 53.5 15.5 56 19" fill="none" stroke="#0066FF" stroke-width="1.8" stroke-linecap="round"/>
@@ -371,7 +383,7 @@
     }, duration);
   }
 
-  // Activity Tracker (Any action resets idle counter and dismisses easter egg)
+  // User Activity Tracker (Resets 1-minute timer & dismisses Easter egg instantly)
   const registerActivity = () => {
     lastUserActivity = Date.now();
     if (easterEggActive) {
@@ -392,13 +404,13 @@
   window.addEventListener('keydown', registerActivity, { passive: true });
   window.addEventListener('scroll', registerActivity, { passive: true });
 
-  // Playful Click Interaction: Jump & Pounce
+  // Playful Click Hop
   window.addEventListener('click', () => {
     registerActivity();
     showBubble(':3', 900);
     if (wrapper) {
       wrapper.style.transition = 'transform 0.16s ease-out';
-      wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} translateY(-16px) scale(1.12)`;
+      wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} translateY(-14px) scale(1.1)`;
       setTimeout(() => {
         wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} translateY(0) scale(1)`;
         setTimeout(() => {
@@ -432,24 +444,22 @@
     return null;
   }
 
-  // Find Interactive UI Platform in current viewport (Play button, filter tab, CTA)
-  function findVisibleUiPlatform() {
+  // Find Voice Demo Card / Button in current viewport
+  function findVisibleVoiceCard() {
     const selectors = [
+      '.demo-card',
       '.demo-play-btn',
-      '.audio-tab-btn.active',
-      '.audio-tab-btn',
-      '.hero-actions .btn-primary',
-      '.pill-badge'
+      '.audio-tab-btn.active'
     ];
     for (let sel of selectors) {
       const el = document.querySelector(sel);
       if (el) {
         const rect = el.getBoundingClientRect();
-        if (rect.top > 80 && rect.bottom < window.innerHeight - 80 && rect.left > 40 && rect.right < window.innerWidth - 40) {
+        if (rect.top > 60 && rect.bottom < window.innerHeight - 60 && rect.left > 20 && rect.right < window.innerWidth - 20) {
           return {
             element: el,
-            targetX: rect.left + rect.width / 2,
-            targetY: rect.top - 15
+            targetX: rect.left + rect.width * 0.5,
+            targetY: rect.top - 12
           };
         }
       }
@@ -458,7 +468,7 @@
   }
 
   // =========================================================================
-  // Easter Egg System: 30 Seconds Inactivity
+  // Easter Egg System: 1 Minute Inactivity (60,000ms)
   // =========================================================================
   let easterEggOverlay = null;
 
@@ -472,70 +482,116 @@
     easterEggOverlay.id = 'cat-easteregg-overlay';
 
     if (easterEggMode === 'rainbow') {
-      // Light Mode: Vibrant Rainbow Runway Across Lower Viewport
+      // Light Mode: Authentic 7-Band Concentric Rainbow Arc with Cloud Puffs
+      // 7 Distinct Colors: Red, Orange, Yellow, Green, Cyan, Blue, Violet
       easterEggOverlay.innerHTML = `
-        <svg viewBox="0 0 1000 600" preserveAspectRatio="none" style="width: 100vw; height: 100vh; position: absolute; bottom: 0; left: 0;">
+        <svg viewBox="0 0 1200 700" preserveAspectRatio="none" style="width: 100vw; height: 100vh; position: absolute; bottom: 0; left: 0;">
           <defs>
-            <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#FF3B30"/>
-              <stop offset="18%" stop-color="#FF9500"/>
-              <stop offset="36%" stop-color="#FFCC00"/>
-              <stop offset="54%" stop-color="#34C759"/>
-              <stop offset="72%" stop-color="#00C7BE"/>
-              <stop offset="88%" stop-color="#007AFF"/>
-              <stop offset="100%" stop-color="#AF52DE"/>
-            </linearGradient>
-            <filter id="rainbowGlow">
-              <feGaussianBlur stdDeviation="6" result="blur"/>
+            <filter id="rainbowSoftGlow">
+              <feGaussianBlur stdDeviation="8" result="blur"/>
               <feMerge>
                 <feMergeNode in="blur"/>
                 <feMergeNode in="SourceGraphic"/>
               </feMerge>
             </filter>
           </defs>
-          <!-- Glowing Rainbow Arch Runway -->
-          <path d="M -50 500 Q 500 240 1050 500" fill="none" stroke="url(#rainbowGrad)" stroke-width="42" stroke-linecap="round" filter="url(#rainbowGlow)" opacity="0.95"/>
-          <path d="M -50 500 Q 500 240 1050 500" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+
+          <!-- 7 Concentric Rainbow Ribbon Bands (7px width each, total 49px) -->
+          <g filter="url(#rainbowSoftGlow)" opacity="0.94">
+            <!-- 1. Red Band -->
+            <path d="M -80 620 Q 600 240 1280 620" fill="none" stroke="#FF2D55" stroke-width="7" stroke-linecap="round"/>
+            <!-- 2. Orange Band -->
+            <path d="M -80 627 Q 600 247 1280 627" fill="none" stroke="#FF9500" stroke-width="7" stroke-linecap="round"/>
+            <!-- 3. Yellow Band -->
+            <path d="M -80 634 Q 600 254 1280 634" fill="none" stroke="#FFCC00" stroke-width="7" stroke-linecap="round"/>
+            <!-- 4. Green Band -->
+            <path d="M -80 641 Q 600 261 1280 641" fill="none" stroke="#34C759" stroke-width="7" stroke-linecap="round"/>
+            <!-- 5. Cyan Band -->
+            <path d="M -80 648 Q 600 268 1280 648" fill="none" stroke="#00C7BE" stroke-width="7" stroke-linecap="round"/>
+            <!-- 6. Indigo/Blue Band -->
+            <path d="M -80 655 Q 600 275 1280 655" fill="none" stroke="#007AFF" stroke-width="7" stroke-linecap="round"/>
+            <!-- 7. Violet/Purple Band -->
+            <path d="M -80 662 Q 600 282 1280 662" fill="none" stroke="#AF52DE" stroke-width="7" stroke-linecap="round"/>
+          </g>
+
+          <!-- Cloud Base Puffs Left -->
+          <g fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 4px 12px rgba(0,0,0,0.08))">
+            <circle cx="80" cy="590" r="50"/>
+            <circle cx="140" cy="610" r="45"/>
+            <circle cx="40" cy="625" r="40"/>
+          </g>
+
+          <!-- Cloud Base Puffs Right -->
+          <g fill="#FFFFFF" opacity="0.95" filter="drop-shadow(0 4px 12px rgba(0,0,0,0.08))">
+            <circle cx="1120" cy="590" r="50"/>
+            <circle cx="1060" cy="610" r="45"/>
+            <circle cx="1160" cy="625" r="40"/>
+          </g>
         </svg>
       `;
-      showBubble('*strut*', 2000);
+      showBubble('*strut*', 2400);
 
     } else {
-      // Dark Mode: Dim Page, Aurora Borealis Ribbon Waves & Twinkling Stars
-      let starsHtml = '';
-      for (let i = 0; i < 28; i++) {
-        const sx = Math.random() * 95;
-        const sy = Math.random() * 65;
-        const sSize = 1.5 + Math.random() * 2.5;
-        const sDelay = (Math.random() * 2.5).toFixed(2);
-        starsHtml += `<circle class="easter-star" cx="${sx}%" cy="${sy}%" r="${sSize}" fill="#E0F2FE" style="animation-delay: ${sDelay}s;" />`;
+      // Dark Mode: Dim Atmosphere, True Aurora Borealis Curtains & Starfield
+      let starsSvg = '';
+      // Micro background stars
+      for (let i = 0; i < 35; i++) {
+        const sx = (Math.random() * 96).toFixed(1);
+        const sy = (Math.random() * 62).toFixed(1);
+        const sSize = (0.7 + Math.random() * 1.3).toFixed(1);
+        const sDelay = (Math.random() * 3).toFixed(1);
+        starsSvg += `<circle class="easter-star-twinkle" cx="${sx}%" cy="${sy}%" r="${sSize}" fill="#E0F2FE" style="animation-delay: ${sDelay}s;" />`;
+      }
+      // 4-point Diamond Starbursts
+      const brightStars = [
+        { x: 180, y: 70 }, { x: 420, y: 110 }, { x: 740, y: 65 }, { x: 980, y: 130 }
+      ];
+      for (let bs of brightStars) {
+        starsSvg += `
+          <g transform="translate(${bs.x}, ${bs.y})" class="easter-star-twinkle">
+            <path d="M 0 -8 L 2 -2 L 8 0 L 2 2 L 0 8 L -2 2 L -8 0 L -2 -2 Z" fill="#FFFFFF" opacity="0.95"/>
+            <circle cx="0" cy="0" r="2.5" fill="#38BDF8"/>
+          </g>
+        `;
       }
 
-      easterEggOverlay.style.background = 'rgba(5, 12, 28, 0.68)';
+      easterEggOverlay.style.background = 'rgba(4, 9, 22, 0.72)';
       easterEggOverlay.style.backdropFilter = 'blur(2px)';
       easterEggOverlay.innerHTML = `
-        <svg viewBox="0 0 1000 600" preserveAspectRatio="none" style="width: 100vw; height: 100vh; position: absolute; top: 0; left: 0;">
+        <svg viewBox="0 0 1200 700" preserveAspectRatio="none" style="width: 100vw; height: 100vh; position: absolute; top: 0; left: 0;">
           <defs>
-            <linearGradient id="auroraGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="rgba(16, 185, 129, 0.6)"/>
-              <stop offset="45%" stop-color="rgba(6, 182, 212, 0.8)"/>
-              <stop offset="80%" stop-color="rgba(99, 102, 241, 0.6)"/>
-              <stop offset="100%" stop-color="rgba(168, 85, 247, 0.4)"/>
+            <linearGradient id="auroraGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(16, 185, 129, 0.75)"/>
+              <stop offset="45%" stop-color="rgba(6, 182, 212, 0.65)"/>
+              <stop offset="100%" stop-color="rgba(6, 182, 212, 0)"/>
             </linearGradient>
-            <linearGradient id="auroraGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="rgba(56, 189, 248, 0.5)"/>
-              <stop offset="50%" stop-color="rgba(52, 211, 153, 0.7)"/>
-              <stop offset="100%" stop-color="rgba(147, 51, 234, 0.5)"/>
+            <linearGradient id="auroraViolet" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(168, 85, 247, 0.7)"/>
+              <stop offset="50%" stop-color="rgba(56, 189, 248, 0.6)"/>
+              <stop offset="100%" stop-color="rgba(129, 140, 248, 0)"/>
             </linearGradient>
-            <filter id="auroraBlur">
-              <feGaussianBlur stdDeviation="22"/>
+            <linearGradient id="shootingStarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#FFFFFF"/>
+              <stop offset="60%" stop-color="rgba(56, 189, 248, 0.8)"/>
+              <stop offset="100%" stop-color="rgba(56, 189, 248, 0)"/>
+            </linearGradient>
+            <filter id="auroraCurtainBlur">
+              <feGaussianBlur stdDeviation="18"/>
             </filter>
           </defs>
-          <!-- Twinkling Stars -->
-          ${starsHtml}
-          <!-- Rippling Aurora Curtains -->
-          <path class="aurora-ribbon" d="M -50 160 Q 250 80 500 170 T 1050 140 L 1050 0 L -50 0 Z" fill="url(#auroraGrad1)" filter="url(#auroraBlur)"/>
-          <path class="aurora-ribbon" d="M -50 210 Q 300 120 600 220 T 1050 180 L 1050 0 L -50 0 Z" fill="url(#auroraGrad2)" filter="url(#auroraBlur)" style="animation-duration: 8s; animation-delay: -3s;"/>
+
+          <!-- Starfield -->
+          ${starsSvg}
+
+          <!-- Shooting Star / Meteor -->
+          <g class="shooting-star-group" transform="translate(1050, 40)">
+            <line x1="0" y1="0" x2="120" y2="-60" stroke="url(#shootingStarGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="0" cy="0" r="2.8" fill="#FFFFFF"/>
+          </g>
+
+          <!-- Layered Ethereal Aurora Borealis Curtains -->
+          <path class="aurora-ribbon-1" d="M -60 140 Q 280 60 620 150 T 1260 110 L 1260 0 L -60 0 Z" fill="url(#auroraGreen)" filter="url(#auroraCurtainBlur)"/>
+          <path class="aurora-ribbon-2" d="M -60 180 Q 320 90 700 190 T 1260 140 L 1260 0 L -60 0 Z" fill="url(#auroraViolet)" filter="url(#auroraCurtainBlur)"/>
         </svg>
       `;
       showBubble('*gasp*', 2500);
@@ -557,7 +613,7 @@
         if (elToRemove && elToRemove.parentNode) {
           elToRemove.parentNode.removeChild(elToRemove);
         }
-      }, 800);
+      }, 900);
       easterEggOverlay = null;
     }
     state = 'sit';
@@ -570,14 +626,15 @@
   function animate() {
     frameCount++;
     const now = Date.now();
-    const idleSeconds = (now - lastUserActivity) / 1000;
+    const idleMs = now - lastUserActivity;
+    const idleSeconds = idleMs / 1000;
 
-    // Trigger 30-Second Inactivity Easter Egg
-    if (idleSeconds >= 30 && !easterEggActive && !isAudioActive()) {
+    // Trigger 1-Minute Inactivity Easter Egg (60 seconds)
+    if (idleMs >= EASTER_EGG_TIMEOUT_MS && !easterEggActive && !isAudioActive()) {
       startEasterEgg();
     }
 
-    // 1. Audio Playback Priority (Voice Demos & Videos)
+    // 1. Audio Playback Detection (Voice Demos & Videos)
     const audioPlaying = isAudioActive();
     if (audioPlaying) {
       if (headphones) headphones.style.display = 'block';
@@ -592,37 +649,39 @@
       easterEggFrame++;
 
       if (easterEggMode === 'rainbow') {
-        // Fashion Ramp Walk Across Rainbow Arc
-        // Progress t from 0 to 1 across screen width
-        const cycle = (easterEggFrame % 450) / 450;
+        // DELICATE, SLOW Fashion Runway Ramp Walk across Rainbow Arc (18 seconds per cycle)
+        const cycleFrames = 1100;
+        const cycle = (easterEggFrame % cycleFrames) / cycleFrames;
         const screenW = window.innerWidth;
         const screenH = window.innerHeight;
-        
-        // Quadratic bezier arc matching SVG path (M -50 500 Q 500 240 1050 500)
+
+        // Quadratic curve matching the top of the 7-band rainbow
         const t = cycle;
-        const p0 = { x: 50, y: screenH * 0.78 };
-        const p1 = { x: screenW * 0.5, y: screenH * 0.44 };
-        const p2 = { x: screenW - 50, y: screenH * 0.78 };
+        const p0 = { x: 60, y: screenH * 0.82 };
+        const p1 = { x: screenW * 0.5, y: screenH * 0.38 };
+        const p2 = { x: screenW - 60, y: screenH * 0.82 };
 
         catX = (1 - t) * (1 - t) * p0.x + 2 * (1 - t) * t * p1.x + t * t * p2.x;
         catY = (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * p1.y + t * t * p2.y;
         facingLeft = false;
 
-        // Glamour Strutting Gait
-        const strut = frameCount * 0.32;
-        const stepL = Math.sin(strut);
-        const stepR = Math.sin(strut + Math.PI);
-        if (legFrontFar) legFrontFar.style.transform = `translateY(${stepL * 5}px) rotate(${stepL * 18}deg)`;
-        if (legFrontNear) legFrontNear.style.transform = `translateY(${stepR * 5}px) rotate(${stepR * 18}deg)`;
-        if (legBackFar) legBackFar.style.transform = `translateY(${stepR * 5}px) rotate(${stepR * 16}deg)`;
-        if (legBackNear) legBackNear.style.transform = `translateY(${stepL * 5}px) rotate(${stepL * 16}deg)`;
+        // Delicate, graceful slow feline runway steps
+        const delicateStrut = frameCount * 0.14; // Slow, poise-filled
+        const stepL = Math.sin(delicateStrut);
+        const stepR = Math.sin(delicateStrut + Math.PI);
 
-        // Head held high with regal model poise
-        if (headGroup) headGroup.style.transform = `rotate(${Math.sin(strut * 0.5) * 4 - 3}deg) translateY(-2px)`;
-        if (tailGroup) tailGroup.style.transform = `rotate(${-20 + Math.sin(strut * 0.8) * 18}deg)`;
+        // Slow graceful paws
+        if (legFrontFar) legFrontFar.style.transform = `translateY(${stepL * 3.5}px) rotate(${stepL * 10}deg)`;
+        if (legFrontNear) legFrontNear.style.transform = `translateY(${stepR * 3.5}px) rotate(${stepR * 10}deg)`;
+        if (legBackFar) legBackFar.style.transform = `translateY(${stepR * 3.5}px) rotate(${stepR * 9}deg)`;
+        if (legBackNear) legBackNear.style.transform = `translateY(${stepL * 3.5}px) rotate(${stepL * 9}deg)`;
 
-        // Mid-ramp pose pause
-        if (cycle > 0.48 && cycle < 0.54) {
+        // Regal head tilt and feather-plume tail sway
+        if (headGroup) headGroup.style.transform = `rotate(${Math.sin(delicateStrut * 0.5) * 3 - 2}deg) translateY(-2px)`;
+        if (tailGroup) tailGroup.style.transform = `rotate(${-22 + Math.sin(delicateStrut * 0.6) * 14}deg)`;
+
+        // At the rainbow summit (apex): Pause gracefully, pose, wink
+        if (cycle > 0.47 && cycle < 0.53) {
           setEyes('happy');
           if (headGroup) headGroup.style.transform = 'rotate(0deg)';
         } else {
@@ -630,56 +689,52 @@
         }
 
       } else {
-        // Dark Mode: Amazed by Aurora Borealis & Starfield
+        // Dark Mode: Serene Stargazer Amazed by Aurora Borealis
         const targetX = window.innerWidth * 0.5;
-        const targetY = window.innerHeight * 0.68;
-        catX += (targetX - catX) * 0.05;
-        catY += (targetY - catY) * 0.05;
+        const targetY = window.innerHeight * 0.70;
+        catX += (targetX - catX) * 0.04;
+        catY += (targetY - catY) * 0.04;
 
         setEyes('starry');
-        // Cat sits back on haunches gazing up at the northern sky
-        if (headGroup) headGroup.style.transform = `rotate(-14deg) translateY(-4px)`;
-        if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(frameCount * 0.06) * 12}deg)`;
-        
-        // Gentle paw batting at floating star
-        const pawReach = Math.sin(frameCount * 0.08);
-        if (legFrontNear) legFrontNear.style.transform = `translate(4px, -${Math.max(0, pawReach * 9)}px) rotate(-16deg)`;
+        // Cat sits back peacefully on haunches gazing up at the northern sky
+        if (headGroup) headGroup.style.transform = `rotate(-16deg) translateY(-4px)`;
+        if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(frameCount * 0.05) * 10}deg)`;
+
+        // Gentle breathing torso rise and fall
+        const breath = Math.sin(frameCount * 0.04) * 1.5;
+        if (wrapper) wrapper.style.transform = `scaleY(${1 + breath * 0.02})`;
       }
 
       catEl.style.transform = `translate3d(${catX - 37}px, ${catY - 45}px, 0)`;
-      if (wrapper) wrapper.style.transform = facingLeft ? 'scaleX(-1)' : 'scaleX(1)';
+      if (wrapper && easterEggMode === 'rainbow') {
+        wrapper.style.transform = facingLeft ? 'scaleX(-1)' : 'scaleX(1)';
+      }
       requestAnimationFrame(animate);
       return;
     }
 
     // =========================================================================
-    // Standard Interactive States (Hunting, Music, Photo, Exploration, Zoomies)
+    // Standard Companion Mode (Hunting Standoff, Soundriya Photo, Kneading, Stroll)
     // =========================================================================
 
-    // Target Calculation with Respectful Hunting Standoff Perimeter (NEVER under mouse)
-    let targetX = mouseX;
-    let targetY = mouseY;
-
-    // Determine hunting standoff offset (75px to 110px away from pointer)
+    // Distance Vector to Mouse Cursor
     const cursorVectorX = mouseX - catX;
     const cursorVectorY = mouseY - catY;
     const cursorDist = Math.hypot(cursorVectorX, cursorVectorY);
 
-    // Prevent cat from ever going under or too close to mouse cursor (< 65px buffer)
-    if (cursorDist < 65 && !isAudioActive() && state !== 'zoomies') {
-      // Repel backwards away from mouse cursor
+    // Standoff Perimeter: Never go under mouse (< 65px buffer)
+    if (cursorDist < 65 && !isAudioActive()) {
       catX -= (cursorVectorX / (cursorDist || 1)) * 10;
       catY -= (cursorVectorY / (cursorDist || 1)) * 10;
     }
 
-    // Audio Listening Mode: Cat puts on headphones & grooves
     if (audioPlaying) {
+      // Audio Listening Mode: Cat puts on headphones & grooves peacefully
       state = 'listening';
       setEyes('happy');
 
-      // Position comfortably to the side of the cursor
-      targetX = mouseX + (catX > mouseX ? 85 : -85);
-      targetY = mouseY + 30;
+      const targetX = mouseX + (catX > mouseX ? 85 : -85);
+      const targetY = mouseY + 30;
 
       const beat = Math.sin(frameCount * 0.16);
       if (headGroup) headGroup.style.transform = `translateY(${beat * 3}px) rotate(${beat * 3.5}deg)`;
@@ -690,48 +745,9 @@
       catY += (targetY - catY) * 0.08;
       facingLeft = targetX < catX;
 
-    } else if (state === 'zoomies') {
+    } else if (idleSeconds > 3 && idleSeconds < 12) {
       // =======================================================================
-      // Cat Zoomies: Frantic high-speed sprint across the screen!
-      // =======================================================================
-      const curTarget = zoomieTargets[zoomieIndex];
-      if (curTarget) {
-        const zdx = curTarget.x - catX;
-        const zdy = curTarget.y - catY;
-        const zDist = Math.hypot(zdx, zdy);
-
-        facingLeft = zdx < 0;
-        setEyes('hunt');
-
-        // Super-speed sprint (24px/frame)
-        const zSpeed = Math.min(24, Math.max(8, zDist * 0.18));
-        catX += (zdx / zDist) * zSpeed;
-        catY += (zdy / zDist) * zSpeed;
-
-        // Hyper quadruped sprint cycle
-        const zStride = frameCount * 0.7;
-        if (legFrontFar) legFrontFar.style.transform = `translateY(${Math.sin(zStride) * 6}px) rotate(22deg)`;
-        if (legFrontNear) legFrontNear.style.transform = `translateY(${Math.sin(zStride + Math.PI) * 6}px) rotate(-22deg)`;
-        if (legBackFar) legBackFar.style.transform = `translateY(${Math.sin(zStride + 1) * 6}px) rotate(20deg)`;
-        if (legBackNear) legBackNear.style.transform = `translateY(${Math.sin(zStride + 1 + Math.PI) * 6}px) rotate(-20deg)`;
-        if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(zStride * 0.9) * 32}deg)`;
-
-        if (zDist < 35) {
-          zoomieIndex++;
-          if (zoomieIndex >= zoomieTargets.length) {
-            // Zoomies complete! Skid-stop and pant calmly
-            state = 'sit';
-            setEyes('normal');
-            showBubble(':3', 1000);
-          }
-        }
-      } else {
-        state = 'sit';
-      }
-
-    } else if (idleSeconds > 4 && idleSeconds < 14) {
-      // =======================================================================
-      // Idle Action 1: Walk over to Soundriya's Photo & Show Affection!
+      // Idle Sequence 1: Visit Soundriya's Photo OR Gentle Biscuit-Kneading
       // =======================================================================
       const portrait = findVisiblePortrait();
       if (portrait) {
@@ -741,111 +757,130 @@
         const pDist = Math.hypot(pDx, pDy);
 
         if (pDist > 25) {
-          // Walk step-by-step toward Soundriya's photo
+          // Slow, delicate walk step-by-step to Soundriya's portrait
           facingLeft = pDx < 0;
           setEyes('normal');
-          const walkSpeed = Math.min(7, Math.max(3, pDist * 0.08));
+          const walkSpeed = Math.min(5.5, Math.max(2.5, pDist * 0.07));
           catX += (pDx / pDist) * walkSpeed;
           catY += (pDy / pDist) * walkSpeed;
 
-          // Natural walking gait
-          const walkStride = frameCount * 0.35;
+          const walkStride = frameCount * 0.28;
           if (legFrontFar) legFrontFar.style.transform = `translateY(${Math.sin(walkStride) * 3}px)`;
           if (legFrontNear) legFrontNear.style.transform = `translateY(${Math.sin(walkStride + Math.PI) * 3}px)`;
           if (legBackFar) legBackFar.style.transform = `translateY(${Math.sin(walkStride + 0.8) * 3}px)`;
           if (legBackNear) legBackNear.style.transform = `translateY(${Math.sin(walkStride + 0.8 + Math.PI) * 3}px)`;
 
         } else {
-          // Arrived at Soundriya's photo: cheek rubbing & affectionate purr
+          // Arrived at Soundriya's photo: Gentle cheek-rubbing affection & purr
           state = 'photo_affection';
           setEyes('happy');
-          const rub = Math.sin(frameCount * 0.08);
+          const rub = Math.sin(frameCount * 0.07);
           if (wrapper) {
-            wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} rotate(${rub * 6}deg) translateY(${Math.abs(rub) * 2}px)`;
+            wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} rotate(${rub * 5}deg) translateY(${Math.abs(rub) * 1.5}px)`;
           }
-          if (tailGroup) tailGroup.style.transform = `rotate(${-28 + rub * 12}deg)`;
-          if (frameCount % 180 === 0) {
-            showBubble('*purr*', 1400);
+          if (tailGroup) tailGroup.style.transform = `rotate(${-26 + rub * 10}deg)`;
+          if (frameCount % 200 === 0) {
+            showBubble('*purr*', 1500);
           }
         }
       } else {
-        // No photo in view: explore interactive UI platform (e.g., voice demo play button)
-        const uiPlatform = findVisibleUiPlatform();
-        if (uiPlatform) {
-          state = 'perch_button';
-          const uDx = uiPlatform.targetX - catX;
-          const uDy = uiPlatform.targetY - catY;
-          const uDist = Math.hypot(uDx, uDy);
+        // No photo in view: Cat visits a voice demo card and gently KNEADS BISCUITS!
+        const voiceCard = findVisibleVoiceCard();
+        if (voiceCard) {
+          const vDx = voiceCard.targetX - catX;
+          const vDy = voiceCard.targetY - catY;
+          const vDist = Math.hypot(vDx, vDy);
 
-          if (uDist > 20) {
-            facingLeft = uDx < 0;
-            const uSpeed = Math.min(6, Math.max(2.5, uDist * 0.07));
-            catX += (uDx / uDist) * uSpeed;
-            catY += (uDy / uDist) * uSpeed;
-
-            const uStride = frameCount * 0.35;
-            if (legFrontFar) legFrontFar.style.transform = `translateY(${Math.sin(uStride) * 3}px)`;
-            if (legFrontNear) legFrontNear.style.transform = `translateY(${Math.sin(uStride + Math.PI) * 3}px)`;
-            if (legBackFar) legBackFar.style.transform = `translateY(${Math.sin(uStride + 0.8) * 3}px)`;
-            if (legBackNear) legBackNear.style.transform = `translateY(${Math.sin(uStride + 0.8 + Math.PI) * 3}px)`;
-          } else {
-            // Perch atop button & pat lightly
+          if (vDist > 25) {
+            // Calm slow walk to the card
+            facingLeft = vDx < 0;
             setEyes('normal');
-            if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(frameCount * 0.08) * 10}deg)`;
-            if (frameCount % 160 === 0) {
-              // Cute paw tap on the button
-              if (legFrontNear) legFrontNear.style.transform = 'translateY(4px)';
-              setTimeout(() => {
-                if (legFrontNear) legFrontNear.style.transform = '';
-              }, 180);
-              showBubble(':3', 800);
+            const vSpeed = Math.min(5, Math.max(2, vDist * 0.06));
+            catX += (vDx / vDist) * vSpeed;
+            catY += (vDy / vDist) * vSpeed;
+
+            const vStride = frameCount * 0.26;
+            if (legFrontFar) legFrontFar.style.transform = `translateY(${Math.sin(vStride) * 3}px)`;
+            if (legFrontNear) legFrontNear.style.transform = `translateY(${Math.sin(vStride + Math.PI) * 3}px)`;
+            if (legBackFar) legBackFar.style.transform = `translateY(${Math.sin(vStride + 0.8) * 3}px)`;
+            if (legBackNear) legBackNear.style.transform = `translateY(${Math.sin(vStride + 0.8 + Math.PI) * 3}px)`;
+          } else {
+            // Sits gently on the card ledge and kneads biscuits (alternating soft paw presses)
+            state = 'knead_biscuits';
+            setEyes('happy');
+            const kneadCycle = Math.sin(frameCount * 0.12);
+            // Left paw presses down, then right paw presses down
+            if (legFrontFar) legFrontFar.style.transform = `translateY(${Math.max(0, kneadCycle * 4)}px)`;
+            if (legFrontNear) legFrontNear.style.transform = `translateY(${Math.max(0, -kneadCycle * 4)}px)`;
+            if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(frameCount * 0.06) * 10}deg)`;
+
+            if (frameCount % 220 === 0) {
+              showBubble('*knead*', 1200);
             }
           }
         }
       }
 
-    } else if (idleSeconds > 14 && idleSeconds < 29) {
-      // Trigger Cat Zoomies occasionally during prolonged idle
-      if (state !== 'zoomies' && Math.random() < 0.015) {
-        state = 'zoomies';
-        zoomieIndex = 0;
-        zoomieTargets = [
-          { x: window.innerWidth * 0.15, y: window.innerHeight * 0.35 },
-          { x: window.innerWidth * 0.85, y: window.innerHeight * 0.65 },
-          { x: window.innerWidth * 0.45, y: window.innerHeight * 0.25 },
-          { x: mouseX + 90, y: mouseY + 30 }
-        ];
-        showBubble('*zoomies!*', 1200);
-      } else if (state !== 'zoomies') {
-        // Sleep peacefully with zZz
-        state = 'sleep';
-        setEyes('sleep');
-        if (tailGroup) tailGroup.style.transform = 'rotate(-10deg)';
-        if (frameCount % 170 === 0) {
-          showBubble('zZz', 1600);
-        }
+    } else if (idleSeconds >= 12 && idleSeconds < 35) {
+      // =======================================================================
+      // Idle Sequence 2: Gentle Screen Edge Stroll (Above taskbar/bottom page)
+      // =======================================================================
+      state = 'edge_stroll';
+      setEyes('normal');
+
+      const bottomY = window.innerHeight - 48; // Walk peacefully along bottom border
+      const strollSpeed = 1.4; // Slow, delicate balance walk
+      catY += (bottomY - catY) * 0.06;
+
+      // Reverse direction at screen margins
+      if (catX > window.innerWidth - 80) edgeDirection = -1;
+      if (catX < 80) edgeDirection = 1;
+
+      catX += edgeDirection * strollSpeed;
+      facingLeft = edgeDirection < 0;
+
+      // Slow balancing cat walk
+      const strollCycle = frameCount * 0.18;
+      if (legFrontFar) legFrontFar.style.transform = `translateY(${Math.sin(strollCycle) * 3}px)`;
+      if (legFrontNear) legFrontNear.style.transform = `translateY(${Math.sin(strollCycle + Math.PI) * 3}px)`;
+      if (legBackFar) legBackFar.style.transform = `translateY(${Math.sin(strollCycle + 0.8) * 3}px)`;
+      if (legBackNear) legBackNear.style.transform = `translateY(${Math.sin(strollCycle + 0.8 + Math.PI) * 3}px)`;
+      if (tailGroup) tailGroup.style.transform = `rotate(${-18 + Math.sin(strollCycle * 0.5) * 12}deg)`;
+
+    } else if (idleSeconds >= 35 && idleSeconds < 60) {
+      // =======================================================================
+      // Idle Sequence 3: Peaceful Sleep with Gentle Torso Breathing
+      // =======================================================================
+      state = 'sleep';
+      setEyes('sleep');
+      if (tailGroup) tailGroup.style.transform = 'rotate(-10deg)';
+
+      // Gentle sleeping breath
+      const breath = Math.sin(frameCount * 0.05) * 1.5;
+      if (wrapper) wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} scaleY(${1 + breath * 0.02})`;
+
+      if (frameCount % 180 === 0) {
+        showBubble('zZz', 1600);
       }
 
     } else {
       // =======================================================================
-      // Active Hunting Mode: Stalking & Chasing the Mouse Cursor
+      // Active Cursor Stalking & Chasing (Respectful 90px Perimeter)
       // =======================================================================
-      // Standoff position: Stay 80px behind or to the flank of mouse motion
       const flankAngle = Math.atan2(catY - mouseY, catX - mouseX);
-      const safeDistance = 85;
-      targetX = mouseX + Math.cos(flankAngle) * safeDistance;
-      targetY = mouseY + Math.sin(flankAngle) * safeDistance;
+      const safeDistance = 90; // Standoff distance: Never under mouse
+      let targetX = mouseX + Math.cos(flankAngle) * safeDistance;
+      let targetY = mouseY + Math.sin(flankAngle) * safeDistance;
 
-      // Keep slightly below mouse plane
       if (targetY < mouseY + 15) {
-        targetY = mouseY + 25;
+        targetY = mouseY + 28;
       }
 
       const dx = targetX - catX;
       const dy = targetY - catY;
       const distToStandoff = Math.hypot(dx, dy);
 
-      // Stalking Butt-Wiggle before pounce
+      // Distant target: Stalk crouch before giving chase
       if (cursorDist > 220 && state === 'sit') {
         state = 'stalk';
         stateTimer = 16;
@@ -855,43 +890,41 @@
 
       if (state === 'stalk' && stateTimer > 0) {
         stateTimer--;
-        const wiggle = Math.sin(frameCount * 0.8) * 6;
+        const wiggle = Math.sin(frameCount * 0.8) * 5;
         if (tailGroup) tailGroup.style.transform = `rotate(${wiggle * 3}deg)`;
         if (wrapper) wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} translateY(5px) scaleY(0.88)`;
-        if (legBackNear) legBackNear.style.transform = `translateX(${wiggle * 0.6}px)`;
-        if (legBackFar) legBackFar.style.transform = `translateX(${-wiggle * 0.6}px)`;
+        if (legBackNear) legBackNear.style.transform = `translateX(${wiggle * 0.5}px)`;
+        if (legBackFar) legBackFar.style.transform = `translateX(${-wiggle * 0.5}px)`;
 
       } else if (distToStandoff > 18) {
-        // Chase & Hunt towards the standoff perimeter
         state = 'chase';
         setEyes(cursorDist > 140 ? 'hunt' : 'normal');
 
-        const chaseSpeed = Math.min(Math.max(distToStandoff * 0.14, 4), 16);
+        const chaseSpeed = Math.min(Math.max(distToStandoff * 0.14, 4), 15);
         catX += (dx / distToStandoff) * chaseSpeed;
         catY += (dy / distToStandoff) * chaseSpeed;
         facingLeft = mouseX < catX;
 
-        // Quadruped Gallop Gait
-        const stride = frameCount * 0.44;
+        // Quadruped Trotting Gait
+        const stride = frameCount * 0.42;
         const frontStepL = Math.sin(stride);
         const frontStepR = Math.sin(stride + Math.PI);
         const backStepL = Math.sin(stride + 0.8);
         const backStepR = Math.sin(stride + 0.8 + Math.PI);
 
-        if (legFrontFar) legFrontFar.style.transform = `translateY(${frontStepL * 4}px) rotate(${frontStepL * 14}deg)`;
-        if (legFrontNear) legFrontNear.style.transform = `translateY(${frontStepR * 4}px) rotate(${frontStepR * 14}deg)`;
-        if (legBackFar) legBackFar.style.transform = `translateY(${backStepL * 4}px) rotate(${backStepL * 16}deg)`;
-        if (legBackNear) legBackNear.style.transform = `translateY(${backStepR * 4}px) rotate(${backStepR * 16}deg)`;
-        if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(stride * 0.7) * 22}deg)`;
+        if (legFrontFar) legFrontFar.style.transform = `translateY(${frontStepL * 4}px) rotate(${frontStepL * 12}deg)`;
+        if (legFrontNear) legFrontNear.style.transform = `translateY(${frontStepR * 4}px) rotate(${frontStepR * 12}deg)`;
+        if (legBackFar) legBackFar.style.transform = `translateY(${backStepL * 4}px) rotate(${backStepL * 14}deg)`;
+        if (legBackNear) legBackNear.style.transform = `translateY(${backStepR * 4}px) rotate(${backStepR * 14}deg)`;
+        if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(stride * 0.7) * 20}deg)`;
         if (headGroup) headGroup.style.transform = `rotate(${facingLeft ? -4 : 4}deg) translateY(-1px)`;
 
       } else {
-        // At hunting perimeter: Crouch & watch cursor
+        // At hunting perimeter: Crouch & watch cursor peacefully
         state = 'sit';
         facingLeft = mouseX < catX;
         setEyes('normal');
 
-        // Reset leg transforms
         if (legFrontFar) legFrontFar.style.transform = '';
         if (legFrontNear) legFrontNear.style.transform = '';
         if (legBackFar) legBackFar.style.transform = '';
@@ -899,31 +932,23 @@
         if (headGroup) headGroup.style.transform = '';
         if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(frameCount * 0.08) * 12}deg)`;
 
-        // Occasional playful batting at distance
-        if (mouseSpeed > 5 && Math.random() < 0.04) {
-          if (legFrontNear) legFrontNear.style.transform = 'translate(4px, -6px) rotate(-16deg)';
-          setTimeout(() => {
-            if (legFrontNear) legFrontNear.style.transform = '';
-          }, 140);
-        }
-
-        // Periodic blink
+        // Periodic eye blink
         if (frameCount % 200 > 192) {
           setEyes('sleep');
         }
       }
     }
 
-    // Apply Position & Orientation
+    // Apply Position & Facing Flip
     catEl.style.transform = `translate3d(${catX - 37}px, ${catY - 45}px, 0)`;
-    if (wrapper && state !== 'photo_affection' && state !== 'stalk') {
+    if (wrapper && state !== 'photo_affection' && state !== 'stalk' && !easterEggActive) {
       wrapper.style.transform = facingLeft ? 'scaleX(-1)' : 'scaleX(1)';
     }
 
     requestAnimationFrame(animate);
   }
 
-  // Start Animation Loop
+  // Start Companion Loop
   requestAnimationFrame(animate);
 
   // Responsive Screen Check
