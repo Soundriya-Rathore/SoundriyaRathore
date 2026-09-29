@@ -4640,6 +4640,149 @@ html, body {
   .videos-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+/* ==========================================================================
+   "No, But Seriously" (@no_but.seriously) Creative Series Section
+   ========================================================================== */
+.nbs-section {
+  position: relative;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-ice);
+  border-bottom: 1px solid var(--border-ice);
+  padding: 80px 0;
+}
+
+.nbs-banner-card {
+  background: linear-gradient(135deg, rgba(0, 102, 255, 0.04) 0%, rgba(225, 48, 108, 0.04) 100%);
+  border: 1px solid var(--border-ice);
+  border-radius: 16px;
+  padding: 36px 40px;
+  margin-bottom: 36px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.nbs-creator-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-ice-light);
+  border: 1px solid var(--border-ice);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--blue-primary);
+  margin-bottom: 14px;
+}
+
+.nbs-creator-badge svg {
+  width: 15px;
+  height: 15px;
+}
+
+.nbs-banner-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--navy-deep);
+  margin-bottom: 12px;
+}
+
+.nbs-banner-desc {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--slate-mid);
+  max-width: 780px;
+  margin-bottom: 22px;
+}
+
+.nbs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.nbs-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-ice);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.nbs-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--blue-primary);
+  box-shadow: 0 10px 30px rgba(0, 102, 255, 0.08);
+}
+
+.nbs-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.nbs-chip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--blue-primary);
+  background: rgba(0, 102, 255, 0.08);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.nbs-format-pill {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--slate-light);
+}
+
+.nbs-card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--navy-deep);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.nbs-card-desc {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--slate-mid);
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.nbs-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-ice);
+}
+
+.nbs-handle {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--slate-light);
+}
+
+.nbs-link {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--blue-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nbs-link:hover {
+  color: var(--navy-deep);
 }
 
 /* Accessibility: Honor User Motion Sensitivity Preferences (WCAG AAA) */
