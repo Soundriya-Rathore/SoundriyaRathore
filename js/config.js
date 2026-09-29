@@ -80,6 +80,11 @@ window.PORTFOLIO_CONFIG = {
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
     {
+      youtubeId: "nL1r-2gkEYY",
+      title: "Delhi protests for women’s safety and justice",
+      label: "Live Stage Event"
+    },
+    {
       youtubeId: "tZ2_A4lClK4",
       title: "Rang Barse Holi Celebration | Live Event Emcee & Hosting | Soundriya Rathore",
       label: "Cultural Festival"
