@@ -80,6 +80,11 @@ window.PORTFOLIO_CONFIG = {
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
     {
+      youtubeId: "6XrYcck7EFw",
+      title: "DELHI WOMEN’S SAFETY PROTESTWhy are students protesting?",
+      label: "Live Stage Event"
+    },
+    {
       youtubeId: "nL1r-2gkEYY",
       title: "Delhi protests for women’s safety and justice",
       label: "Live Stage Event"
