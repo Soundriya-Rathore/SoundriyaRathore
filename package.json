@@ -1,0 +1,25 @@
+{
+  "name": "soundriya-rathore-portfolio",
+  "version": "1.0.0",
+  "description": "Professional portfolio website for Soundriya Rathore - Voice Artist, EMCEE & Television Journalist",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "portfolio",
+    "voice-artist",
+    "journalist",
+    "emcee"
+  ],
+  "author": "Soundriya Rathore",
+  "license": "MIT",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

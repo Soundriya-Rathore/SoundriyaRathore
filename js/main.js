@@ -5,6 +5,8 @@
  * Zero-Emoji | Pure Modern ES6+
  */
 
+import { injectSpeedInsights } from './speed-insights.mjs';
+
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initPreviewTip();
@@ -20,6 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollSpy();
   initContactActions();
   autoSyncLiveYouTube();
+
+  // Initialize Vercel Speed Insights
+  injectSpeedInsights();
 
   // Dynamic Year in Footer
   const yr = document.getElementById('current-year');

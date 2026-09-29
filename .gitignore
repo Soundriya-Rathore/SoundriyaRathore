@@ -8,6 +8,7 @@ client_secret*.json
 # Local development / temporary files
 .vercel
 node_modules/
+dist/
 .DS_Store
 Thumbs.db
 
