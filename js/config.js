@@ -18,6 +18,8 @@ window.PORTFOLIO_CONFIG = {
     whatsapp: "918107849819",
     youtubeChannel: "https://youtube.com/@soundriya.rathore?si=L-8t2I-JUCiy0A-r",
     instagram: "https://www.instagram.com/Soundriya_rathore/",
+    instagramProject: "https://www.instagram.com/no_but.seriously?stkn=ZDNlZDc0MzIxNw==",
+    instagramProjectHandle: "@no_but.seriously",
     linkedin: "https://www.linkedin.com/in/soundriya-rathore-060988316/",
     soundcloud: "https://soundcloud.com/soundriya-rathore",
     muckrack: "https://muckrack.com/soundriya-rathore-1"
@@ -75,7 +77,7 @@ window.PORTFOLIO_CONFIG = {
   shorts: [
     {
       youtubeId: "tZ2_A4lClK4",
-      title: "Rang Barse Holi Celebration | Live Event Emcee & Hosting | Soundriya Rathore",
+      title: "Rang Barse Holi Celebration | Live Event Emcee &amp; Hosting | Soundriya Rathore",
       label: "Cultural Festival"
     },
     {
@@ -85,7 +87,7 @@ window.PORTFOLIO_CONFIG = {
     },
     {
       youtubeId: "RaWw6AJ6XVo",
-      title: "Alumni Meet Host & Anchor | GKFTII Formal Stage Event | Soundriya Rathore",
+      title: "Alumni Meet Host &amp; Anchor | GKFTII Formal Stage Event | Soundriya Rathore",
       label: "Institutional Gala"
     },
     {
