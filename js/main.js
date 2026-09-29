@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initScrollProgressBar();
   initScrollReveals();
-  initMetricsCounter();
   initFloatingBackToTop();
   initHeroPerspectiveTilt();
   initCardSpotlightHover();
@@ -1153,50 +1152,7 @@ function initScrollReveals() {
 }
 
 /**
- * 3. Animated Career Metrics & Experience Counters
- */
-function initMetricsCounter() {
-  const metricItems = document.querySelectorAll('.metric-item');
-  if (!metricItems.length) return;
-
-  const animateNumber = (el, target, duration = 1400) => {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      // Ease-out cubic curve
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.floor(eased * target);
-      el.textContent = current;
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      } else {
-        el.textContent = target;
-      }
-    };
-    window.requestAnimationFrame(step);
-  };
-
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const numEl = entry.target.querySelector('.metric-number');
-        if (numEl) {
-          const target = parseInt(numEl.getAttribute('data-target'), 10) || 0;
-          animateNumber(numEl, target);
-        }
-        obs.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.25
-  });
-
-  metricItems.forEach(item => observer.observe(item));
-}
-
-/**
- * 4. Floating Glassmorphic Back to Top Action
+ * 3. Floating Glassmorphic Back to Top Action
  */
 function initFloatingBackToTop() {
   const btn = document.getElementById('floating-back-to-top');
