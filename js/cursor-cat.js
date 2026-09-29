@@ -2,8 +2,9 @@
  * Soundriya Rathore - Intelligent Playful PC Cursor Cat Companion
  * Desktop PC Only | Natural 4-Leg Feline Anatomy | Relaxed Hunting Standoff
  * Random Playful Engine: Dancing, Singing/Meow, Tail Chase, Yawn & Loaf, Pacing, Biscuits
- * Full Screen-Edge Traversal (Enters One Side & Exits Other)
+ * Full Screen-Edge Traversal (Enters One Side & Exits Other Above Taskbar)
  * 1-Minute Easter Eggs: Dimmed 7-Band Rainbow with Slow Runway Strut | Aurora Borealis with Luminous Crescent Moon
+ * 3-Minute Grand Easter Egg: SPIDER-CAT Web-Swinging across Top Navigation Bar shouting "WEB!" and "THWIP!"
  * Zero-Emoji | Pure Hardware-Accelerated 60 FPS
  */
 
@@ -25,25 +26,29 @@
   let facingLeft = false;
   let frameCount = 0;
 
-  // Random Behavior Engine States:
-  // 'sit', 'stalk', 'chase', 'listening', 'walk_to_photo', 'photo_affection',
-  // 'knead_biscuits', 'edge_stroll', 'dance', 'sing_meow', 'chase_tail', 'pacing', 'yawn_loaf', 'sleep'
+  // State Machine: 'sit', 'stalk', 'chase', 'listening', 'walk_to_photo', 'photo_affection',
+  // 'knead_biscuits', 'edge_stroll', 'dance', 'sing_meow', 'chase_tail', 'yawn_loaf', 'sleep',
+  // 'easter_egg' (1-min rainbow/aurora), 'spider_cat' (3-min web-swinging)
   let state = 'sit';
   let stateTimer = 0;
-  let stateVariant = 0;
   let lastUserActivity = Date.now();
-  const EASTER_EGG_TIMEOUT_MS = 60000; // Exactly 1 minute (60s)
+  const EASTER_EGG_TIMEOUT_MS = 60000;   // 1 Minute (60s)
+  const SPIDER_CAT_TIMEOUT_MS = 180000;  // 3 Minutes (180s)
+  
   let easterEggActive = false;
   let easterEggMode = null; // 'rainbow' or 'aurora'
   let easterEggFrame = 0;
 
+  // Spider-Cat State
+  let spiderCatActive = false;
+  let spiderFrame = 0;
+  let spiderSwingIndex = 0;
+  let spiderAnchorX = window.innerWidth * 0.35;
+  const spiderAnchorY = 24; // Top Navigation Bar anchor level
+
   // Screen Edge Stroll State (Full screen traversal from off-screen to off-screen)
   let edgeDirection = 1; // 1 = Left to Right, -1 = Right to Left
   let edgeActive = false;
-
-  // Pacing Range
-  let paceOriginX = 0;
-  let paceDirection = 1;
 
   // Tail Chase Angle
   let spinAngle = 0;
@@ -84,6 +89,41 @@
     transform: translate3d(-150px, -150px, 0);
     transition: opacity 0.3s ease;
   `;
+
+  // Create Fixed Spider-Man Web SVG Overlay
+  const spiderWebSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  spiderWebSvg.id = 'cat-spider-web-overlay';
+  spiderWebSvg.setAttribute('aria-hidden', 'true');
+  spiderWebSvg.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9993;
+    overflow: visible;
+    display: none;
+  `;
+  spiderWebSvg.innerHTML = `
+    <defs>
+      <filter id="webSoftGlow">
+        <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#FFFFFF" flood-opacity="0.95"/>
+      </filter>
+    </defs>
+    <!-- Web Line from Navbar to Cat -->
+    <line id="spider-web-line" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" filter="url(#webSoftGlow)"/>
+    <!-- Sticky Web Burst / Splat on Navigation Bar -->
+    <g id="spider-web-splat">
+      <circle cx="0" cy="0" r="7" fill="#FFFFFF" opacity="0.95" filter="url(#webSoftGlow)"/>
+      <path d="M 0 0 L -14 -6 M 0 0 L -9 -13 M 0 0 L 9 -13 M 0 0 L 14 -6 M 0 0 L 16 5 M 0 0 L 9 13 M 0 0 L -9 13 M 0 0 L -16 5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="0" cy="0" r="11" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.75"/>
+    </g>
+  `;
+  document.body.appendChild(spiderWebSvg);
+
+  const webLine = spiderWebSvg.querySelector('#spider-web-line');
+  const webSplat = spiderWebSvg.querySelector('#spider-web-splat');
 
   // Inject Theme Styling & Animation Keyframes
   const styleEl = document.createElement('style');
@@ -180,7 +220,7 @@
   `;
   document.head.appendChild(styleEl);
 
-  // SVG Anatomy: 4 Natural Feline Legs, Realistic Joints, Studio Headphones, Facial States
+  // SVG Anatomy: 4 Natural Feline Legs, Realistic Joints, Studio Headphones, Facial States, Spider-Cat Suit
   catEl.innerHTML = `
     <div class="cat-wrapper" style="position: relative; width: 100%; height: 100%; transform-origin: 50% 88%;">
       <!-- Ground Shadow -->
@@ -332,9 +372,47 @@
             </g>
           </g>
         </g>
+
+        <!-- ===================================================================
+             SPIDER-CAT SUIT OVERLAY (Transforms after 3 Minutes!)
+             =================================================================== -->
+        <g class="cat-spiderman-suit" style="display: none;">
+          <!-- Blue Flanks Body Suit -->
+          <path d="M 22 36 C 20 28, 28 22, 38 23 C 46 24, 52 28, 52 35 C 52 43, 44 46, 36 46 C 26 46, 22 42, 22 36 Z" fill="#1D4ED8"/>
+          <!-- Red Center Chest & Spine Section -->
+          <path d="M 32 23 C 40 23, 48 27, 48 35 C 48 43, 40 46, 34 45 C 38 41, 38 28, 32 23 Z" fill="#EF4444"/>
+          <!-- Spider Web Grid on Red Body -->
+          <path d="M 35 24 L 46 43 M 43 24 L 35 43 M 34 32 Q 40 33 46 32 M 34 38 Q 40 39 46 38" fill="none" stroke="#0F172A" stroke-width="0.6"/>
+          <!-- Spider Emblem on Chest -->
+          <g transform="translate(41, 33)">
+            <ellipse cx="0" cy="0" rx="1.5" ry="2" fill="#0F172A"/>
+            <circle cx="0" cy="-2.2" r="1" fill="#0F172A"/>
+            <path d="M -1 -1 Q -3 -3 -4 -5 M -1 0 Q -4 0 -5 2 M -1 1 Q -4 2 -3 5 M 1 -1 Q 3 -3 4 -5 M 1 0 Q 4 0 5 2 M 1 1 Q 4 2 3 5" fill="none" stroke="#0F172A" stroke-width="0.65"/>
+          </g>
+
+          <!-- Red Gloves on Front Paws -->
+          <ellipse cx="42" cy="51.5" rx="3.5" ry="2.3" fill="#EF4444" stroke="#DC2626" stroke-width="0.5"/>
+          <ellipse cx="49.5" cy="52" rx="4" ry="2.5" fill="#EF4444" stroke="#DC2626" stroke-width="0.5"/>
+          <!-- Red Boots on Rear Paws -->
+          <ellipse cx="18.5" cy="52.5" rx="3.8" ry="2.3" fill="#EF4444" stroke="#DC2626" stroke-width="0.5"/>
+          <ellipse cx="25" cy="53.5" rx="4.2" ry="2.4" fill="#EF4444" stroke="#DC2626" stroke-width="0.5"/>
+
+          <!-- Red Spider-Cat Mask & Hood -->
+          <polygon points="39,17 42,4 49,14" fill="#EF4444"/>
+          <polygon points="52,13 58,4 62,17" fill="#EF4444"/>
+          <ellipse cx="50" cy="20" rx="12.5" ry="10.5" fill="#EF4444" filter="url(#cat-depth-shadow)"/>
+
+          <!-- Black Spider Web Grid on Mask -->
+          <path d="M 50 20 L 50 9.5 M 50 20 L 42 10.5 M 50 20 L 58 10.5 M 50 20 L 37.5 20 M 50 20 L 62.5 20 M 50 20 L 43 28 M 50 20 L 57 28" stroke="#0F172A" stroke-width="0.75" stroke-linecap="round"/>
+          <path d="M 45 13 Q 50 11 55 13 M 42 16 Q 50 14 58 16 M 44 24 Q 50 26 56 24" fill="none" stroke="#0F172A" stroke-width="0.75"/>
+
+          <!-- Iconic White Curved Triangular Spider-Man Eye Lenses -->
+          <path d="M 41 15 C 45 14, 47 18, 47 21 C 44 22, 39 20, 41 15 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8"/>
+          <path d="M 59 15 C 55 14, 53 18, 53 21 C 56 22, 61 20, 59 15 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8"/>
+        </g>
       </svg>
 
-      <!-- Emote Interaction Bubble -->
+      <!-- Comic / Emote Interaction Bubble -->
       <div class="cat-bubble" style="
         position: absolute;
         top: -18px;
@@ -377,6 +455,7 @@
   const eyesStarry = catEl.querySelector('.cat-eyes-starry');
   const headphones = catEl.querySelector('.cat-headphones');
   const musicNotes = catEl.querySelector('.cat-music-notes');
+  const spidermanSuit = catEl.querySelector('.cat-spiderman-suit');
   const bubble = catEl.querySelector('.cat-bubble');
 
   // Eye State Controller
@@ -394,7 +473,7 @@
     if (mouthOpen) mouthOpen.style.display = isOpen ? 'block' : 'none';
   }
 
-  // Emote Bubble Display
+  // Bubble Messenger
   function showBubble(text, duration = 1200) {
     if (!bubble) return;
     bubble.textContent = text;
@@ -407,11 +486,14 @@
     }, duration);
   }
 
-  // User Activity Tracker (Resets 1-minute timer & dismisses Easter egg instantly)
+  // User Activity Tracker (Resets idle timers & dismisses active Easter eggs gracefully)
   const registerActivity = () => {
     lastUserActivity = Date.now();
     if (easterEggActive) {
       stopEasterEgg();
+    }
+    if (spiderCatActive) {
+      stopSpiderCat();
     }
   };
 
@@ -471,7 +553,7 @@
   let easterEggOverlay = null;
 
   function startEasterEgg() {
-    if (easterEggActive) return;
+    if (easterEggActive || spiderCatActive) return;
     easterEggActive = true;
     easterEggFrame = 0;
     easterEggMode = isDarkTheme() ? 'aurora' : 'rainbow';
@@ -481,7 +563,6 @@
 
     if (easterEggMode === 'rainbow') {
       // Light Mode: Authentic 7-Band Concentric Rainbow Arc with DIMMED Backdrop
-      // Soft dim background so rainbow & cat runway stand out gracefully!
       easterEggOverlay.style.background = 'rgba(15, 23, 42, 0.44)';
       easterEggOverlay.style.backdropFilter = 'blur(2px)';
       easterEggOverlay.innerHTML = `
@@ -525,7 +606,7 @@
       showBubble('*strut*', 2600);
 
     } else {
-      // Dark Mode: Dim Atmosphere, True Aurora Borealis Curtains, LUMINOUS CRESCENT MOON & Starfield
+      // Dark Mode: Dim Atmosphere, Aurora Curtains, LUMINOUS CRESCENT MOON & Starfield
       let starsSvg = '';
       for (let i = 0; i < 35; i++) {
         const sx = (Math.random() * 96).toFixed(1);
@@ -576,11 +657,8 @@
 
           <!-- Glowing Crescent Moon with Halo -->
           <g class="easter-moon-group" transform="translate(180, 85)">
-            <!-- Outer Moonlit Aura Halo -->
             <circle cx="0" cy="0" r="42" fill="rgba(224, 242, 254, 0.22)" filter="url(#auroraCurtainBlur)" class="easter-moon-glow"/>
-            <!-- Crescent Moon Body -->
             <path d="M 0 -24 A 24 24 0 1 0 24 0 A 19 19 0 1 1 0 -24 Z" fill="#F8FAFC" filter="drop-shadow(0 0 14px rgba(255, 255, 255, 0.85))"/>
-            <!-- Subtle Lunar Crater Details -->
             <circle cx="-6" cy="2" r="3.2" fill="#E2E8F0" opacity="0.6"/>
             <circle cx="-2" cy="-10" r="2.4" fill="#E2E8F0" opacity="0.5"/>
             <circle cx="2" cy="11" r="2" fill="#E2E8F0" opacity="0.5"/>
@@ -625,6 +703,54 @@
   }
 
   // =========================================================================
+  // Grand Easter Egg System: 3 Minutes (180,000ms) - SPIDER-CAT!
+  // =========================================================================
+  function startSpiderCat() {
+    if (spiderCatActive) return;
+    // Dismiss 1-minute easter egg if active
+    if (easterEggActive) stopEasterEgg();
+
+    spiderCatActive = true;
+    spiderFrame = 0;
+    spiderSwingIndex = 0;
+    spiderAnchorX = window.innerWidth * 0.35;
+
+    // Put on the Spider-Man suit!
+    if (spidermanSuit) spidermanSuit.style.display = 'block';
+    if (spiderWebSvg) spiderWebSvg.style.display = 'block';
+
+    showBubble('*POOF! SPIDER-CAT!*', 2000);
+  }
+
+  function stopSpiderCat() {
+    if (!spiderCatActive) return;
+    spiderCatActive = false;
+
+    // Hide Spider-Man suit and web line
+    if (spidermanSuit) spidermanSuit.style.display = 'none';
+    if (spiderWebSvg) spiderWebSvg.style.display = 'none';
+
+    // Backflip landing
+    if (wrapper) {
+      wrapper.style.transition = 'transform 0.3s ease-out';
+      wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} rotate(360deg)`;
+      setTimeout(() => {
+        wrapper.style.transition = '';
+        wrapper.style.transform = facingLeft ? 'scaleX(-1)' : 'scaleX(1)';
+      }, 300);
+    }
+
+    state = 'sit';
+    setEyes('normal');
+    setMouth(false);
+    showBubble(':3', 1000);
+  }
+
+  // Developer convenience: Accessible via console for instant testing
+  window.triggerSpiderCat = startSpiderCat;
+  window.triggerEasterEgg = startEasterEgg;
+
+  // =========================================================================
   // 60 FPS Companion Animation Loop
   // =========================================================================
   function animate() {
@@ -633,8 +759,10 @@
     const idleMs = now - lastUserActivity;
     const idleSeconds = idleMs / 1000;
 
-    // Trigger 1-Minute Inactivity Easter Egg (60,000ms)
-    if (idleMs >= EASTER_EGG_TIMEOUT_MS && !easterEggActive && !isAudioActive()) {
+    // Check Trigger for 3-Minute Grand Easter Egg: SPIDER-CAT!
+    if (idleMs >= SPIDER_CAT_TIMEOUT_MS && !spiderCatActive && !isAudioActive()) {
+      startSpiderCat();
+    } else if (idleMs >= EASTER_EGG_TIMEOUT_MS && idleMs < SPIDER_CAT_TIMEOUT_MS && !easterEggActive && !spiderCatActive && !isAudioActive()) {
       startEasterEgg();
     }
 
@@ -649,7 +777,79 @@
     }
 
     // =========================================================================
-    // Easter Egg Rendering Loop
+    // 3-Minute Grand Easter Egg: SPIDER-CAT WEB SWINGING
+    // =========================================================================
+    if (spiderCatActive) {
+      spiderFrame++;
+
+      // Multiple Anchor Points along the top Navigation Bar
+      const navAnchors = [
+        window.innerWidth * 0.28,
+        window.innerWidth * 0.72,
+        window.innerWidth * 0.48,
+        window.innerWidth * 0.82,
+        window.innerWidth * 0.18
+      ];
+
+      // Switch anchor point every 220 frames (~3.6s per swing session)
+      const currentAnchorIndex = Math.floor(spiderFrame / 220) % navAnchors.length;
+      spiderAnchorX += (navAnchors[currentAnchorIndex] - spiderAnchorX) * 0.05;
+
+      // Authentic Pendulum Swing Physics
+      const swingSpeed = 0.038;
+      const angle = Math.sin(spiderFrame * swingSpeed) * 0.68; // Radians (~ -39 to +39 deg)
+      const ropeLength = 150 + Math.cos(spiderFrame * (swingSpeed * 0.5)) * 25;
+
+      catX = spiderAnchorX + Math.sin(angle) * ropeLength;
+      catY = spiderAnchorY + Math.cos(angle) * ropeLength;
+
+      // Facing orientation based on swing velocity
+      const swingVel = Math.cos(spiderFrame * swingSpeed);
+      facingLeft = swingVel < 0;
+
+      // Cat body tilts with pendulum arc
+      const swingDeg = angle * (180 / Math.PI);
+
+      // Upside-Down Hanging Pause every 4th cycle
+      const hangingCycle = Math.floor(spiderFrame / 440) % 2 === 1;
+      if (hangingCycle && Math.abs(angle) < 0.18) {
+        // Hangs upside-down by a single web thread from navbar
+        if (wrapper) wrapper.style.transform = 'rotate(180deg)';
+        if (spiderFrame % 140 === 0) {
+          showBubble('*hangs upside-down*', 1600);
+        }
+      } else {
+        if (wrapper) {
+          wrapper.style.transform = `${facingLeft ? 'scaleX(-1) ' : ''}rotate(${swingDeg * 0.85}deg)`;
+        }
+
+        // Shouts at the top of the Navigation Bar!
+        // Triggers shouts near the peak of the swing / when shooting webs
+        if (spiderFrame % 180 === 15) {
+          showBubble('*THWIP!*', 1200);
+        } else if (spiderFrame % 180 === 60) {
+          showBubble('*WEB!*', 1200);
+        } else if (spiderFrame % 180 === 115) {
+          showBubble('SPIDER-CAT!', 1400);
+        }
+      }
+
+      // Update Web SVG Vector Line & Sticky Splat
+      if (webLine && webSplat) {
+        webLine.setAttribute('x1', spiderAnchorX);
+        webLine.setAttribute('y1', spiderAnchorY);
+        webLine.setAttribute('x2', catX + (facingLeft ? -8 : 8));
+        webLine.setAttribute('y2', catY - 14); // Connects to front paw!
+        webSplat.setAttribute('transform', `translate(${spiderAnchorX}, ${spiderAnchorY})`);
+      }
+
+      catEl.style.transform = `translate3d(${catX - 37}px, ${catY - 45}px, 0)`;
+      requestAnimationFrame(animate);
+      return;
+    }
+
+    // =========================================================================
+    // 1-Minute Easter Egg Rendering (Rainbow / Aurora)
     // =========================================================================
     if (easterEggActive) {
       easterEggFrame++;
@@ -670,7 +870,6 @@
         catY = (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * p1.y + t * t * p2.y;
         facingLeft = false;
 
-        // Ultra-delicate slow runway steps
         const delicateStrut = frameCount * 0.08;
         const stepL = Math.sin(delicateStrut);
         const stepR = Math.sin(delicateStrut + Math.PI);
@@ -680,11 +879,9 @@
         if (legBackFar) legBackFar.style.transform = `translateY(${stepR * 3}px) rotate(${stepR * 8}deg)`;
         if (legBackNear) legBackNear.style.transform = `translateY(${stepL * 3}px) rotate(${stepL * 8}deg)`;
 
-        // Regal chin tilt and plume tail sway
         if (headGroup) headGroup.style.transform = `rotate(${Math.sin(delicateStrut * 0.5) * 2.5 - 2}deg) translateY(-2px)`;
         if (tailGroup) tailGroup.style.transform = `rotate(${-22 + Math.sin(delicateStrut * 0.5) * 12}deg)`;
 
-        // Summit apex pause: Strikes a fashion pose
         if (cycle > 0.48 && cycle < 0.52) {
           setEyes('happy');
           if (headGroup) headGroup.style.transform = 'rotate(0deg)';
@@ -701,11 +898,9 @@
 
         setEyes('starry');
         setMouth(false);
-        // Cat gazes up in quiet awe toward the moon and aurora
         if (headGroup) headGroup.style.transform = `rotate(-16deg) translateY(-4px)`;
         if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(frameCount * 0.04) * 8}deg)`;
 
-        // Calm breathing rise and fall
         const breath = Math.sin(frameCount * 0.04) * 1.5;
         if (wrapper) wrapper.style.transform = `scaleY(${1 + breath * 0.02})`;
       }
@@ -755,10 +950,7 @@
       // =======================================================================
       stateTimer--;
 
-      // When stateTimer reaches 0, pick a new delightful random feline activity!
       if (stateTimer <= 0) {
-        // Choose next activity:
-        // 0: visit photo (if visible), 1: dance, 2: sing/meow, 3: biscuits, 4: screen edge walk, 5: tail chase, 6: pacing, 7: yawn & loaf
         const portrait = findVisiblePortrait();
         const randChoice = Math.random();
 
@@ -766,38 +958,31 @@
           state = 'walk_to_photo';
           stateTimer = 350; // ~6 seconds
         } else if (randChoice < 0.42 && !edgeActive) {
-          // SCREEN EDGE STROLL: Traverses the entire screen bottom above taskbar
           state = 'edge_stroll';
           edgeActive = true;
-          // Enter from one side off-screen, exit the other side
           edgeDirection = Math.random() < 0.5 ? 1 : -1;
           catX = edgeDirection === 1 ? -70 : window.innerWidth + 70;
           catY = window.innerHeight - 38; // Sits right atop taskbar
           stateTimer = 900; // ~15 seconds to leisurely cross screen
           showBubble(':3', 1000);
         } else if (randChoice < 0.56) {
-          // GENTLE DANCE: Two-step shuffle with rhythmic ear twitches
           state = 'dance';
           stateTimer = 220; // ~3.6 seconds
           showBubble('*dance*', 1400);
         } else if (randChoice < 0.70) {
-          // SING / MEOW: Opens mouth and emits sweet vocal music bursts
           state = 'sing_meow';
           stateTimer = 200; // ~3.3 seconds
           showBubble('meow~', 1500);
         } else if (randChoice < 0.82) {
-          // SLOW BISCUITS: Hypnotic, meditative, slow kneading
           state = 'knead_biscuits';
           stateTimer = 260; // ~4.3 seconds
           showBubble('*knead*', 1400);
         } else if (randChoice < 0.92) {
-          // CHASE TAIL: Playfully spins in a circle chasing its tail
           state = 'chase_tail';
           spinAngle = 0;
           stateTimer = 140; // ~2.3 seconds
           showBubble('*spin*', 1200);
         } else {
-          // YAWN & LOAF: Big kitten stretch, yawn, and cozy loaf
           state = 'yawn_loaf';
           stateTimer = 280; // ~4.6 seconds
           showBubble('*yawn*', 1500);
@@ -813,7 +998,6 @@
           const pDist = Math.hypot(pDx, pDy);
 
           if (pDist > 25) {
-            // Calm slow walk
             facingLeft = pDx < 0;
             setEyes('normal');
             setMouth(false);
@@ -827,7 +1011,6 @@
             if (legBackFar) legBackFar.style.transform = `translateY(${Math.sin(walkStride + 0.8) * 2.5}px)`;
             if (legBackNear) legBackNear.style.transform = `translateY(${Math.sin(walkStride + 0.8 + Math.PI) * 2.5}px)`;
           } else {
-            // Arrived: Gentle cheek-rubbing affection & purr
             setEyes('happy');
             setMouth(false);
             const rub = Math.sin(frameCount * 0.06);
@@ -838,17 +1021,16 @@
             if (frameCount % 180 === 0) showBubble('*purr*', 1400);
           }
         } else {
-          stateTimer = 0; // Pick new behavior if photo scrolled away
+          stateTimer = 0;
         }
 
       } else if (state === 'edge_stroll') {
-        // Screen Edge Traversal: Enters from one off-screen side, slow-walks across taskbar top, exits other side
         setEyes('normal');
         setMouth(false);
         const taskbarTopY = window.innerHeight - 38;
         catY += (taskbarTopY - catY) * 0.08;
 
-        const slowEdgeSpeed = 1.1; // Leisurely, delicate balance stroll
+        const slowEdgeSpeed = 1.1;
         catX += edgeDirection * slowEdgeSpeed;
         facingLeft = edgeDirection < 0;
 
@@ -859,18 +1041,15 @@
         if (legBackNear) legBackNear.style.transform = `translateY(${Math.sin(strollCycle + 0.8 + Math.PI) * 2.8}px)`;
         if (tailGroup) tailGroup.style.transform = `rotate(${-18 + Math.sin(strollCycle * 0.5) * 12}deg)`;
 
-        // Check if fully exited the other side of the screen
         if ((edgeDirection === 1 && catX > window.innerWidth + 75) ||
             (edgeDirection === -1 && catX < -75)) {
           edgeActive = false;
-          // Return smoothly near mouse area
           catX = mouseX + (edgeDirection === 1 ? -90 : 90);
           catY = mouseY + 30;
           stateTimer = 0;
         }
 
       } else if (state === 'dance') {
-        // Happy Little Kitten Shuffle Dance
         setEyes('happy');
         setMouth(false);
         const danceStep = Math.sin(frameCount * 0.12) * 5;
@@ -880,7 +1059,6 @@
         if (legFrontNear) legFrontNear.style.transform = `translateY(${Math.sin(frameCount * 0.14) * 3}px)`;
 
       } else if (state === 'sing_meow') {
-        // Singing / Meowing with Cute Open Mouth
         setEyes('happy');
         setMouth(true);
         if (headGroup) headGroup.style.transform = `rotate(-8deg) translateY(-2px)`;
@@ -888,7 +1066,6 @@
         if (musicNotes && frameCount % 60 < 40) musicNotes.style.display = 'block';
 
       } else if (state === 'knead_biscuits') {
-        // Ultra-Slow, Gentle, Meditative Biscuit Kneading
         setEyes('happy');
         setMouth(false);
         const slowKnead = Math.sin(frameCount * 0.045);
@@ -897,7 +1074,6 @@
         if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(frameCount * 0.04) * 8}deg)`;
 
       } else if (state === 'chase_tail') {
-        // Playful 360-Degree Tail Chase Spin
         setEyes('hunt');
         setMouth(false);
         spinAngle += 7;
@@ -905,16 +1081,13 @@
         if (tailGroup) tailGroup.style.transform = `rotate(28deg)`;
 
       } else if (state === 'yawn_loaf') {
-        // Kitten Yawn, Stretch & Loaf
         if (stateTimer > 180) {
-          // Big yawn & stretch
           setEyes('sleep');
           setMouth(true);
           if (wrapper) wrapper.style.transform = `${facingLeft ? 'scaleX(-1)' : 'scaleX(1)'} scaleX(1.1) translateY(2px)`;
           if (legFrontNear) legFrontNear.style.transform = 'translate(4px, -1px)';
           if (legFrontFar) legFrontFar.style.transform = 'translate(4px, -1px)';
         } else {
-          // Relax into a peaceful little loaf
           setMouth(false);
           setEyes('sleep');
           if (legFrontNear) legFrontNear.style.transform = '';
@@ -933,7 +1106,7 @@
       setMouth(false);
 
       const flankAngle = Math.atan2(catY - mouseY, catX - mouseX);
-      const safeDistance = 90; // Standoff distance: Never under mouse
+      const safeDistance = 90;
       let targetX = mouseX + Math.cos(flankAngle) * safeDistance;
       let targetY = mouseY + Math.sin(flankAngle) * safeDistance;
 
@@ -946,7 +1119,6 @@
       const distToStandoff = Math.hypot(dx, dy);
 
       if (distToStandoff > 18) {
-        // Calm, smooth, leisurely trot (Max speed 4.5px/frame)
         state = 'chase';
         setEyes('normal');
 
@@ -955,7 +1127,6 @@
         catY += (dy / distToStandoff) * calmSpeed;
         facingLeft = mouseX < catX;
 
-        // Slow natural gait
         const stride = frameCount * 0.24;
         const stepL = Math.sin(stride);
         const stepR = Math.sin(stride + Math.PI);
@@ -967,7 +1138,6 @@
         if (headGroup) headGroup.style.transform = `rotate(${facingLeft ? -3 : 3}deg)`;
 
       } else {
-        // At hunting perimeter: Sit calmly & watch
         facingLeft = mouseX < catX;
         setEyes('normal');
 
@@ -978,7 +1148,6 @@
         if (headGroup) headGroup.style.transform = '';
         if (tailGroup) tailGroup.style.transform = `rotate(${Math.sin(frameCount * 0.07) * 10}deg)`;
 
-        // Periodic soft blink
         if (frameCount % 200 > 192) {
           setEyes('sleep');
         }
@@ -987,7 +1156,7 @@
 
     // Apply Position & Facing Flip
     catEl.style.transform = `translate3d(${catX - 37}px, ${catY - 45}px, 0)`;
-    if (wrapper && state !== 'photo_affection' && state !== 'chase_tail' && state !== 'dance' && state !== 'yawn_loaf' && !easterEggActive) {
+    if (wrapper && state !== 'photo_affection' && state !== 'chase_tail' && state !== 'dance' && state !== 'yawn_loaf' && !easterEggActive && !spiderCatActive) {
       wrapper.style.transform = facingLeft ? 'scaleX(-1)' : 'scaleX(1)';
     }
 
@@ -1002,6 +1171,7 @@
     if (!isDesktop()) {
       catEl.style.display = 'none';
       if (easterEggActive) stopEasterEgg();
+      if (spiderCatActive) stopSpiderCat();
     } else {
       catEl.style.display = 'block';
     }
