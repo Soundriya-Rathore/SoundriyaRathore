@@ -4640,6 +4640,8 @@ html, body {
   .videos-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
 /* ==========================================================================
    "No, But Seriously" (@no_but.seriously) Creative Series Section
    ========================================================================== */
@@ -4674,9 +4676,25 @@ html, body {
   margin-bottom: 14px;
 }
 
+.nbs-section svg {
+  max-width: 20px;
+  max-height: 20px;
+}
+
 .nbs-creator-badge svg {
   width: 15px;
   height: 15px;
+  max-width: 15px;
+  max-height: 15px;
+  flex-shrink: 0;
+}
+
+.nbs-banner-actions svg {
+  width: 16px;
+  height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+  flex-shrink: 0;
 }
 
 .nbs-banner-title {
