@@ -80,6 +80,11 @@ window.PORTFOLIO_CONFIG = {
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
     {
+      youtubeId: "DXj2fZTfUYE",
+      title: "Nepal Floods Crisis: Catastrophic Landslides Wash Away Towns #Shorts",
+      label: "Live Stage Event"
+    },
+    {
       youtubeId: "6XrYcck7EFw",
       title: "Why Are Delhi Students Protesting? Ground Reality of Women Safety #Shorts",
       label: "Live Stage Event"
@@ -103,11 +108,6 @@ window.PORTFOLIO_CONFIG = {
       youtubeId: "RaWw6AJ6XVo",
       title: "Formal Stage Anchoring: Annual Alumni Meet Host Soundriya Rathore #Shorts",
       label: "Institutional Gala"
-    },
-    {
-      youtubeId: "jqCok9FnwF4",
-      title: "Fast-Paced Digital News Anchor: Speed, Precision & Clarity #Shorts",
-      label: "Digital News Desk"
     }
   ],
 
