@@ -53,7 +53,7 @@ window.PORTFOLIO_CONFIG = {
     },
     {
       youtubeId: "g-Sd6AoYXt4",
-      title: "Field Reporting & Piece to Camera (PTC) | On-Location News | Soundriya Rathore",
+      title: "Live Field Reporting & Piece to Camera (PTC): On Location News #Shorts",
       category: "Broadcast Journalism",
       badge: "Bulletin"
     },
@@ -81,32 +81,32 @@ window.PORTFOLIO_CONFIG = {
   shorts: [
     {
       youtubeId: "6XrYcck7EFw",
-      title: "DELHI WOMEN’S SAFETY PROTESTWhy are students protesting?",
+      title: "Why Are Delhi Students Protesting? Ground Reality of Women Safety #Shorts",
       label: "Live Stage Event"
     },
     {
       youtubeId: "nL1r-2gkEYY",
-      title: "Delhi protests for women’s safety and justice",
+      title: "Delhi Demands Justice: Ground Report on Women Safety Protests #Shorts",
       label: "Live Stage Event"
     },
     {
       youtubeId: "tZ2_A4lClK4",
-      title: "Rang Barse Holi Celebration | Live Event Emcee & Hosting | Soundriya Rathore",
+      title: "Electrifying Stage Energy! Rang Barse Holi Festival Live Emcee #Shorts",
       label: "Cultural Festival"
     },
     {
       youtubeId: "D5Z4vR1B72c",
-      title: "Standup Comedy Night Host | Live Stage Emceeing | Soundriya Rathore",
+      title: "Live Standup Comedy Stage Host: Club Capri Emcee Soundriya Rathore #Shorts",
       label: "Comedy & Entertainment"
     },
     {
       youtubeId: "RaWw6AJ6XVo",
-      title: "Alumni Meet Host & Anchor | GKFTII Formal Stage Event | Soundriya Rathore",
+      title: "Formal Stage Anchoring: Annual Alumni Meet Host Soundriya Rathore #Shorts",
       label: "Institutional Gala"
     },
     {
       youtubeId: "jqCok9FnwF4",
-      title: "Digital Media News Reel | Fast-Paced News Anchor | Soundriya Rathore",
+      title: "Fast-Paced Digital News Anchor: Speed, Precision & Clarity #Shorts",
       label: "Digital News Desk"
     }
   ],
