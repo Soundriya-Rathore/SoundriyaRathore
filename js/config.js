@@ -81,7 +81,7 @@ window.PORTFOLIO_CONFIG = {
   shorts: [
     {
       youtubeId: "ij25Nw3cJFM",
-      title: "Protesters detained by delhi police!",
+      title: "Citizens Detained, System Questioned: Jantar Mantar Protest Ground Report #Shorts",
       label: "Live Stage Event"
     },
     {
