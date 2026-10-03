@@ -80,6 +80,11 @@ window.PORTFOLIO_CONFIG = {
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
     {
+      youtubeId: "ij25Nw3cJFM",
+      title: "Protesters detained by delhi police!",
+      label: "Live Stage Event"
+    },
+    {
       youtubeId: "DXj2fZTfUYE",
       title: "Nepal Floods Crisis: Catastrophic Landslides Wash Away Towns #Shorts",
       label: "Live Stage Event"
@@ -103,11 +108,6 @@ window.PORTFOLIO_CONFIG = {
       youtubeId: "D5Z4vR1B72c",
       title: "Live Standup Comedy Stage Host: Club Capri Emcee Soundriya Rathore #Shorts",
       label: "Comedy & Entertainment"
-    },
-    {
-      youtubeId: "RaWw6AJ6XVo",
-      title: "Formal Stage Anchoring: Annual Alumni Meet Host Soundriya Rathore #Shorts",
-      label: "Institutional Gala"
     }
   ],
 
