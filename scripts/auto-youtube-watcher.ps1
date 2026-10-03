@@ -47,6 +47,72 @@ function Parse-IsoDuration([string]$isoDuration) {
     }
 }
 
+function Get-VideoAspectRatioClassification([string]$VideoId) {
+    Write-Host "[AspectRatio] Detecting native aspect ratio for video $VideoId..."
+    
+    # Method 1: Inspect frame0.jpg dimensions
+    $frame0Url = "https://i.ytimg.com/vi/$VideoId/frame0.jpg"
+    $testFramePath = Join-Path $FramesDir "${VideoId}_aspect_detect.jpg"
+    curl.exe -s -L $frame0Url -o $testFramePath
+    
+    $width = 0
+    $height = 0
+    $ratio = 0.0
+    if (Test-Path $testFramePath) {
+        $fItem = Get-Item $testFramePath
+        if ($fItem.Length -gt 1000) {
+            try {
+                $img = [System.Drawing.Image]::FromFile($testFramePath)
+                $width = $img.Width
+                $height = $img.Height
+                if ($height -gt 0) {
+                    $ratio = [double]$width / [double]$height
+                }
+                $img.Dispose()
+            } catch {}
+        }
+    }
+
+    # Method 2: Check YouTube Shorts endpoint redirect behavior
+    $shortsUrl = "https://www.youtube.com/shorts/$VideoId"
+    $req = [System.Net.WebRequest]::Create($shortsUrl)
+    $req.Method = "HEAD"
+    $req.AllowAutoRedirect = $false
+    $statusCode = 0
+    try {
+        $resp = $req.GetResponse()
+        $statusCode = [int]$resp.StatusCode
+        $resp.Close()
+    } catch {
+        if ($_.Exception.Response) {
+            $statusCode = [int]$_.Exception.Response.StatusCode
+        }
+    }
+
+    # Decision: Width < Height (ratio < 1.0) or HTTP 200 => 9:16 Vertical Short
+    # Width >= Height (ratio >= 1.0) or HTTP 303 => 16:9 Landscape Video
+    $isVertical = $false
+    if ($ratio -gt 0) {
+        $isVertical = ($ratio -lt 1.0)
+    } elseif ($statusCode -eq 200) {
+        $isVertical = $true
+    }
+
+    $formatStr = if ($isVertical) { "9:16 Vertical Short" } else { "16:9 Landscape Video" }
+    $typeStr = if ($isVertical) { "short" } else { "video" }
+
+    Write-Host "[AspectRatio] Result: $formatStr (Dims: ${width}x${height}, Ratio: $([math]::Round($ratio, 3)), Shorts HTTP: $statusCode)"
+    return [PSCustomObject]@{
+        IsVertical = $isVertical
+        AspectRatio = $ratio
+        Width = $width
+        Height = $height
+        ShortsStatusCode = $statusCode
+        Format = $formatStr
+        Type = $typeStr
+    }
+}
+
 function Build-AutoShortThumbnail($id, $title, $framePath, $outPath) {
     Write-Host "[Thumbnail] Rendering 9:16 vertical thumbnail for Short ($id)..."
     $bmp = New-Object System.Drawing.Bitmap 1080, 1920
@@ -243,10 +309,11 @@ function Check-And-Process-NewVideos {
 
             $detail = $vDetails.items[0]
             $durationSec = Parse-IsoDuration $detail.contentDetails.duration
-            $isShort = ($durationSec -le 180) -and ($durationSec -gt 0)
-            $typeStr = if ($isShort) { "short" } else { "video" }
+            $classification = Get-VideoAspectRatioClassification -VideoId $vId
+            $isShort = $classification.IsVertical
+            $typeStr = $classification.Type
 
-            Write-Host "[Watcher] Video Duration: $durationSec seconds | Format: $typeStr"
+            Write-Host "[Watcher] Video Duration: $durationSec seconds | Aspect: $($classification.Format)"
 
             # 1. Optimize Title
             $optimizedTitle = $vTitle
