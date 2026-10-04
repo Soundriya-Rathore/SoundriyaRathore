@@ -131,8 +131,12 @@ function Build-CompleteDescription([string]$existingNarrative, [string[]]$extraH
     $splitMarkers = @(
         "Official Website & Media Portfolio:",
         "Official Website & Portfolio:",
-        "Connect on Social Media",
+        "Official Website:",
         "Direct Bookings & Management:",
+        "Manager (WhatsApp & Calls):",
+        "Manager / WhatsApp:",
+        "Connect on Social Media & Official Channels:",
+        "Connect on Social Media:",
         "Follow & Connect Across Platforms:",
         "https://soundriyarathore.vercel.app/"
     )
@@ -156,15 +160,12 @@ $cleanNarrative
 Official Website & Media Portfolio:
 https://soundriyarathore.vercel.app/
 
-Direct Bookings & Management:
-Manager (WhatsApp & Calls): +91 95718 59038
-Email: soundriyarathore221@gmail.com
-
-Follow & Connect Across Platforms:
+Connect on Social Media & Official Channels:
 Journalism, Anchoring & Stage Hosting Instagram: https://www.instagram.com/no_but.seriously/
 Personal Instagram: https://www.instagram.com/Soundriya_rathore/
 LinkedIn: https://www.linkedin.com/in/soundriya-rathore-060988316/
 YouTube Channel: https://www.youtube.com/@soundriya.rathore
+Email: soundriyarathore221@gmail.com
 
 $uniqueHashtags
 "@
@@ -285,7 +286,7 @@ function Optimize-AllVideosPerformance {
         $needsTagUpdate = $false
         $needsTitleUpdate = $false
 
-        if (-not ($desc -match "95718 59038")) { $needsDescUpdate = $true }
+        if ($desc -match "95718 59038" -or $desc -match "Direct Bookings & Management:") { $needsDescUpdate = $true }
         if (-not ($desc -match "soundriyarathore.vercel.app")) { $needsDescUpdate = $true }
         if (-not ($desc -match "no_but.seriously") -or -not ($desc -match "Soundriya_rathore")) { $needsDescUpdate = $true }
         if ($tags.Count -lt 10) { $needsTagUpdate = $true }
