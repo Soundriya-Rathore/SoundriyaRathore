@@ -43,37 +43,37 @@ window.PORTFOLIO_CONFIG = {
   featuredVideos: [
     {
       youtubeId: "KUt2m5-ysqY",
-      title: "The Psychology of Late-Night Thoughts | Talk Show Hosted by Soundriya Rathore",
-      category: "Moderation & Panel",
-      badge: "Talk Show"
+      title: "Why Do We Overthink at Night? Psychology of Late-Night Thoughts | Soundriya Rathore",
+      category: "Broadcast Journalism",
+      badge: "Special Coverage"
     },
     {
       youtubeId: "H-G96ClEFME",
-      title: "War Journalism: Risks & Ethics | Media & Conflict Podcast | Soundriya Rathore",
-      category: "Dialogue & Audio-Visual",
-      badge: "Podcast"
+      title: "Inside Frontline Conflict Reporting: Ethics of War Journalism | Soundriya Rathore",
+      category: "Field Journalism",
+      badge: "Field Reporting"
     },
     {
       youtubeId: "g-Sd6AoYXt4",
-      title: "Field Reporting & Piece to Camera (PTC) | On-Location News | Soundriya Rathore",
+      title: "Live Field Reporting & Piece to Camera (PTC): On Location News #Shorts",
       category: "Broadcast Journalism",
       badge: "Bulletin"
     },
     {
       youtubeId: "jTtfGnU25Ns",
-      title: "Superfast News Bulletin | Rapid Headline Anchoring | Soundriya Rathore",
+      title: "Non-Stop 100 Speed News Bulletin | Fast-Paced Studio Anchor Soundriya Rathore",
       category: "News Studio Desk",
       badge: "Anchoring"
     },
     {
       youtubeId: "NFFZtB_0Ymw",
-      title: "Studio News Anchoring | Prime Time Bulletin | Soundriya Rathore",
+      title: "Prime Time Hindi News Bulletin | Studio News Anchor Soundriya Rathore",
       category: "News Studio Desk",
       badge: "Anchoring"
     },
     {
       youtubeId: "762kTKqRnyE",
-      title: "Documentary: Jagat Shiromani Temple | Amer, Rajasthan | Soundriya Rathore",
+      title: "The Mystery of Jagat Shiromani Temple Amer: Heritage Documentary | Soundriya Rathore",
       category: "Documentary Production",
       badge: "Documentary"
     }
@@ -82,24 +82,34 @@ window.PORTFOLIO_CONFIG = {
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
     {
+      youtubeId: "Cyz7DnQSuxg",
+      title: "Students Enraged Over Delhi Police Detentions: Jantar Mantar Protest Ground Report #Shorts",
+      label: "Live Stage Event"
+    },
+    {
+      youtubeId: "ij25Nw3cJFM",
+      title: "Citizens Detained, System Questioned: Jantar Mantar Protest Ground Report #Shorts",
+      label: "Live Stage Event"
+    },
+    {
+      youtubeId: "DXj2fZTfUYE",
+      title: "Nepal Floods Crisis: Catastrophic Landslides Wash Away Towns #Shorts",
+      label: "Live Stage Event"
+    },
+    {
+      youtubeId: "6XrYcck7EFw",
+      title: "Why Are Delhi Students Protesting? Ground Reality of Women Safety #Shorts",
+      label: "Live Stage Event"
+    },
+    {
+      youtubeId: "nL1r-2gkEYY",
+      title: "Delhi Demands Justice: Ground Report on Women Safety Protests #Shorts",
+      label: "Live Stage Event"
+    },
+    {
       youtubeId: "tZ2_A4lClK4",
-      title: "Rang Barse Holi Celebration | Live Event Emcee &amp; Hosting | Soundriya Rathore",
+      title: "Live Stage Emcee Energy: Rang Barse Festival Host Soundriya Rathore #Shorts",
       label: "Cultural Festival"
-    },
-    {
-      youtubeId: "D5Z4vR1B72c",
-      title: "Standup Comedy Night Host | Live Stage Emceeing | Soundriya Rathore",
-      label: "Comedy & Entertainment"
-    },
-    {
-      youtubeId: "RaWw6AJ6XVo",
-      title: "Alumni Meet Host &amp; Anchor | GKFTII Formal Stage Event | Soundriya Rathore",
-      label: "Institutional Gala"
-    },
-    {
-      youtubeId: "jqCok9FnwF4",
-      title: "Digital Media News Reel | Fast-Paced News Anchor | Soundriya Rathore",
-      label: "Digital News Desk"
     }
   ],
 
