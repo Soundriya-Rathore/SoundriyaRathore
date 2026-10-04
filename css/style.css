@@ -3645,6 +3645,23 @@ button {
   background: rgba(239, 68, 68, 0.06) !important;
 }
 
+.audition-other-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: var(--bg-ice-light);
+  border: 1px dashed var(--border-ice);
+  border-radius: var(--radius-sm);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+[data-theme="dark"] .audition-other-wrap {
+  background: rgba(13, 27, 48, 0.7);
+  border-color: rgba(56, 189, 248, 0.2);
+}
+
 /* 4. Instant EPK & Rate Sheet One-Sheet */
 .epk-modal-card {
   max-width: 860px;
