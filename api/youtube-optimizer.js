@@ -119,7 +119,7 @@ export default async function handler(req, res) {
             cleanNarrative = cleanNarrative.split(m)[0].trim();
           }
         }
-        cleanNarrative = cleanNarrative.replace(/(?m)^#\S+\s*/g, '').trim();
+        cleanNarrative = cleanNarrative.replace(/^#\S+\s*/gm, '').trim();
         if (!cleanNarrative) {
           cleanNarrative = 'Television Journalist, News Anchor, and Live Event Host Soundriya Rathore.';
         }
