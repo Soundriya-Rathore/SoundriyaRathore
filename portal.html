@@ -23,6 +23,152 @@
       flex-direction: column;
     }
 
+    /* Lock Screen Modal */
+    .lock-overlay {
+      position: fixed;
+      inset: 0;
+      background: #0B192C;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .lock-card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: var(--radius-md);
+      padding: 2.75rem 2.25rem;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
+    }
+
+    .lock-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(0, 102, 255, 0.15);
+      border: 1px solid rgba(0, 102, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      color: #38BDF8;
+    }
+
+    .lock-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .lock-card p {
+      font-size: 0.925rem;
+      color: #94A3B8;
+      margin: 0 0 1.75rem;
+      line-height: 1.55;
+    }
+
+    .lock-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      text-align: left;
+    }
+
+    .lock-input-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      color: #CBD5E1;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .lock-input {
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(2, 6, 23, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      font-size: 1.1rem;
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      letter-spacing: 0.15em;
+      text-align: center;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .lock-input:focus {
+      outline: none;
+      border-color: #0066FF;
+      box-shadow: 0 0 16px rgba(0, 102, 255, 0.35);
+    }
+
+    .lock-error {
+      display: none;
+      font-size: 0.825rem;
+      color: #F87171;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+
+    .lock-remember {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: #94A3B8;
+      cursor: pointer;
+    }
+
+    .lock-remember input {
+      accent-color: #0066FF;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .lock-submit-btn {
+      background: #0066FF;
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 0.9rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .lock-submit-btn:hover {
+      background: #0052CC;
+      box-shadow: 0 0 20px rgba(0, 102, 255, 0.4);
+    }
+
+    /* Main Dashboard Content */
+    .portal-content {
+      display: none; /* hidden until unlocked */
+      flex: 1;
+      flex-direction: column;
+    }
+
     .portal-nav {
       background: rgba(11, 25, 44, 0.95);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -71,7 +217,13 @@
       letter-spacing: 0.05em;
     }
 
-    .portal-back-btn {
+    .portal-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .portal-back-btn, .portal-lock-btn {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
@@ -83,9 +235,11 @@
       border-radius: var(--radius-sm);
       border: 1px solid rgba(255, 255, 255, 0.1);
       transition: all 0.2s ease;
+      background: transparent;
+      cursor: pointer;
     }
 
-    .portal-back-btn:hover {
+    .portal-back-btn:hover, .portal-lock-btn:hover {
       color: #FFFFFF;
       border-color: #0066FF;
       background: rgba(0, 102, 255, 0.1);
@@ -333,257 +487,369 @@
 </head>
 <body class="portal-body">
 
-  <!-- Top Navigation -->
-  <header class="portal-nav">
-    <div class="portal-brand">
-      <div class="portal-logo-dot"></div>
-      <h1>Soundriya Rathore</h1>
-      <span>Executive Hub</span>
-    </div>
-    <a href="index.html" class="portal-back-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-      </svg>
-      Return to Main Site
-    </a>
-  </header>
-
-  <!-- Hero Header -->
-  <section class="portal-hero">
-    <div class="portal-hero-badge">Verified Direct Access Center</div>
-    <h2>Creator &amp; Operations Command Portal</h2>
-    <p>Centralized console providing Soundriya instant, independent access to all digital operations, live audience analytics, search index ranking, and deployment channels.</p>
-  </section>
-
-  <!-- Platform Cards Grid -->
-  <main class="portal-grid">
-
-    <!-- Card 1: YouTube Studio -->
-    <article class="portal-card card-yt">
-      <div>
-        <div class="portal-card-header">
-          <div class="portal-card-icon" style="color: #FF0000;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-            </svg>
-          </div>
-          <span class="portal-card-tag">Video &amp; Shorts</span>
-        </div>
-        <h3 class="portal-card-title">YouTube Studio Console</h3>
-        <p class="portal-card-desc">Review video analytics, real-time viewer retention, subscriber growth, community comments, and edit video metadata directly.</p>
-      </div>
-      <div>
-        <div class="portal-card-meta">
-          <div>Channel Handle: <span>@soundriya.rathore</span></div>
-          <div>Total Content: <span>16 Videos / Shorts</span></div>
-        </div>
-        <a href="https://studio.youtube.com/channel/UCm3C__y6F_KLPH-D-5Rc4jQ" target="_blank" rel="noopener noreferrer" class="portal-btn">
-          Open YouTube Studio
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
-      </div>
-    </article>
-
-    <!-- Card 2: Google Analytics 4 -->
-    <article class="portal-card card-ga">
-      <div>
-        <div class="portal-card-header">
-          <div class="portal-card-icon" style="color: #F59E0B;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="20" x2="18" y2="10"></line>
-              <line x1="12" y1="20" x2="12" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="14"></line>
-            </svg>
-          </div>
-          <span class="portal-card-tag">Audience Traffic</span>
-        </div>
-        <h3 class="portal-card-title">Google Analytics 4 (GA4)</h3>
-        <p class="portal-card-desc">Monitor live portfolio visitors, geographic reach, session duration, and device breakdown across mobile, tablet, and desktop.</p>
-      </div>
-      <div>
-        <div class="portal-card-meta">
-          <div>Property ID: <span>409141092</span></div>
-          <div>Measurement: <span>Live Active Tracking</span></div>
-        </div>
-        <a href="https://analytics.google.com/analytics/web/#/a409141092p555510317/admin" target="_blank" rel="noopener noreferrer" class="portal-btn">
-          Open Google Analytics
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
-      </div>
-    </article>
-
-    <!-- Card 3: Google Search Console -->
-    <article class="portal-card card-gsc">
-      <div>
-        <div class="portal-card-header">
-          <div class="portal-card-icon" style="color: #10B981;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </div>
-          <span class="portal-card-tag">SEO &amp; Indexing</span>
-        </div>
-        <h3 class="portal-card-title">Google Search Console</h3>
-        <p class="portal-card-desc">Track organic search impressions on Google, search query keywords, click-through rates (CTR), and page index health.</p>
-      </div>
-      <div>
-        <div class="portal-card-meta">
-          <div>Verified Domain: <span>soundriyarathore.vercel.app</span></div>
-          <div>Report Window: <span>Last 28 Days Active</span></div>
-        </div>
-        <a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fsoundriyarathore.vercel.app%2F&num_of_days=28&metrics=CLICKS%2CIMPRESSIONS%2CCTR%2CPOSITION" target="_blank" rel="noopener noreferrer" class="portal-btn">
-          Open Search Console
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
-      </div>
-    </article>
-
-    <!-- Card 4: Google Knowledge Panel -->
-    <article class="portal-card card-kg">
-      <div>
-        <div class="portal-card-header">
-          <div class="portal-card-icon" style="color: #4285F4;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
-            </svg>
-          </div>
-          <span class="portal-card-tag">Official Identity</span>
-        </div>
-        <h3 class="portal-card-title">Google Knowledge Panel</h3>
-        <p class="portal-card-desc">Inspect your official Google Knowledge Graph verified profile card, public search presence, and structured knowledge listing.</p>
-      </div>
-      <div>
-        <div class="portal-card-meta">
-          <div>Entity: <span>Soundriya Rathore Voice Artist &amp; EMCEE</span></div>
-          <div>Knowledge Graph: <span>Verified Live</span></div>
-        </div>
-        <a href="https://www.google.com/search?q=Soundriya+Rathore+Voice+Artist+%26+EMCEE&stick=H4sIAAAAAAAA_-NgU1IxqDA1SrNMTDY3TwHCNLMkK6BIWqqFRUqaUZqRkWFKkoXhIla14PzSvJSizMpEhaDEkoz8olSFsPzM5FQFx6KSzOISBTUFV19nV1cAI3G_elEAAAA&hl=en" target="_blank" rel="noopener noreferrer" class="portal-btn">
-          View Knowledge Panel
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
-      </div>
-    </article>
-
-    <!-- Card 5: Vercel Cloud Console -->
-    <article class="portal-card card-vercel">
-      <div>
-        <div class="portal-card-header">
-          <div class="portal-card-icon" style="color: #FFFFFF;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 1L24 22H0L12 1Z"/>
-            </svg>
-          </div>
-          <span class="portal-card-tag">Hosting &amp; Edge</span>
-        </div>
-        <h3 class="portal-card-title">Vercel Production Console</h3>
-        <p class="portal-card-desc">Live production deployment status, global edge network performance, domain health, and automatic GitHub deployment tracking.</p>
-      </div>
-      <div>
-        <div class="portal-card-meta">
-          <div>Project: <span>soundriya-rathore</span></div>
-          <div>Status: <span>Production Ready (Global CDN)</span></div>
-        </div>
-        <a href="https://vercel.com/sr-backend/soundriya-rathore" target="_blank" rel="noopener noreferrer" class="portal-btn">
-          Open Vercel Console
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
-      </div>
-    </article>
-
-    <!-- Card 6: GitHub Code Repository -->
-    <article class="portal-card card-github">
-      <div>
-        <div class="portal-card-header">
-          <div class="portal-card-icon" style="color: #A855F7;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-            </svg>
-          </div>
-          <span class="portal-card-tag">Source &amp; Assets</span>
-        </div>
-        <h3 class="portal-card-title">GitHub Project Repository</h3>
-        <p class="portal-card-desc">Review source code, design revisions, commit history, deployment assets, and automated sync scripts.</p>
-      </div>
-      <div>
-        <div class="portal-card-meta">
-          <div>Repository: <span>SoundriyaRathore</span></div>
-          <div>Organization: <span>Soundriya-Rathore</span></div>
-        </div>
-        <a href="https://github.com/Soundriya-Rathore/SoundriyaRathore" target="_blank" rel="noopener noreferrer" class="portal-btn">
-          Open GitHub Repo
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
-      </div>
-    </article>
-
-  </main>
-
-  <!-- Access Delegation Instructions Box -->
-  <section class="portal-guide">
-    <div class="portal-guide-box">
-      <h3 class="portal-guide-title">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="16" x2="12" y2="12"></line>
-          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+  <!-- Lock Screen Modal -->
+  <div id="lock-screen" class="lock-overlay">
+    <div class="lock-card">
+      <div class="lock-icon-wrap">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
-        Direct Login &amp; Google Account Access Guidelines
-      </h3>
-      <p style="color: #94A3B8; font-size: 0.95rem; line-height: 1.6; margin: 0 0 1rem;">
-        When clicking the cards above, Google opens the platform using the currently signed-in Google account on the device. For seamless access without needing manager authorization, ensure permissions have been granted to Soundriya's official account (<strong>soundriyarathore221@gmail.com</strong>):
-      </p>
+      </div>
+      <h2>Creator Command Hub</h2>
+      <p>Private executive console. Enter authorized passcode to unlock operational consoles and analytics.</p>
+      
+      <form id="lock-form" class="lock-form" onsubmit="handleUnlock(event)">
+        <div class="lock-input-group">
+          <label for="passcode-input">Security Passcode / PIN</label>
+          <input 
+            type="password" 
+            id="passcode-input" 
+            class="lock-input" 
+            placeholder="••••" 
+            autocomplete="off" 
+            required
+            autofocus
+          >
+        </div>
 
-      <div class="portal-guide-list">
-        <div class="portal-guide-item">
-          <h4>1. YouTube Studio</h4>
-          <p>Manager invites <em>soundriyarathore221@gmail.com</em> under <strong>Settings &gt; Permissions</strong> as <strong>Editor</strong> or <strong>Manager</strong>.</p>
+        <div id="lock-error-msg" class="lock-error">
+          Incorrect passcode. Please check and try again.
         </div>
-        <div class="portal-guide-item">
-          <h4>2. Google Analytics 4</h4>
-          <p>Manager adds <em>soundriyarathore221@gmail.com</em> under <strong>Admin &gt; Property Access Management</strong> with <strong>Viewer</strong> role.</p>
+
+        <label class="lock-remember">
+          <input type="checkbox" id="remember-device" checked>
+          <span>Keep unlocked on this device</span>
+        </label>
+
+        <button type="submit" class="lock-submit-btn">
+          Unlock Dashboard
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Content (Revealed upon unlock) -->
+  <div id="portal-content" class="portal-content">
+
+    <!-- Top Navigation -->
+    <header class="portal-nav">
+      <div class="portal-brand">
+        <div class="portal-logo-dot"></div>
+        <h1>Soundriya Rathore</h1>
+        <span>Executive Hub</span>
+      </div>
+      <div class="portal-nav-actions">
+        <button onclick="lockDashboard()" class="portal-lock-btn" title="Lock Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Lock
+        </button>
+        <a href="index.html" class="portal-back-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Main Site
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero Header -->
+    <section class="portal-hero">
+      <div class="portal-hero-badge">Verified Direct Access Center</div>
+      <h2>Creator &amp; Operations Command Portal</h2>
+      <p>Centralized console providing Soundriya instant, independent access to all digital operations, live audience analytics, search index ranking, and deployment channels.</p>
+    </section>
+
+    <!-- Platform Cards Grid -->
+    <main class="portal-grid">
+
+      <!-- Card 1: YouTube Studio -->
+      <article class="portal-card card-yt">
+        <div>
+          <div class="portal-card-header">
+            <div class="portal-card-icon" style="color: #FF0000;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </div>
+            <span class="portal-card-tag">Video &amp; Shorts</span>
+          </div>
+          <h3 class="portal-card-title">YouTube Studio Console</h3>
+          <p class="portal-card-desc">Review video analytics, real-time viewer retention, subscriber growth, community comments, and edit video metadata directly.</p>
         </div>
-        <div class="portal-guide-item">
-          <h4>3. Search Console</h4>
-          <p>Manager adds <em>soundriyarathore221@gmail.com</em> under <strong>Settings &gt; Users &amp; Permissions</strong> as <strong>Full</strong> or <strong>Restricted</strong> user.</p>
+        <div>
+          <div class="portal-card-meta">
+            <div>Channel Handle: <span>@soundriya.rathore</span></div>
+            <div>Total Content: <span>16 Videos / Shorts</span></div>
+          </div>
+          <a href="https://studio.youtube.com/channel/UCm3C__y6F_KLPH-D-5Rc4jQ" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            Open YouTube Studio
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
         </div>
-        <div class="portal-guide-item">
-          <h4>4. Vercel &amp; GitHub</h4>
-          <p>Soundriya can sign into GitHub and Vercel directly via linked GitHub account <strong>Soundriya-Rathore</strong>.</p>
+      </article>
+
+      <!-- Card 2: Google Analytics 4 -->
+      <article class="portal-card card-ga">
+        <div>
+          <div class="portal-card-header">
+            <div class="portal-card-icon" style="color: #F59E0B;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </div>
+            <span class="portal-card-tag">Audience Traffic</span>
+          </div>
+          <h3 class="portal-card-title">Google Analytics 4 (GA4)</h3>
+          <p class="portal-card-desc">Monitor live portfolio visitors, geographic reach, session duration, and device breakdown across mobile, tablet, and desktop.</p>
+        </div>
+        <div>
+          <div class="portal-card-meta">
+            <div>Property ID: <span>409141092</span></div>
+            <div>Measurement: <span>Live Active Tracking</span></div>
+          </div>
+          <a href="https://analytics.google.com/analytics/web/#/a409141092p555510317/admin" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            Open Google Analytics
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Card 3: Google Search Console -->
+      <article class="portal-card card-gsc">
+        <div>
+          <div class="portal-card-header">
+            <div class="portal-card-icon" style="color: #10B981;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <span class="portal-card-tag">SEO &amp; Indexing</span>
+          </div>
+          <h3 class="portal-card-title">Google Search Console</h3>
+          <p class="portal-card-desc">Track organic search impressions on Google, search query keywords, click-through rates (CTR), and page index health.</p>
+        </div>
+        <div>
+          <div class="portal-card-meta">
+            <div>Verified Domain: <span>soundriyarathore.vercel.app</span></div>
+            <div>Report Window: <span>Last 28 Days Active</span></div>
+          </div>
+          <a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fsoundriyarathore.vercel.app%2F&num_of_days=28&metrics=CLICKS%2CIMPRESSIONS%2CCTR%2CPOSITION" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            Open Search Console
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Card 4: Google Knowledge Panel -->
+      <article class="portal-card card-kg">
+        <div>
+          <div class="portal-card-header">
+            <div class="portal-card-icon" style="color: #4285F4;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+              </svg>
+            </div>
+            <span class="portal-card-tag">Official Identity</span>
+          </div>
+          <h3 class="portal-card-title">Google Knowledge Panel</h3>
+          <p class="portal-card-desc">Inspect your official Google Knowledge Graph verified profile card, public search presence, and structured knowledge listing.</p>
+        </div>
+        <div>
+          <div class="portal-card-meta">
+            <div>Entity: <span>Soundriya Rathore Voice Artist &amp; EMCEE</span></div>
+            <div>Knowledge Graph: <span>Verified Live</span></div>
+          </div>
+          <a href="https://www.google.com/search?q=Soundriya+Rathore+Voice+Artist+%26+EMCEE&stick=H4sIAAAAAAAA_-NgU1IxqDA1SrNMTDY3TwHCNLMkK6BIWqqFRUqaUZqRkWFKkoXhIla14PzSvJSizMpEhaDEkoz8olSFsPzM5FQFx6KSzOISBTUFV19nV1cAI3G_elEAAAA&hl=en" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            View Knowledge Panel
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Card 5: Vercel Cloud Console -->
+      <article class="portal-card card-vercel">
+        <div>
+          <div class="portal-card-header">
+            <div class="portal-card-icon" style="color: #FFFFFF;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1L24 22H0L12 1Z"/>
+              </svg>
+            </div>
+            <span class="portal-card-tag">Hosting &amp; Edge</span>
+          </div>
+          <h3 class="portal-card-title">Vercel Production Console</h3>
+          <p class="portal-card-desc">Live production deployment status, global edge network performance, domain health, and automatic GitHub deployment tracking.</p>
+        </div>
+        <div>
+          <div class="portal-card-meta">
+            <div>Project: <span>soundriya-rathore</span></div>
+            <div>Status: <span>Production Ready (Global CDN)</span></div>
+          </div>
+          <a href="https://vercel.com/sr-backend/soundriya-rathore" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            Open Vercel Console
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Card 6: GitHub Code Repository -->
+      <article class="portal-card card-github">
+        <div>
+          <div class="portal-card-header">
+            <div class="portal-card-icon" style="color: #A855F7;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </div>
+            <span class="portal-card-tag">Source &amp; Assets</span>
+          </div>
+          <h3 class="portal-card-title">GitHub Project Repository</h3>
+          <p class="portal-card-desc">Review source code, design revisions, commit history, deployment assets, and automated sync scripts.</p>
+        </div>
+        <div>
+          <div class="portal-card-meta">
+            <div>Repository: <span>SoundriyaRathore</span></div>
+            <div>Organization: <span>Soundriya-Rathore</span></div>
+          </div>
+          <a href="https://github.com/Soundriya-Rathore/SoundriyaRathore" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            Open GitHub Repo
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+    </main>
+
+    <!-- Access Delegation Instructions Box -->
+    <section class="portal-guide">
+      <div class="portal-guide-box">
+        <h3 class="portal-guide-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          Direct Login &amp; Google Account Access Guidelines
+        </h3>
+        <p style="color: #94A3B8; font-size: 0.95rem; line-height: 1.6; margin: 0 0 1rem;">
+          When clicking the cards above, Google opens the platform using the currently signed-in Google account on the device. For seamless access without needing manager authorization, ensure permissions have been granted to Soundriya's official account (<strong>soundriyarathore221@gmail.com</strong>):
+        </p>
+
+        <div class="portal-guide-list">
+          <div class="portal-guide-item">
+            <h4>1. YouTube Studio</h4>
+            <p>Manager invites <em>soundriyarathore221@gmail.com</em> under <strong>Settings &gt; Permissions</strong> as <strong>Editor</strong> or <strong>Manager</strong>.</p>
+          </div>
+          <div class="portal-guide-item">
+            <h4>2. Google Analytics 4</h4>
+            <p>Manager adds <em>soundriyarathore221@gmail.com</em> under <strong>Admin &gt; Property Access Management</strong> with <strong>Viewer</strong> role.</p>
+          </div>
+          <div class="portal-guide-item">
+            <h4>3. Search Console</h4>
+            <p>Manager adds <em>soundriyarathore221@gmail.com</em> under <strong>Settings &gt; Users &amp; Permissions</strong> as <strong>Full</strong> or <strong>Restricted</strong> user.</p>
+          </div>
+          <div class="portal-guide-item">
+            <h4>4. Vercel &amp; GitHub</h4>
+            <p>Soundriya can sign into GitHub and Vercel directly via linked GitHub account <strong>Soundriya-Rathore</strong>.</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="portal-footer">
-    <p>&copy; Soundriya Rathore. All operational dashboards and management systems protected. Zero emoji typography.</p>
-  </footer>
+    <!-- Footer -->
+    <footer class="portal-footer">
+      <p>&copy; Soundriya Rathore. All operational dashboards and management systems protected. Zero emoji typography.</p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Authorized passcodes (PIN, manager prefix, or private secret)
+    const VALID_CODES = ['9571', 'sr2026', 'soundriya221', '221'];
+
+    function checkAuth() {
+      // 1. Check URL parameters for direct link sharing (e.g. ?key=sr2026 or ?pin=9571)
+      const params = new URLSearchParams(window.location.search);
+      const urlKey = params.get('key') || params.get('pin');
+      if (urlKey && VALID_CODES.includes(urlKey.toLowerCase())) {
+        grantAccess(true);
+        return;
+      }
+
+      // 2. Check saved persistent session
+      if (localStorage.getItem('sr_portal_auth') === 'true') {
+        grantAccess(false);
+      }
+    }
+
+    function handleUnlock(e) {
+      e.preventDefault();
+      const input = document.getElementById('passcode-input');
+      const errorMsg = document.getElementById('lock-error-msg');
+      const remember = document.getElementById('remember-device').checked;
+      const val = (input.value || '').trim().toLowerCase();
+
+      if (VALID_CODES.includes(val)) {
+        errorMsg.style.display = 'none';
+        grantAccess(remember);
+      } else {
+        errorMsg.style.display = 'block';
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    function grantAccess(persist) {
+      if (persist) {
+        localStorage.setItem('sr_portal_auth', 'true');
+      }
+      document.getElementById('lock-screen').style.display = 'none';
+      document.getElementById('portal-content').style.display = 'flex';
+    }
+
+    function lockDashboard() {
+      localStorage.removeItem('sr_portal_auth');
+      window.location.href = window.location.pathname; // strip URL params and re-lock
+    }
+
+    // Initialize check
+    checkAuth();
+  </script>
 
 </body>
 </html>
