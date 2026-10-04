@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creator Hub &amp; Executive Command Portal | Soundriya Rathore</title>
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Preconnect & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css?v=3.6">
+  
+  <style>
+    .portal-body {
+      background: #0B192C;
+      color: #F8FAFC;
+      min-height: 100vh;
+      font-family: var(--font-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .portal-nav {
+      background: rgba(11, 25, 44, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .portal-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .portal-logo-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #0066FF;
+      box-shadow: 0 0 12px #0066FF;
+    }
+
+    .portal-brand h1 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0;
+      color: #FFFFFF;
+      letter-spacing: -0.02em;
+    }
+
+    .portal-brand span {
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      background: rgba(0, 102, 255, 0.2);
+      color: #38BDF8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .portal-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #94A3B8;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .portal-back-btn:hover {
+      color: #FFFFFF;
+      border-color: #0066FF;
+      background: rgba(0, 102, 255, 0.1);
+    }
+
+    .portal-hero {
+      max-width: 1180px;
+      margin: 3rem auto 2rem;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+
+    .portal-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(30, 62, 98, 0.4);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 0.4rem 1rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      color: #38BDF8;
+      margin-bottom: 1.25rem;
+    }
+
+    .portal-hero h2 {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin: 0 0 1rem;
+      letter-spacing: -0.03em;
+    }
+
+    .portal-hero p {
+      font-size: 1.1rem;
+      color: #94A3B8;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .portal-grid {
+      max-width: 1180px;
+      margin: 1.5rem auto 4rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .portal-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .portal-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      transition: background 0.2s ease;
+    }
+
+    .portal-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+    }
+
+    .portal-card.card-yt:hover::before { background: #FF0000; }
+    .portal-card.card-ga:hover::before { background: #F59E0B; }
+    .portal-card.card-gsc:hover::before { background: #10B981; }
+    .portal-card.card-kg:hover::before { background: #4285F4; }
+    .portal-card.card-vercel:hover::before { background: #FFFFFF; }
+    .portal-card.card-github:hover::before { background: #A855F7; }
+
+    .portal-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+
+    .portal-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .portal-card-tag {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.05);
+      color: #94A3B8;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .portal-card-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin: 0 0 0.5rem;
+    }
+
+    .portal-card-desc {
+      font-size: 0.925rem;
+      color: #94A3B8;
+      line-height: 1.55;
+      margin-bottom: 1.5rem;
+    }
+
+    .portal-card-meta {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #64748B;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .portal-card-meta div {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .portal-card-meta span {
+      color: #E2E8F0;
+      word-break: break-all;
+    }
+
+    .portal-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      background: #0066FF;
+      color: #FFFFFF;
+      border: none;
+      cursor: pointer;
+    }
+
+    .portal-btn:hover {
+      background: #0052CC;
+      box-shadow: 0 0 16px rgba(0, 102, 255, 0.4);
+    }
+
+    .portal-guide {
+      max-width: 1180px;
+      margin: 0 auto 5rem;
+      padding: 0 1.5rem;
+    }
+
+    .portal-guide-box {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: var(--radius-md);
+      padding: 2.25rem;
+    }
+
+    .portal-guide-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin: 0 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .portal-guide-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .portal-guide-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+    }
+
+    .portal-guide-item h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #38BDF8;
+      margin: 0 0 0.5rem;
+    }
+
+    .portal-guide-item p {
+      font-size: 0.85rem;
+      color: #94A3B8;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .portal-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748B;
+      margin-top: auto;
+    }
+
+    @media (max-width: 768px) {
+      .portal-hero h2 { font-size: 1.85rem; }
+      .portal-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="portal-body">
+
+  <!-- Top Navigation -->
+  <header class="portal-nav">
+    <div class="portal-brand">
+      <div class="portal-logo-dot"></div>
+      <h1>Soundriya Rathore</h1>
+      <span>Executive Hub</span>
+    </div>
+    <a href="index.html" class="portal-back-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Return to Main Site
+    </a>
+  </header>
+
+  <!-- Hero Header -->
+  <section class="portal-hero">
+    <div class="portal-hero-badge">Verified Direct Access Center</div>
+    <h2>Creator &amp; Operations Command Portal</h2>
+    <p>Centralized console providing Soundriya instant, independent access to all digital operations, live audience analytics, search index ranking, and deployment channels.</p>
+  </section>
+
+  <!-- Platform Cards Grid -->
+  <main class="portal-grid">
+
+    <!-- Card 1: YouTube Studio -->
+    <article class="portal-card card-yt">
+      <div>
+        <div class="portal-card-header">
+          <div class="portal-card-icon" style="color: #FF0000;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </div>
+          <span class="portal-card-tag">Video &amp; Shorts</span>
+        </div>
+        <h3 class="portal-card-title">YouTube Studio Console</h3>
+        <p class="portal-card-desc">Review video analytics, real-time viewer retention, subscriber growth, community comments, and edit video metadata directly.</p>
+      </div>
+      <div>
+        <div class="portal-card-meta">
+          <div>Channel Handle: <span>@soundriya.rathore</span></div>
+          <div>Total Content: <span>16 Videos / Shorts</span></div>
+        </div>
+        <a href="https://studio.youtube.com/channel/UCm3C__y6F_KLPH-D-5Rc4jQ" target="_blank" rel="noopener noreferrer" class="portal-btn">
+          Open YouTube Studio
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- Card 2: Google Analytics 4 -->
+    <article class="portal-card card-ga">
+      <div>
+        <div class="portal-card-header">
+          <div class="portal-card-icon" style="color: #F59E0B;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </div>
+          <span class="portal-card-tag">Audience Traffic</span>
+        </div>
+        <h3 class="portal-card-title">Google Analytics 4 (GA4)</h3>
+        <p class="portal-card-desc">Monitor live portfolio visitors, geographic reach, session duration, and device breakdown across mobile, tablet, and desktop.</p>
+      </div>
+      <div>
+        <div class="portal-card-meta">
+          <div>Property ID: <span>409141092</span></div>
+          <div>Measurement: <span>Live Active Tracking</span></div>
+        </div>
+        <a href="https://analytics.google.com/analytics/web/#/a409141092p555510317/admin" target="_blank" rel="noopener noreferrer" class="portal-btn">
+          Open Google Analytics
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- Card 3: Google Search Console -->
+    <article class="portal-card card-gsc">
+      <div>
+        <div class="portal-card-header">
+          <div class="portal-card-icon" style="color: #10B981;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <span class="portal-card-tag">SEO &amp; Indexing</span>
+        </div>
+        <h3 class="portal-card-title">Google Search Console</h3>
+        <p class="portal-card-desc">Track organic search impressions on Google, search query keywords, click-through rates (CTR), and page index health.</p>
+      </div>
+      <div>
+        <div class="portal-card-meta">
+          <div>Verified Domain: <span>soundriyarathore.vercel.app</span></div>
+          <div>Report Window: <span>Last 28 Days Active</span></div>
+        </div>
+        <a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fsoundriyarathore.vercel.app%2F&num_of_days=28&metrics=CLICKS%2CIMPRESSIONS%2CCTR%2CPOSITION" target="_blank" rel="noopener noreferrer" class="portal-btn">
+          Open Search Console
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- Card 4: Google Knowledge Panel -->
+    <article class="portal-card card-kg">
+      <div>
+        <div class="portal-card-header">
+          <div class="portal-card-icon" style="color: #4285F4;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+            </svg>
+          </div>
+          <span class="portal-card-tag">Official Identity</span>
+        </div>
+        <h3 class="portal-card-title">Google Knowledge Panel</h3>
+        <p class="portal-card-desc">Inspect your official Google Knowledge Graph verified profile card, public search presence, and structured knowledge listing.</p>
+      </div>
+      <div>
+        <div class="portal-card-meta">
+          <div>Entity: <span>Soundriya Rathore Voice Artist &amp; EMCEE</span></div>
+          <div>Knowledge Graph: <span>Verified Live</span></div>
+        </div>
+        <a href="https://www.google.com/search?q=Soundriya+Rathore+Voice+Artist+%26+EMCEE&stick=H4sIAAAAAAAA_-NgU1IxqDA1SrNMTDY3TwHCNLMkK6BIWqqFRUqaUZqRkWFKkoXhIla14PzSvJSizMpEhaDEkoz8olSFsPzM5FQFx6KSzOISBTUFV19nV1cAI3G_elEAAAA&hl=en" target="_blank" rel="noopener noreferrer" class="portal-btn">
+          View Knowledge Panel
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- Card 5: Vercel Cloud Console -->
+    <article class="portal-card card-vercel">
+      <div>
+        <div class="portal-card-header">
+          <div class="portal-card-icon" style="color: #FFFFFF;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 1L24 22H0L12 1Z"/>
+            </svg>
+          </div>
+          <span class="portal-card-tag">Hosting &amp; Edge</span>
+        </div>
+        <h3 class="portal-card-title">Vercel Production Console</h3>
+        <p class="portal-card-desc">Live production deployment status, global edge network performance, domain health, and automatic GitHub deployment tracking.</p>
+      </div>
+      <div>
+        <div class="portal-card-meta">
+          <div>Project: <span>soundriya-rathore</span></div>
+          <div>Status: <span>Production Ready (Global CDN)</span></div>
+        </div>
+        <a href="https://vercel.com/sr-backend/soundriya-rathore" target="_blank" rel="noopener noreferrer" class="portal-btn">
+          Open Vercel Console
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- Card 6: GitHub Code Repository -->
+    <article class="portal-card card-github">
+      <div>
+        <div class="portal-card-header">
+          <div class="portal-card-icon" style="color: #A855F7;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+          </div>
+          <span class="portal-card-tag">Source &amp; Assets</span>
+        </div>
+        <h3 class="portal-card-title">GitHub Project Repository</h3>
+        <p class="portal-card-desc">Review source code, design revisions, commit history, deployment assets, and automated sync scripts.</p>
+      </div>
+      <div>
+        <div class="portal-card-meta">
+          <div>Repository: <span>SoundriyaRathore</span></div>
+          <div>Organization: <span>Soundriya-Rathore</span></div>
+        </div>
+        <a href="https://github.com/Soundriya-Rathore/SoundriyaRathore" target="_blank" rel="noopener noreferrer" class="portal-btn">
+          Open GitHub Repo
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Access Delegation Instructions Box -->
+  <section class="portal-guide">
+    <div class="portal-guide-box">
+      <h3 class="portal-guide-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        Direct Login &amp; Google Account Access Guidelines
+      </h3>
+      <p style="color: #94A3B8; font-size: 0.95rem; line-height: 1.6; margin: 0 0 1rem;">
+        When clicking the cards above, Google opens the platform using the currently signed-in Google account on the device. For seamless access without needing manager authorization, ensure permissions have been granted to Soundriya's official account (<strong>soundriyarathore221@gmail.com</strong>):
+      </p>
+
+      <div class="portal-guide-list">
+        <div class="portal-guide-item">
+          <h4>1. YouTube Studio</h4>
+          <p>Manager invites <em>soundriyarathore221@gmail.com</em> under <strong>Settings &gt; Permissions</strong> as <strong>Editor</strong> or <strong>Manager</strong>.</p>
+        </div>
+        <div class="portal-guide-item">
+          <h4>2. Google Analytics 4</h4>
+          <p>Manager adds <em>soundriyarathore221@gmail.com</em> under <strong>Admin &gt; Property Access Management</strong> with <strong>Viewer</strong> role.</p>
+        </div>
+        <div class="portal-guide-item">
+          <h4>3. Search Console</h4>
+          <p>Manager adds <em>soundriyarathore221@gmail.com</em> under <strong>Settings &gt; Users &amp; Permissions</strong> as <strong>Full</strong> or <strong>Restricted</strong> user.</p>
+        </div>
+        <div class="portal-guide-item">
+          <h4>4. Vercel &amp; GitHub</h4>
+          <p>Soundriya can sign into GitHub and Vercel directly via linked GitHub account <strong>Soundriya-Rathore</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="portal-footer">
+    <p>&copy; Soundriya Rathore. All operational dashboards and management systems protected. Zero emoji typography.</p>
+  </footer>
+
+</body>
+</html>
