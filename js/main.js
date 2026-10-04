@@ -891,10 +891,17 @@ function initBookingTools() {
   const emailError = document.getElementById('audition-email-error');
   const scriptError = document.getElementById('audition-script-error');
 
+  const toneRadios = document.querySelectorAll('input[name="audition-tone"]');
+  const toneError = document.getElementById('audition-tone-error');
+  const otherWrap = document.getElementById('audition-other-wrap');
+  const otherTextInput = document.getElementById('audition-other-text');
+  const otherTextError = document.getElementById('audition-other-error');
+
   const MANAGER_PHONE = '9571859038';
   const MANAGER_PHONE_FORMATTED = '+91 95718 59038';
   const MANAGER_WA_INTL = '919571859038';
   const MAX_AUDITION_REQUESTS_PER_DAY = 2;
+  const MAX_AUDITION_SCRIPT_WORDS = 20;
   const AUDITION_STORAGE_KEY = 'sr_audition_requests_v1';
 
   const countWords = (text) => {
@@ -905,15 +912,15 @@ function initBookingTools() {
   const updateWordCounter = () => {
     if (!scriptInput || !auditionWordCountBadge) return;
     const words = countWords(scriptInput.value);
-    auditionWordCountBadge.textContent = `${words} / 50 words`;
+    auditionWordCountBadge.textContent = `${words} / ${MAX_AUDITION_SCRIPT_WORDS} words`;
 
-    if (words > 50) {
+    if (words > MAX_AUDITION_SCRIPT_WORDS) {
       auditionWordCountBadge.className = 'word-counter-badge limit-exceeded';
       if (auditionScriptLimitWarning) {
         auditionScriptLimitWarning.style.display = 'block';
-        auditionScriptLimitWarning.textContent = `Script excerpt exceeds complimentary sample limit (${words} words / max 50). Please trim your text, or contact Soundriya's manager (${MANAGER_PHONE_FORMATTED}) for full commercial recordings.`;
+        auditionScriptLimitWarning.textContent = `Script excerpt exceeds sample limit (${words} words / max ${MAX_AUDITION_SCRIPT_WORDS}). Please trim your text to ${MAX_AUDITION_SCRIPT_WORDS} words, or contact Soundriya's manager (${MANAGER_PHONE_FORMATTED}) for full commercial recordings.`;
       }
-    } else if (words >= 40) {
+    } else if (words >= 16) {
       auditionWordCountBadge.className = 'word-counter-badge limit-warning';
       if (auditionScriptLimitWarning) auditionScriptLimitWarning.style.display = 'none';
     } else {
@@ -987,6 +994,27 @@ function initBookingTools() {
     });
   }
 
+  // Handle category radio changes and "Other" field toggle
+  toneRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      clearFieldError(null, toneError);
+      if (radio.value === 'Other') {
+        if (otherWrap) otherWrap.style.display = 'flex';
+        if (otherTextInput) otherTextInput.focus();
+      } else {
+        if (otherWrap) otherWrap.style.display = 'none';
+        if (otherTextInput) otherTextInput.value = '';
+        clearFieldError(otherTextInput, otherTextError);
+      }
+    });
+  });
+
+  if (otherTextInput) {
+    otherTextInput.addEventListener('input', () => {
+      clearFieldError(otherTextInput, otherTextError);
+    });
+  }
+
   // Hook opening modal to initialize quota and word counter
   document.querySelectorAll('[data-open-audition-modal]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1000,8 +1028,13 @@ function initBookingTools() {
     const email = emailInput?.value.trim() || '';
     const script = scriptInput?.value.trim() || '';
     const notes = notesInput?.value.trim() || 'None';
-    const selectedTone = document.querySelector('input[name="audition-tone"]:checked')?.value || 'Commercial';
-    return { name, email, script, notes, tone: selectedTone };
+    const checkedToneRadio = document.querySelector('input[name="audition-tone"]:checked');
+    let tone = checkedToneRadio ? checkedToneRadio.value : '';
+    if (tone === 'Other') {
+      const customTone = otherTextInput?.value.trim() || '';
+      tone = customTone ? `Other: ${customTone}` : 'Other (Custom Request)';
+    }
+    return { name, email, script, notes, tone };
   };
 
   const validateAuditionForm = () => {
@@ -1046,7 +1079,7 @@ function initBookingTools() {
       setFieldError(emailInput, emailError, 'Email address is mandatory for sample MP3 delivery.');
       isValid = false;
     } else if (!emailRegex.test(emailVal)) {
-      setFieldError(emailInput, emailError, 'Please enter a valid email address (e.g., alex@agency.com).');
+      setFieldError(emailInput, emailError, 'Please enter a valid email address (e.g., name@company.com).');
       isValid = false;
     } else {
       const emailLower = emailVal.toLowerCase();
@@ -1060,17 +1093,38 @@ function initBookingTools() {
       }
     }
 
-    // 4. Script excerpt validation (mandatory & limited)
+    // 4. Style & Category validation (mandatory)
+    const checkedToneRadio = document.querySelector('input[name="audition-tone"]:checked');
+    if (!checkedToneRadio) {
+      setFieldError(null, toneError, 'Please select a style or category for your sample.');
+      isValid = false;
+    } else {
+      clearFieldError(null, toneError);
+      if (checkedToneRadio.value === 'Other') {
+        const otherVal = otherTextInput?.value.trim() || '';
+        if (!otherVal) {
+          setFieldError(otherTextInput, otherTextError, 'Please specify what project style or type you require.');
+          isValid = false;
+        } else if (otherVal.length < 2) {
+          setFieldError(otherTextInput, otherTextError, 'Please enter a valid specification (at least 2 characters).');
+          isValid = false;
+        } else {
+          clearFieldError(otherTextInput, otherTextError);
+        }
+      }
+    }
+
+    // 5. Script excerpt validation (mandatory & capped at 20 words)
     const scriptVal = scriptInput?.value.trim() || '';
     const wordCount = countWords(scriptVal);
     if (!scriptVal) {
-      setFieldError(scriptInput, scriptError, 'Script excerpt is mandatory (20 to 50 words recommended).');
+      setFieldError(scriptInput, scriptError, `Script excerpt is mandatory (up to ${MAX_AUDITION_SCRIPT_WORDS} words).`);
       isValid = false;
-    } else if (wordCount < 4) {
-      setFieldError(scriptInput, scriptError, 'Script excerpt is too short. Please provide at least 4–5 words to evaluate tone.');
+    } else if (wordCount < 3) {
+      setFieldError(scriptInput, scriptError, 'Script excerpt is too short. Please provide at least 3 words.');
       isValid = false;
-    } else if (wordCount > 50) {
-      setFieldError(scriptInput, scriptError, `Script exceeds limit (${wordCount} words / max 50). Please trim to sample size or contact management.`);
+    } else if (wordCount > MAX_AUDITION_SCRIPT_WORDS) {
+      setFieldError(scriptInput, scriptError, `Script excerpt exceeds ${MAX_AUDITION_SCRIPT_WORDS}-word limit (${wordCount} words). Please trim to ${MAX_AUDITION_SCRIPT_WORDS} words.`);
       isValid = false;
     } else {
       clearFieldError(scriptInput, scriptError);
