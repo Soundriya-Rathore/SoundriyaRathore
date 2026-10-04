@@ -60,7 +60,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=3.5">
+  <link rel="stylesheet" href="css/style.css?v=3.6">
 
   <!-- JSON-LD Structured Data for High Google Search & Knowledge Graph Ranking -->
   <script type="application/ld+json">
@@ -819,7 +819,7 @@
             </div>
             <h3 class="audition-callout-title">Need a Custom Audition for Your Script?</h3>
             <p class="audition-callout-desc">
-              Have a campaign, documentary, or commercial script? Send 20–40 words and Soundriya will record and deliver a tailored 15-second vocal audition in your required tone within 24 hours.
+              Have a campaign, documentary, or commercial script? Send up to 20 words and Soundriya will record and deliver a tailored 15-second vocal audition in your required tone within 24 hours.
             </p>
           </div>
           <div class="audition-callout-action">
@@ -2305,7 +2305,7 @@
             <div class="booking-modal-badge">Complimentary Audition Service</div>
             <h3 class="booking-modal-title">Request a Custom 15-Sec Voice Sample</h3>
             <p class="booking-modal-subtitle">
-              Paste 20–40 words of your script. Soundriya will record and deliver a tailored vocal sample within 24 hours.
+              Paste up to 20 words of your script. Soundriya will record and deliver a tailored vocal sample within 24 hours.
             </p>
           </div>
         </div>
@@ -2341,27 +2341,43 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Desired Tone &amp; Style</label>
-            <div class="tone-pills-selector">
-              <label class="tone-pill"><input type="radio" name="audition-tone" value="Commercial (Warm &amp; Conversational)" checked><span>Commercial (Warm &amp; Conversational)</span></label>
-              <label class="tone-pill"><input type="radio" name="audition-tone" value="Commercial (Energetic &amp; Retail)"><span>Commercial (Energetic &amp; Retail)</span></label>
-              <label class="tone-pill"><input type="radio" name="audition-tone" value="Documentary (Deep &amp; Authoritative)"><span>Documentary (Deep &amp; Authoritative)</span></label>
-              <label class="tone-pill"><input type="radio" name="audition-tone" value="Corporate &amp; E-Learning (Professional)"><span>Corporate &amp; E-Learning</span></label>
-              <label class="tone-pill"><input type="radio" name="audition-tone" value="News &amp; Television Bulletin"><span>Broadcast Journalism</span></label>
+            <label class="form-label">
+              Style &amp; Category <span class="required-star">*</span>
+            </label>
+            <div class="tone-pills-selector" id="audition-tone-selector">
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Documentary"><span>Documentary</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Commercial"><span>Commercial</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Corporate"><span>Corporate</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Journalism"><span>Journalism</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Anchor"><span>Anchor</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Broadcast Host"><span>Broadcast Host</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Game / Gaming"><span>Game / Gaming</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Movie Dubbing"><span>Movie Dubbing</span></label>
+              <label class="tone-pill"><input type="radio" name="audition-tone" value="Other"><span>Other</span></label>
+            </div>
+            <span id="audition-tone-error" class="field-error-text" style="display: none;"></span>
+
+            <!-- Other Specification Input -->
+            <div id="audition-other-wrap" class="audition-other-wrap" style="display: none;">
+              <label for="audition-other-text" class="form-label">
+                Please specify your project style / requirement <span class="required-star">*</span>
+              </label>
+              <input type="text" id="audition-other-text" class="form-input" placeholder="e.g., E-Learning, Audiobook, Animation, IVR, etc.">
+              <span id="audition-other-error" class="field-error-text" style="display: none;"></span>
             </div>
           </div>
 
           <div class="form-group">
             <div class="form-label-with-counter">
               <label for="audition-script" class="form-label">
-                Script Excerpt (20 to 50 words) <span class="required-star">*</span>
+                Script Excerpt (Max 20 words) <span class="required-star">*</span>
               </label>
-              <span id="audition-word-count" class="word-counter-badge">0 / 50 words</span>
+              <span id="audition-word-count" class="word-counter-badge">0 / 20 words</span>
             </div>
-            <textarea id="audition-script" class="form-textarea" rows="3" placeholder="Paste your script lines here. E.g.: 'Introducing Bella Tavola. Where ancient Italian culinary mastery meets modern dining grace. Taste the authenticity tonight.'" required aria-required="true"></textarea>
+            <textarea id="audition-script" class="form-textarea" rows="3" placeholder="Paste up to 20 words. E.g.: 'Introducing Bella Tavola. Where ancient Italian culinary mastery meets modern dining grace. Taste authentic tonight.'" required aria-required="true"></textarea>
             <span id="audition-script-error" class="field-error-text" style="display: none;"></span>
             <div id="audition-script-limit-warning" class="form-script-limit-warning" style="display: none;">
-              Script excerpt exceeds complimentary sample limit (max 50 words). For full script recordings, please contact Soundriya's manager (+91 95718 59038) directly.
+              Script excerpt exceeds complimentary sample limit (max 20 words). For full script recordings, please contact Soundriya's manager (+91 95718 59038) directly.
             </div>
           </div>
 
@@ -2626,7 +2642,7 @@
 
   <!-- Scripts: Config First, then Main JS -->
   <script src="js/config.js?v=2.7"></script>
-  <script src="js/main.js?v=2.7"></script>
+  <script src="js/main.js?v=2.8"></script>
   <script src="js/cursor-cat.js?v=6.0" defer></script>
 </body>
 </html>
