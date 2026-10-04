@@ -1,0 +1,46 @@
+name: Autonomous YouTube 15-Min Cloud Optimizer
+
+on:
+  schedule:
+    # Runs every 15 minutes in GitHub's cloud compute
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  optimize-youtube:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Trigger Cloud Vercel Autonomous Optimizer
+        run: |
+          echo "Triggering Vercel serverless autonomous optimizer endpoint..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" https://soundriyarathore.vercel.app/api/youtube-optimizer)
+          echo "Response from cloud optimizer:"
+          echo "$RESPONSE"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Sync Channel Config & Sitemap
+        run: node scripts/sync-youtube.js
+
+      - name: Commit & Push Site Updates
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add js/config.js sitemap.xml
+          if git diff --staged --quiet; then
+            echo "No config changes needed. Everything synced."
+          else
+            echo "Sync changes detected! Committing to repository..."
+            git commit -m "chore(auto): 15-min autonomous YouTube sync and sitemap update [skip ci]"
+            git push
+          fi
