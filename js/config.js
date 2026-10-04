@@ -13,9 +13,11 @@ window.PORTFOLIO_CONFIG = {
     headline: "The Voice & Presence.",
     subheadline: "Lending voice, charisma, and narrative depth to newsrooms, brand campaigns and live stages.",
     location: "Jaipur / Global Remote Setup",
-    phone: "+91 8107849819",
+    phone: "+91 95718 59038",
+    managerPhone: "+91 95718 59038",
     email: "Soundriyarathore221@gmail.com",
-    whatsapp: "918107849819",
+    whatsapp: "919571859038",
+    managerWhatsapp: "919571859038",
     youtubeChannel: "https://youtube.com/@soundriya.rathore?si=L-8t2I-JUCiy0A-r",
     instagramPersonal: "https://www.instagram.com/Soundriya_rathore/",
     instagramPersonalHandle: "@Soundriya_rathore",
@@ -53,7 +55,7 @@ window.PORTFOLIO_CONFIG = {
     },
     {
       youtubeId: "g-Sd6AoYXt4",
-      title: "Live Field Reporting & Piece to Camera (PTC): On Location News #Shorts",
+      title: "Field Reporting & Piece to Camera (PTC) | On-Location News | Soundriya Rathore",
       category: "Broadcast Journalism",
       badge: "Bulletin"
     },
@@ -80,34 +82,24 @@ window.PORTFOLIO_CONFIG = {
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
     {
-      youtubeId: "ij25Nw3cJFM",
-      title: "Citizens Detained, System Questioned: Jantar Mantar Protest Ground Report #Shorts",
-      label: "Live Stage Event"
-    },
-    {
-      youtubeId: "DXj2fZTfUYE",
-      title: "Nepal Floods Crisis: Catastrophic Landslides Wash Away Towns #Shorts",
-      label: "Live Stage Event"
-    },
-    {
-      youtubeId: "6XrYcck7EFw",
-      title: "Why Are Delhi Students Protesting? Ground Reality of Women Safety #Shorts",
-      label: "Live Stage Event"
-    },
-    {
-      youtubeId: "nL1r-2gkEYY",
-      title: "Delhi Demands Justice: Ground Report on Women Safety Protests #Shorts",
-      label: "Live Stage Event"
-    },
-    {
       youtubeId: "tZ2_A4lClK4",
-      title: "Electrifying Stage Energy! Rang Barse Holi Festival Live Emcee #Shorts",
+      title: "Rang Barse Holi Celebration | Live Event Emcee &amp; Hosting | Soundriya Rathore",
       label: "Cultural Festival"
     },
     {
       youtubeId: "D5Z4vR1B72c",
-      title: "Live Standup Comedy Stage Host: Club Capri Emcee Soundriya Rathore #Shorts",
+      title: "Standup Comedy Night Host | Live Stage Emceeing | Soundriya Rathore",
       label: "Comedy & Entertainment"
+    },
+    {
+      youtubeId: "RaWw6AJ6XVo",
+      title: "Alumni Meet Host &amp; Anchor | GKFTII Formal Stage Event | Soundriya Rathore",
+      label: "Institutional Gala"
+    },
+    {
+      youtubeId: "jqCok9FnwF4",
+      title: "Digital Media News Reel | Fast-Paced News Anchor | Soundriya Rathore",
+      label: "Digital News Desk"
     }
   ],
 
