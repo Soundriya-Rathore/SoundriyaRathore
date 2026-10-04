@@ -876,30 +876,231 @@ function initBookingTools() {
   // 1. Audition Form Handling
   const auditionForm = document.getElementById('audition-request-form');
   const auditionSendWa = document.getElementById('audition-send-wa');
+  const auditionSendEmail = document.getElementById('audition-send-email');
   const auditionSuccess = document.getElementById('audition-success-msg');
+  const auditionGeneralError = document.getElementById('audition-general-error-msg');
+  const auditionQuotaWarning = document.getElementById('audition-quota-warning');
+  const auditionScriptLimitWarning = document.getElementById('audition-script-limit-warning');
+  const auditionWordCountBadge = document.getElementById('audition-word-count');
+
+  const nameInput = document.getElementById('audition-name');
+  const emailInput = document.getElementById('audition-email');
+  const scriptInput = document.getElementById('audition-script');
+  const notesInput = document.getElementById('audition-notes');
+  const nameError = document.getElementById('audition-name-error');
+  const emailError = document.getElementById('audition-email-error');
+  const scriptError = document.getElementById('audition-script-error');
+
+  const MANAGER_PHONE = '9571859038';
+  const MANAGER_PHONE_FORMATTED = '+91 95718 59038';
+  const MANAGER_WA_INTL = '919571859038';
+  const MAX_AUDITION_REQUESTS_PER_DAY = 2;
+  const AUDITION_STORAGE_KEY = 'sr_audition_requests_v1';
+
+  const countWords = (text) => {
+    if (!text) return 0;
+    return text.trim().split(/\s+/).filter(Boolean).length;
+  };
+
+  const updateWordCounter = () => {
+    if (!scriptInput || !auditionWordCountBadge) return;
+    const words = countWords(scriptInput.value);
+    auditionWordCountBadge.textContent = `${words} / 50 words`;
+
+    if (words > 50) {
+      auditionWordCountBadge.className = 'word-counter-badge limit-exceeded';
+      if (auditionScriptLimitWarning) {
+        auditionScriptLimitWarning.style.display = 'block';
+        auditionScriptLimitWarning.textContent = `Script excerpt exceeds complimentary sample limit (${words} words / max 50). Please trim your text, or contact Soundriya's manager (${MANAGER_PHONE_FORMATTED}) for full commercial recordings.`;
+      }
+    } else if (words >= 40) {
+      auditionWordCountBadge.className = 'word-counter-badge limit-warning';
+      if (auditionScriptLimitWarning) auditionScriptLimitWarning.style.display = 'none';
+    } else {
+      auditionWordCountBadge.className = 'word-counter-badge';
+      if (auditionScriptLimitWarning) auditionScriptLimitWarning.style.display = 'none';
+    }
+  };
+
+  const getRecentRequests = () => {
+    try {
+      const raw = localStorage.getItem(AUDITION_STORAGE_KEY);
+      if (!raw) return [];
+      const list = JSON.parse(raw);
+      const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+      return Array.isArray(list) ? list.filter(ts => typeof ts === 'number' && ts > oneDayAgo) : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const recordRequest = () => {
+    try {
+      const recent = getRecentRequests();
+      recent.push(Date.now());
+      localStorage.setItem(AUDITION_STORAGE_KEY, JSON.stringify(recent));
+    } catch {}
+  };
+
+  const checkQuota = () => {
+    const recent = getRecentRequests();
+    if (recent.length >= MAX_AUDITION_REQUESTS_PER_DAY) {
+      if (auditionQuotaWarning) {
+        auditionQuotaWarning.style.display = 'block';
+        auditionQuotaWarning.innerHTML = `Daily Complimentary Sample Limit Reached (${MAX_AUDITION_REQUESTS_PER_DAY} of ${MAX_AUDITION_REQUESTS_PER_DAY} used today). To request additional vocal samples, discuss full script bookings, or expedite urgent turnarounds, please contact <strong>Soundriya's Manager directly at <a href="tel:+${MANAGER_WA_INTL}" style="color:inherit;text-decoration:underline;">${MANAGER_PHONE_FORMATTED}</a></strong> or via <a href="https://wa.me/${MANAGER_WA_INTL}" target="_blank" style="color:inherit;text-decoration:underline;">WhatsApp</a>.`;
+      }
+      return false;
+    }
+    if (auditionQuotaWarning) {
+      auditionQuotaWarning.style.display = 'none';
+    }
+    return true;
+  };
+
+  const setFieldError = (input, errorEl, message) => {
+    if (input) input.classList.add('is-invalid');
+    if (errorEl) {
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+  };
+
+  const clearFieldError = (input, errorEl) => {
+    if (input) input.classList.remove('is-invalid');
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.style.display = 'none';
+    }
+    if (auditionGeneralError) auditionGeneralError.style.display = 'none';
+  };
+
+  if (nameInput) {
+    nameInput.addEventListener('input', () => clearFieldError(nameInput, nameError));
+  }
+  if (emailInput) {
+    emailInput.addEventListener('input', () => clearFieldError(emailInput, emailError));
+  }
+  if (scriptInput) {
+    scriptInput.addEventListener('input', () => {
+      updateWordCounter();
+      clearFieldError(scriptInput, scriptError);
+    });
+  }
+
+  // Hook opening modal to initialize quota and word counter
+  document.querySelectorAll('[data-open-audition-modal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      checkQuota();
+      updateWordCounter();
+    });
+  });
 
   const getAuditionData = () => {
-    const name = document.getElementById('audition-name')?.value.trim() || 'Client';
-    const email = document.getElementById('audition-email')?.value.trim() || '';
-    const script = document.getElementById('audition-script')?.value.trim() || '';
-    const notes = document.getElementById('audition-notes')?.value.trim() || 'None';
+    const name = nameInput?.value.trim() || 'Client';
+    const email = emailInput?.value.trim() || '';
+    const script = scriptInput?.value.trim() || '';
+    const notes = notesInput?.value.trim() || 'None';
     const selectedTone = document.querySelector('input[name="audition-tone"]:checked')?.value || 'Commercial';
     return { name, email, script, notes, tone: selectedTone };
   };
 
+  const validateAuditionForm = () => {
+    let isValid = true;
+    if (auditionGeneralError) auditionGeneralError.style.display = 'none';
+
+    // 1. Quota check
+    if (!checkQuota()) {
+      return false;
+    }
+
+    // 2. Name validation (mandatory)
+    const nameVal = nameInput?.value.trim() || '';
+    if (!nameVal) {
+      setFieldError(nameInput, nameError, 'Your Name & Company / Agency is required.');
+      isValid = false;
+    } else if (nameVal.length < 2) {
+      setFieldError(nameInput, nameError, 'Please enter a valid name (at least 2 characters).');
+      isValid = false;
+    } else {
+      clearFieldError(nameInput, nameError);
+    }
+
+    // 3. Email validation (mandatory & legit check)
+    const emailVal = emailInput?.value.trim() || '';
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    const disposableDomains = [
+      'tempmail.com', 'temp-mail.org', '10minutemail.com', '10minutemail.net',
+      'guerrillamail.com', 'guerrillamailblock.com', 'mailinator.com', 'sharklasers.com',
+      'throwawaymail.com', 'yopmail.com', 'yopmail.fr', 'trashmail.com', 'trashmail.net',
+      'dispostable.com', 'getnada.com', 'fakemailgenerator.com', 'mohmal.com',
+      'burnermail.io', 'mytemp.email', 'dropmail.me', 'inboxkitten.com', 'crazymailing.com',
+      'emailondeck.com', 'maildrop.cc', 'tempail.com', 'minuteinbox.com', 'nada.ltd'
+    ];
+    const dummyEmails = [
+      'test@test.com', 'a@a.com', 'asdf@asdf.com', 'abc@abc.com', 'xyz@xyz.com',
+      'fake@fake.com', 'none@none.com', 'sample@sample.com', 'user@user.com',
+      'admin@admin.com', 'no@no.com', '123@123.com', 'test@gmail.com', 'demo@demo.com'
+    ];
+
+    if (!emailVal) {
+      setFieldError(emailInput, emailError, 'Email address is mandatory for sample MP3 delivery.');
+      isValid = false;
+    } else if (!emailRegex.test(emailVal)) {
+      setFieldError(emailInput, emailError, 'Please enter a valid email address (e.g., alex@agency.com).');
+      isValid = false;
+    } else {
+      const emailLower = emailVal.toLowerCase();
+      const domain = emailLower.split('@')[1] || '';
+      const tld = domain.split('.').pop() || '';
+      if (tld.length < 2 || disposableDomains.includes(domain) || dummyEmails.includes(emailLower)) {
+        setFieldError(emailInput, emailError, 'Please provide a genuine, active work or personal email address.');
+        isValid = false;
+      } else {
+        clearFieldError(emailInput, emailError);
+      }
+    }
+
+    // 4. Script excerpt validation (mandatory & limited)
+    const scriptVal = scriptInput?.value.trim() || '';
+    const wordCount = countWords(scriptVal);
+    if (!scriptVal) {
+      setFieldError(scriptInput, scriptError, 'Script excerpt is mandatory (20 to 50 words recommended).');
+      isValid = false;
+    } else if (wordCount < 4) {
+      setFieldError(scriptInput, scriptError, 'Script excerpt is too short. Please provide at least 4–5 words to evaluate tone.');
+      isValid = false;
+    } else if (wordCount > 50) {
+      setFieldError(scriptInput, scriptError, `Script exceeds limit (${wordCount} words / max 50). Please trim to sample size or contact management.`);
+      isValid = false;
+    } else {
+      clearFieldError(scriptInput, scriptError);
+    }
+
+    return isValid;
+  };
+
   if (auditionSendWa) {
     auditionSendWa.addEventListener('click', () => {
-      const data = getAuditionData();
-      if (!data.script || !data.email) {
-        alert('Please enter your email and script excerpt so Soundriya can record your sample.');
+      if (!validateAuditionForm()) {
+        if (auditionGeneralError) {
+          auditionGeneralError.style.display = 'block';
+          auditionGeneralError.textContent = 'Please correct the highlighted fields before submitting.';
+        }
         return;
       }
-      const message = `*Custom Audition Request for Soundriya Rathore*\n\n*Client / Agency:* ${data.name}\n*Email:* ${data.email}\n*Desired Tone:* ${data.tone}\n*Script Excerpt:*\n"${data.script}"\n\n*Notes:* ${data.notes}\n\n_Sent via soundriyarathore.vercel.app_`;
-      const waUrl = `https://wa.me/918107849819?text=${encodeURIComponent(message)}`;
+
+      const data = getAuditionData();
+      const wordCount = countWords(data.script);
+      const message = `*Custom Audition Request (Manager Review)*\n*Recipient:* Soundriya Rathore's Management Desk (${MANAGER_PHONE_FORMATTED})\n\n*Client / Agency:* ${data.name}\n*Verified Email:* ${data.email}\n*Desired Tone:* ${data.tone}\n*Script Excerpt (${wordCount} words):*\n"${data.script}"\n\n*Pronunciation / Pace Notes:* ${data.notes}\n\n_Submitted via soundriyarathore.vercel.app - Sent to Manager for screening_`;
+      const waUrl = `https://wa.me/${MANAGER_WA_INTL}?text=${encodeURIComponent(message)}`;
+
+      recordRequest();
+      checkQuota();
+
       window.open(waUrl, '_blank');
       if (auditionSuccess) {
         auditionSuccess.style.display = 'block';
-        auditionSuccess.textContent = 'Opening WhatsApp with your audition script! Soundriya will deliver your sample within 24 hours.';
+        auditionSuccess.textContent = `Opening WhatsApp with Soundriya's Manager (${MANAGER_PHONE_FORMATTED})! Your custom vocal sample request has been forwarded for screening.`;
       }
     });
   }
@@ -907,14 +1108,27 @@ function initBookingTools() {
   if (auditionForm) {
     auditionForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!validateAuditionForm()) {
+        if (auditionGeneralError) {
+          auditionGeneralError.style.display = 'block';
+          auditionGeneralError.textContent = 'Please correct the highlighted fields before submitting.';
+        }
+        return;
+      }
+
       const data = getAuditionData();
-      const subject = `Custom 15-Sec Audition Request - ${data.name}`;
-      const body = `Hi Soundriya,\n\nI would like to request a complimentary 15-second vocal audition for our project:\n\nClient / Agency: ${data.name}\nEmail for MP3: ${data.email}\nDesired Tone: ${data.tone}\n\nScript Excerpt:\n"${data.script}"\n\nPronunciation/Pacing Notes:\n${data.notes}\n\nThank you!`;
+      const wordCount = countWords(data.script);
+      const subject = `Custom 15-Sec Audition Request - ${data.name} [Manager Review]`;
+      const body = `Hi Soundriya & Management Desk (${MANAGER_PHONE_FORMATTED}),\n\nI would like to request a complimentary 15-second vocal audition for our project:\n\nClient / Agency: ${data.name}\nVerified Email for MP3: ${data.email}\nDesired Tone: ${data.tone}\n\nScript Excerpt (${wordCount} words):\n"${data.script}"\n\nPronunciation/Pacing Notes:\n${data.notes}\n\nSubmitted via soundriyarathore.vercel.app\nThank you!`;
       const mailtoUrl = `mailto:Soundriyarathore221@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      recordRequest();
+      checkQuota();
+
       window.location.href = mailtoUrl;
       if (auditionSuccess) {
         auditionSuccess.style.display = 'block';
-        auditionSuccess.textContent = 'Opening email client! Your audition details are populated. Send the email and Soundriya will reply with your custom sample.';
+        auditionSuccess.textContent = `Opening email client! Your audition details are populated. Sent to Soundriya and Management (${MANAGER_PHONE_FORMATTED}) for screening.`;
       }
     });
   }
@@ -941,12 +1155,12 @@ function initBookingTools() {
         alert('Please fill in your name, email, and preferred date.');
         return;
       }
-      const message = `*Live Directed Session Booking Request*\n\n*Director / Agency:* ${data.director}\n*Email:* ${data.email}\n*Preferred Date:* ${data.date}\n*Time Window:* ${data.time}\n*Remote Platform:* ${data.platform}\n*Project Details:* ${data.project}\n\n_Sent via soundriyarathore.vercel.app_`;
-      const waUrl = `https://wa.me/918107849819?text=${encodeURIComponent(message)}`;
+      const message = `*Live Directed Session Booking Request*\n*Recipient:* Soundriya Rathore's Management Desk (${MANAGER_PHONE_FORMATTED})\n\n*Director / Agency:* ${data.director}\n*Email:* ${data.email}\n*Preferred Date:* ${data.date}\n*Time Window:* ${data.time}\n*Remote Platform:* ${data.platform}\n*Project Details:* ${data.project}\n\n_Sent via soundriyarathore.vercel.app_`;
+      const waUrl = `https://wa.me/${MANAGER_WA_INTL}?text=${encodeURIComponent(message)}`;
       window.open(waUrl, '_blank');
       if (sessionSuccess) {
         sessionSuccess.style.display = 'block';
-        sessionSuccess.textContent = 'Opening WhatsApp with your session details to confirm Soundriya\'s calendar!';
+        sessionSuccess.textContent = `Opening WhatsApp with Manager (${MANAGER_PHONE_FORMATTED}) to confirm Soundriya's calendar!`;
       }
     });
   }
@@ -955,8 +1169,8 @@ function initBookingTools() {
     sessionForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const data = getSessionData();
-      const subject = `Live Directed Session Booking Request - ${data.director}`;
-      const body = `Hi Soundriya,\n\nWe would like to book a live directed recording session with you:\n\nDirector / Agency: ${data.director}\nEmail: ${data.email}\nPreferred Date: ${data.date}\nTime Window: ${data.time}\nPlatform: ${data.platform}\nProject: ${data.project}\n\nPlease confirm availability and send the session link.\n\nThank you!`;
+      const subject = `Live Directed Session Booking Request - ${data.director} [Manager Desk]`;
+      const body = `Hi Soundriya & Management (${MANAGER_PHONE_FORMATTED}),\n\nWe would like to book a live directed recording session with you:\n\nDirector / Agency: ${data.director}\nEmail: ${data.email}\nPreferred Date: ${data.date}\nTime Window: ${data.time}\nPlatform: ${data.platform}\nProject: ${data.project}\n\nPlease confirm availability and send the session link.\n\nThank you!`;
       const mailtoUrl = `mailto:Soundriyarathore221@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.location.href = mailtoUrl;
       if (sessionSuccess) {
