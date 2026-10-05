@@ -70,17 +70,16 @@ window.PORTFOLIO_CONFIG = {
       title: "Prime Time Hindi News Bulletin | Studio News Anchor Soundriya Rathore",
       category: "News Studio Desk",
       badge: "Anchoring"
-    },
-    {
-      youtubeId: "762kTKqRnyE",
-      title: "The Mystery of Jagat Shiromani Temple Amer: Heritage Documentary | Soundriya Rathore",
-      category: "Documentary Production",
-      badge: "Documentary"
     }
   ],
 
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
+    {
+      youtubeId: "svfYTnGrBk4",
+      title: "Supreme Court exposes Election Commission!",
+      label: "Live Stage Event"
+    },
     {
       youtubeId: "Cyz7DnQSuxg",
       title: "Students Enraged Over Delhi Police Detentions: Jantar Mantar Protest Ground Report #Shorts",
@@ -105,11 +104,6 @@ window.PORTFOLIO_CONFIG = {
       youtubeId: "nL1r-2gkEYY",
       title: "Delhi Demands Justice: Ground Report on Women Safety Protests #Shorts",
       label: "Live Stage Event"
-    },
-    {
-      youtubeId: "tZ2_A4lClK4",
-      title: "Live Stage Emcee Energy: Rang Barse Festival Host Soundriya Rathore #Shorts",
-      label: "Cultural Festival"
     }
   ],
 
