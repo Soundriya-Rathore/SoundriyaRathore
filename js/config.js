@@ -64,17 +64,16 @@ window.PORTFOLIO_CONFIG = {
       title: "Non-Stop 100 Speed News Bulletin | Fast-Paced Studio Anchor Soundriya Rathore",
       category: "News Studio Desk",
       badge: "Anchoring"
-    },
-    {
-      youtubeId: "NFFZtB_0Ymw",
-      title: "Prime Time Hindi News Bulletin | Studio News Anchor Soundriya Rathore",
-      category: "News Studio Desk",
-      badge: "Anchoring"
     }
   ],
 
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
+    {
+      youtubeId: "yi1yCcW9Lko",
+      title: "Could El Nino cause a major food crisis?",
+      label: "Live Stage Event"
+    },
     {
       youtubeId: "svfYTnGrBk4",
       title: "Supreme Court exposes Election Commission!",
@@ -98,11 +97,6 @@ window.PORTFOLIO_CONFIG = {
     {
       youtubeId: "6XrYcck7EFw",
       title: "Why Are Delhi Students Protesting? Ground Reality of Women Safety #Shorts",
-      label: "Live Stage Event"
-    },
-    {
-      youtubeId: "nL1r-2gkEYY",
-      title: "Delhi Demands Justice: Ground Report on Women Safety Protests #Shorts",
       label: "Live Stage Event"
     }
   ],
