@@ -58,17 +58,16 @@ window.PORTFOLIO_CONFIG = {
       title: "Live Field Reporting & Piece to Camera (PTC): On Location News #Shorts",
       category: "Broadcast Journalism",
       badge: "Bulletin"
-    },
-    {
-      youtubeId: "jTtfGnU25Ns",
-      title: "Non-Stop 100 Speed News Bulletin | Fast-Paced Studio Anchor Soundriya Rathore",
-      category: "News Studio Desk",
-      badge: "Anchoring"
     }
   ],
 
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
+    {
+      youtubeId: "Y5ovMEeXWQs",
+      title: "History’s 5 craziest plane hijackings!",
+      label: "Live Stage Event"
+    },
     {
       youtubeId: "yi1yCcW9Lko",
       title: "Could El Nino cause a major food crisis?",
@@ -92,11 +91,6 @@ window.PORTFOLIO_CONFIG = {
     {
       youtubeId: "DXj2fZTfUYE",
       title: "Nepal Floods Crisis: Catastrophic Landslides Wash Away Towns #Shorts",
-      label: "Live Stage Event"
-    },
-    {
-      youtubeId: "6XrYcck7EFw",
-      title: "Why Are Delhi Students Protesting? Ground Reality of Women Safety #Shorts",
       label: "Live Stage Event"
     }
   ],
