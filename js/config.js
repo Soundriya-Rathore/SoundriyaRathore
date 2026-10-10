@@ -52,17 +52,16 @@ window.PORTFOLIO_CONFIG = {
       title: "Inside Frontline Conflict Reporting: Ethics of War Journalism | Soundriya Rathore",
       category: "Field Journalism",
       badge: "Field Reporting"
-    },
-    {
-      youtubeId: "g-Sd6AoYXt4",
-      title: "Live Field Reporting & Piece to Camera (PTC): On Location News #Shorts",
-      category: "Broadcast Journalism",
-      badge: "Bulletin"
     }
   ],
 
   // 4 YouTube Shorts (Tucked into Collapsible "View More" Section)
   shorts: [
+    {
+      youtubeId: "oTsiciATPA0",
+      title: "Delhi heavily guarded!",
+      label: "Live Stage Event"
+    },
     {
       youtubeId: "Y5ovMEeXWQs",
       title: "History’s 5 craziest plane hijackings!",
@@ -86,11 +85,6 @@ window.PORTFOLIO_CONFIG = {
     {
       youtubeId: "ij25Nw3cJFM",
       title: "Citizens Detained, System Questioned: Jantar Mantar Protest Ground Report #Shorts",
-      label: "Live Stage Event"
-    },
-    {
-      youtubeId: "DXj2fZTfUYE",
-      title: "Nepal Floods Crisis: Catastrophic Landslides Wash Away Towns #Shorts",
       label: "Live Stage Event"
     }
   ],
